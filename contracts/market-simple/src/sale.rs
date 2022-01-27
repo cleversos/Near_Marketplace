@@ -37,10 +37,21 @@ impl Contract {
     #[payable]
     pub fn remove_sale(&mut self, nft_contract_id: ValidAccountId, token_id: String) {
         assert_one_yocto();
+        let nft_contract = nft_contract_id.clone();
+        let token = token_id.clone();
         let sale = self.internal_remove_sale(nft_contract_id.into(), token_id);
         let owner_id = env::predecessor_account_id();
         assert_eq!(owner_id, sale.owner_id, "Must be sale owner");
         self.refund_all_bids(&sale.bids);
+        ext_contract::nft_transfer(
+            owner_id.clone(),
+            token,
+            0,
+            "return to user".to_string(),
+            &nft_contract,
+            1,
+            GAS_FOR_NFT_TRANSFER,
+        );
     }
 
     #[payable]

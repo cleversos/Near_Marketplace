@@ -2,6 +2,8 @@ import { marketId, contractId } from '../state/near';
 
 
 const BAD_OWNER_ID = [];
+const DELIMETER = '||';
+
 // api-helper config
 const domain = 'https://helper.nearapi.org';
 const batchPath = domain + '/v1/batch/';
@@ -38,13 +40,19 @@ export const loadItems = (account) => async ({ update, getState }) => {
             from_index: '0',
             limit: 50
         });
+        const temp = await contractAccount.viewFunction(marketId, 'get_sales_by_owner_id', {
+            account_id: marketId,
+            from_index: '0',
+            limit: 50
+        });
+        console.log(temp);
         // merge tokens with sale data if it's on sale
         for (let i = 0; i < tokens.length; i++) {
             const { token_id } = tokens[i];
             let sale = sales.find(({ token_id: t }) => t === token_id);
             // don't have it in state, go find sale data
             if (!sale) {
-                sale = await contractAccount.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + token_id }).catch(() => { });
+                sale = await contractAccount.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + DELIMETER + token_id });
             }
             tokens[i] = Object.assign(tokens[i], sale || {});
         }
@@ -78,7 +86,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
             limit: 50
         });
     }
-    
+
     const saleTokens = await contractAccount.viewFunction(contractId, 'nft_tokens_batch', {
         token_ids: sales.filter(({ nft_contract_id }) => nft_contract_id === contractId).map(({ token_id }) => token_id)
     });
@@ -94,35 +102,56 @@ export const loadItems = (account) => async ({ update, getState }) => {
     }
     sales = sales.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
-    // all tokens
-    // need to use NFT helper for deployed
+    //added for update==================================================
     let allTokens = [];
-    if (process.env.REACT_APP_API_HELPER === "true") {
-        const nft_total_supply = await contractAccount.viewFunction(contractId, 'nft_total_supply');
-        const allTokensUrl = batchPath + JSON.stringify([{
-            contract: contractId,
-            method: 'nft_tokens',
-            args: {},
-            batch: {
-                from_index: '0', // must be name of contract arg (above)
-                limit: nft_total_supply, // must be name of contract arg (above)
-                step: 50, // divides contract arg 'limit'
-                flatten: [], // how to combine results
-            },
-            sort: {
-                path: 'metadata.issued_at',
-            }
-        }]);
-        allTokens = (await fetch(allTokensUrl, { headers }).then((res) => res.json()))[0];
-    } else {
-        allTokens = await contractAccount.viewFunction(contractId, 'nft_tokens', {
-            from_index: '0',
-            limit: 50
-        });
+    for (let i = 0; i < sales.length; i++) {
+        const { token_id } = sales[i];
+        console.log(contractId, token_id);
+        let sale = await contractAccount.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + DELIMETER + token_id });
+        console.log(sale);
+        if(sale && sale.owner_id)
+        {
+            sales[i].owner_id = sale.owner_id;
+            console.log(sale.owner_id);
+        }
+        allTokens.push(sales[i]);
+        if(sale && sale.owner_id && sale.owner_id == account.accountId)
+        {
+            tokens.push(sales[i]);
+        }
     }
+    //added for update==================================================
 
-    allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
+    // // all tokens
+    // // need to use NFT helper for deployed
+    // let allTokens = [];
+    // if (process.env.REACT_APP_API_HELPER === "true") {
+    //     const nft_total_supply = await contractAccount.viewFunction(contractId, 'nft_total_supply');
+    //     const allTokensUrl = batchPath + JSON.stringify([{
+    //         contract: contractId,
+    //         method: 'nft_tokens',
+    //         args: {},
+    //         batch: {
+    //             from_index: '0', // must be name of contract arg (above)
+    //             limit: nft_total_supply, // must be name of contract arg (above)
+    //             step: 50, // divides contract arg 'limit'
+    //             flatten: [], // how to combine results
+    //         },
+    //         sort: {
+    //             path: 'metadata.issued_at',
+    //         }
+    //     }]);
+    //     allTokens = (await fetch(allTokensUrl, { headers }).then((res) => res.json()))[0];
+    // } else {
+    //     allTokens = await contractAccount.viewFunction(contractId, 'nft_tokens', {
+    //         from_index: '0',
+    //         limit: 50
+    //     });
+    // }
 
+    // allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
+
+    console.log(tokens, sales, allTokens);
     update('views', { tokens, sales, allTokens })
     return { tokens, sales, allTokens }
 };

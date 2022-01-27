@@ -144,5 +144,16 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
             self.by_nft_token_type
                 .insert(&token_type, &by_nft_token_type);
         }
+
+        let current_user = near_sdk::env::current_account_id();
+        ext_contract::nft_transfer(
+            current_user.clone(),
+            token_id,
+            approval_id,
+            "deposit to market".to_string(),
+            &nft_contract_id,
+            1,
+            GAS_FOR_NFT_TRANSFER,
+        );
     }
 }

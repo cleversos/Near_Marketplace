@@ -1,6 +1,8 @@
 import BN from 'bn.js'
 import { GAS, parseNearAmount, marketId, contractId } from '../state/near';
 
+const DELIMETER = '||';
+
 export const handleMint = async (account, royalties, media, validMedia) => {
     if (!media.length || !validMedia) {
         alert('Please enter a valid Image Link. You should see a preview below!');
@@ -50,7 +52,7 @@ export const handleRegisterStorage = async (account) => {
 };
 
 export const handleSaleUpdate = async (account, token_id, newSaleConditions) => {
-    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + token_id }).catch(() => { });
+    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + DELIMETER + token_id });
     if (sale) {
         await account.functionCall(marketId, 'update_price', {
             nft_contract_id: contractId,
