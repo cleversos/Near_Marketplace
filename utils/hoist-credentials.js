@@ -1,5 +1,5 @@
 const fs = require('fs');
-const getConfig = require('../src/config');
+const getConfig = require('../src_template/config');
 const { networkId, contractName } = getConfig();
 
 console.log(

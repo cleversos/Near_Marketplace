@@ -151,9 +151,9 @@ Everything else can be installed via:
 
 ## NEAR Config
 
-There is only one config.js file found in `src/config.js`, this is also used for running tests.
+There is only one config.js file found in `src_template/config.js`, this is also used for running tests.
 
-Using `src/config.js` you can set up your different environments. Use `REACT_APP_ENV` to switch environments e.g. in `package.json` script `deploy`.
+Using `src_template/config.js` you can set up your different environments. Use `REACT_APP_ENV` to switch environments e.g. in `package.json` script `deploy`.
 
 ## Running Tests
 
@@ -178,11 +178,11 @@ There are helpers in `test/test-utils.js` that take care of:
 2. creating test accounts each time a test is run
 3. establishing a contract instance so you can call methods
 
-You can change the default funding amount for test accounts in `src/config.js`
+You can change the default funding amount for test accounts in `src_template/config.js`
 
 ## Using the NEAR Config in your app
 
-In `src/state/near.js` you will see that `src/config.js` is loaded as a function. This is to satisfy the jest/node test runner.
+In `src_template/state/near.js` you will see that `src_template/config.js` is loaded as a function. This is to satisfy the jest/node test runner.
 
 You can destructure any properies of the config easily in any module you import it in like this:
 
@@ -213,7 +213,7 @@ await contract.withdraw({ amount: parseNearAmount('1') }, GAS)
 
 ## Getting Started: State Store & useContext
 
->The following steps describe how to use `src/utils/state` to create and use your own `store` and `StateProvider`.
+>The following steps describe how to use `src_template/utils/state` to create and use your own `store` and `StateProvider`.
 
 1. Create a file e.g. `/state/app.js` and add the following code
 ```js

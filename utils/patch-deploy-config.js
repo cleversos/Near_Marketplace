@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = './src/config.js'
+const path = './src_template/config.js'
  
 fs.readFile(path, 'utf-8', function(err, data) {
     if (err) throw err;

@@ -2,7 +2,7 @@ const fs = require('fs');
 const BN = require('bn.js');
 const nearAPI = require('near-api-js');
 const testUtils = require('./test-utils');
-const getConfig = require('../src/config');
+const getConfig = require('../src_template/config');
 
 const {
 	Contract, KeyPair, Account,

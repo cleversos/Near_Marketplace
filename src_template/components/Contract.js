@@ -20,8 +20,8 @@ export const Contract = ({ near, update, account }) => {
 	const [receiver, setReceiver] = useState([]);
 
 	return <>
-		<h4>Mint Something</h4>
-		<input className="full-width" placeholder="Image Link" value={media} onChange={(e) => setMedia(e.target.value)} />
+		<h4>Launch Collections</h4>
+		{/* <input className="full-width" placeholder="Image Link" value={media} onChange={(e) => setMedia(e.target.value)} />
 		<img src={media} onLoad={() => setValidMedia(true)} onError={() => setValidMedia(true)} />
 		
 		{ !validMedia && <p>Image link is invalid.</p> }
@@ -48,9 +48,10 @@ export const Contract = ({ near, update, account }) => {
 			}));
 		}}>Add Royalty</button>
 
-		<div className="line"></div>
+		<div className="line"></div> */}
 
-		<button onClick={() => handleMint(account, royalties, media, true)}>Mint</button>
+		<button onClick={() => handleMint(account, royalties, 'https://media.giphy.com/media/h2ZVjT3kt193cxnwm1/giphy.gif', true)}>Mint BamBoo NFT Collection</button>
+		<button onClick={() => handleMint(account, royalties, 'https://media.giphy.com/media/laUY2MuoktHPy/giphy.gif', true)}>Mint Minion NFT Collection</button>
 	</>;
 };
 
