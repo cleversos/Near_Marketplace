@@ -1,0 +1,56 @@
+@import '../../sass/variables.scss';
+
+.nft-item-card {
+  background: $background2;
+  position: relative;
+  text-decoration: none;
+  transition: all .5s;
+  
+  &:hover {
+    background: #1e213b;
+    transform: scale(1.02);
+  }
+
+  .like-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+
+  .details-container {
+    padding: 16.5px;
+
+    .collection-and-price-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .collection-name {
+        font-size: 11px;
+        line-height: 14px;
+        margin-bottom: 3px;
+      }
+
+      .price-container {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 19.5px;
+          margin-right: 8px;
+        }
+
+        .price {
+          font-size: 12px;
+        }
+      }      
+    }
+
+    .item-name {
+      font-size: 16px;
+      line-height: 22px;
+    }
+
+  }
+}

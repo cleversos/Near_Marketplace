@@ -1,0 +1,50 @@
+@import '../../sass/variables.scss';
+@import '../../components/BodyText/BodyText.scss';
+
+.volume-and-lang-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $separator;
+  padding: 0px 30px;
+  height: 38px;
+
+  .volumes {
+    display: flex;
+
+    .body-text {
+      font-size: 10px;
+      margin-right: 10px;
+
+      span {
+        margin-left: 5px;
+      }
+    }
+    
+    .red {
+      color: $text-color-red;
+    }
+
+    .green {
+      color: $text-color-green;
+    }
+  }
+
+  .language-select {
+    border-radius: 5px;
+    border: 1.5px solid $separator;
+    display: flex;
+    align-items: center;
+    padding: 3px 10px;
+
+    select {
+      @include body-text();
+      background: transparent;
+      background: $background2;
+      border: none;
+      margin-left: 5px;
+      outline: none;
+      font-size: 11px;
+    }
+  }
+}

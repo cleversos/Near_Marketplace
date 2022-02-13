@@ -1,0 +1,50 @@
+@import "../../sass/variables.scss";
+@import "../../sass/global.scss";
+
+.choice-renderer {
+  padding: 25px;
+  overflow: hidden;
+  background: $background2;
+  border: 1px solid $separator;
+  border-radius: 10px;
+}
+
+.choice-renderer-header {
+  display: flex;
+  width: 100%;
+}
+
+.choice-renderer-option {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 10px;
+  border-bottom: solid 1px $separator;
+  cursor: pointer;
+}
+
+.choice-renderer-selected {
+  border-bottom: 1px solid $text-color-green;
+
+  .body-text {
+    color: $text-color-green;
+  }
+}
+
+.choice-renderer-body {
+  height: 100%;
+}
+
+// mobile
+@media screen and (max-width: 850px) {
+
+  .choice-renderer-header {
+    margin-bottom: 10px;
+  }
+
+  .choice-renderer-option {
+    padding: 10px 0;
+  }
+}

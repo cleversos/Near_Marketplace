@@ -1,0 +1,171 @@
+@import '../../sass/variables.scss';
+
+.app-navbar {
+  background: $background2;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+
+  .main-navbar {
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+
+    .brand-container {
+      height: 100px;
+      display: flex;
+      align-items: center;
+      margin-right: 30px;
+      text-decoration: none;
+      
+      img {
+        width: 25px;
+        height: auto;
+      }
+      
+      .body-text {
+        font-size: 20px;
+        line-height: 24px;
+        text-align: left;
+        margin-left: 10px;
+      }
+    }
+
+    .sidebar-open-btn {
+      display: none;
+      margin-right: 20px;
+      cursor: pointer;
+
+      * {
+        pointer-events: none;
+      }
+    }
+
+    .search-bar-container {
+      margin-right: auto;
+      flex: 1;
+      width: 100%;
+    }
+
+    .search-icon-btn {
+      margin-right: 20px;
+
+      svg {
+        width: 20px;
+        height: auto;
+      }
+    }
+
+    .nav-toggler,
+    .search-icon-btn {
+      display: none;
+      cursor: pointer;
+    }
+
+    .nav-toggler {
+      margin-left: 15px;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      padding-left: 20px;
+      margin-bottom: 0;
+
+      li {
+        margin-right: 30px;
+        cursor: pointer;
+        opacity: .6;
+        transition: all .5s;
+        
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .connect-wallet-btn {
+      margin-left: 20px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1020px) {
+  .app-navbar {
+    .main-navbar {
+
+      .nav-toggler {
+        display: block;
+
+        &.hidden {
+          display: none;
+        }
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .app-navbar {
+    .main-navbar {
+      .sidebar-open-btn {
+        display: block;
+      }
+
+      .brand-container {
+        .body-text {
+          display: none;
+        }
+      }      
+    }
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .app-navbar {
+
+    .main-navbar {
+
+      .brand-container {
+        margin-right: auto;
+      }
+      .connect-wallet-btn {
+        display: none;
+      }
+
+      .sidebar-open-btn {
+        // margin-right: auto;
+
+        &.hide-mobile {
+          display: none;
+        }
+      }
+      
+      .nav-toggler {
+        margin-right: 0;
+      }
+
+      .search-bar-container {
+        display: none;
+        margin-right: 20px;
+
+        &.show {
+          display: flex;
+        }
+      }
+
+      .search-icon-btn {
+        display: block;
+        margin-right: 0;
+      }      
+    }
+
+  }
+}

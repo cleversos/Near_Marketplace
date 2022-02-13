@@ -1,0 +1,33 @@
+@import "../../sass/variables.scss";
+@import "../../sass/global.scss";
+
+.filter-toggle-button {
+  display: flex;
+  border: 1px solid $separator;
+  padding: 4px;
+  border-radius: 24px;
+  width: fit-content;
+
+  .main-button {
+    background: $gradient;
+    padding: 10px 17px;
+    margin-left: 5px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    .body-text {
+      font-size: 13px;
+      color: $text-color-white;
+    }
+
+    &.inactive {
+      background: transparent;
+
+      .body-text {
+        color: $text-color-gray;
+      }
+    }
+  }
+}

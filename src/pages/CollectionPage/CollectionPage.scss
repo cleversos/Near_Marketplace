@@ -1,0 +1,63 @@
+@import '../../sass/variables.scss';
+
+.collection-page {
+
+  .mode-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid $separator;
+
+    .mode-set {
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      margin-right: 20px;
+      padding: 10px 5px;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+
+      .body-text {
+        margin-left: 10px;
+        
+      }
+
+      &.selected {
+        border-bottom: 2px solid #1A59F8;
+
+        .body-text {
+          color: white;
+        }
+      }
+    }
+  }
+  .filter-and-gallery-container {
+    display: flex;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 30px;
+    z-index: 5;
+
+    .filter-container {
+      position: sticky;
+      top: 145px;
+      height: calc(100vh - 175px);
+      z-index: 8;
+
+    }
+
+    .gallery-section-container {
+      flex: 1;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .collection-page {
+    .filter-and-gallery-container {
+      padding: 20px;
+    }
+  }
+}

@@ -1,0 +1,82 @@
+@import '../../../../sass/variables.scss';
+
+.home-upcoming-section {
+  .section-padding {
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: 30px;
+
+      .upcoming-launch-card {
+        position: relative;
+
+        &:hover {
+          img {
+            transform: scale(1.03);
+          }
+        }
+
+        .img-darkener {
+          position: absolute;
+          top: 0; bottom: 0;
+          right: 0; left: 0;
+          background: linear-gradient(180deg, rgba(9, 6, 25, 0) 0%, rgba(9, 6, 25, 0.94) 100%);
+          z-index: 1;
+        }
+        .details {
+          position: absolute;
+          z-index: 2;
+          bottom: 20px;
+          left: 20px;
+
+          .name {
+            font-size: 18px;
+            margin-bottom: 10px;
+          }
+
+          .date {
+            font-size: 14px;
+            color: $text-color-gray;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .home-upcoming-section {
+    .section-padding {
+      .head {
+
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .home-upcoming-section {
+    .section-padding {
+      .head {
+        .section-title-text {
+          font-size: 24px;
+        }
+      }
+
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}

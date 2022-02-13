@@ -12,6 +12,7 @@ use std::collections::HashMap;
 use crate::external::*;
 use crate::internal::*;
 use crate::sale::*;
+use crate::collection::*;
 use near_sdk::env::STORAGE_PRICE_PER_BYTE;
 
 mod external;
@@ -20,6 +21,7 @@ mod internal;
 mod nft_callbacks;
 mod sale;
 mod sale_views;
+mod collection;
 
 near_sdk::setup_alloc!();
 
@@ -40,6 +42,8 @@ pub type TokenId = String;
 pub type TokenType = Option<String>;
 pub type FungibleTokenId = AccountId;
 pub type ContractAndTokenId = String;
+pub type ContractAndTokenType = String;
+
 // TODO: Capital U128
 pub type Payout = HashMap<AccountId, U128>;
 #[derive(Serialize)]
@@ -59,12 +63,14 @@ pub struct Contract {
     pub by_nft_token_type: LookupMap<AccountId, UnorderedSet<ContractAndTokenId>>,
     pub ft_token_ids: UnorderedSet<AccountId>,
     pub storage_deposits: LookupMap<AccountId, Balance>,
+    pub collections: UnorderedMap<ContractAndTokenType, CollectionInfo>,
     pub bid_history_length: u8,
 }
 
 /// Helper structure to for keys of the persistent collections.
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKey {
+    CollectionInfo,
     Sales,
     ByOwnerId,
     ByOwnerIdInner { account_id_hash: CryptoHash },
@@ -83,6 +89,7 @@ impl Contract {
         let mut this = Self {
             owner_id: owner_id.into(),
             sales: UnorderedMap::new(StorageKey::Sales),
+            collections: UnorderedMap::new(StorageKey::CollectionInfo),
             by_owner_id: LookupMap::new(StorageKey::ByOwnerId),
             by_nft_contract_id: LookupMap::new(StorageKey::ByNFTContractId),
             by_nft_token_type: LookupMap::new(StorageKey::ByNFTTokenType),

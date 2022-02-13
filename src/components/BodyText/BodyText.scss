@@ -1,0 +1,41 @@
+@import '../../sass/variables.scss';
+
+@mixin body-text{
+  font-family: 'Lexend Deca', sans-serif;
+  font-style: normal;
+  color: rgb(255, 255, 255);
+  margin: 0;
+}
+
+.body-text{
+  @include body-text();
+  font-weight: 400;
+  font-size: 15px;
+
+  &.light {
+    font-weight: 400;
+    color: $text-color-gray
+  }
+
+  &.normal {
+    font-weight: 500;
+    color: $text-color-gray
+  }
+
+  &.bold {
+    font-weight: 600;
+    color: $text-color-white;
+  }
+
+  &.red {
+    color: $text-color-red
+  }
+
+ &.green {
+   color: $text-color-green
+ }
+
+ &.section-title-text {
+   font-size: 34px;
+ }
+}

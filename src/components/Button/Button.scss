@@ -1,0 +1,32 @@
+@import '../../sass/variables.scss';
+
+.main-button{
+  background: $gradient;
+  border-radius: 60px;
+  border: none;
+  cursor: pointer;
+  padding: 12px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  .icon-loader {
+    margin-right: 10px;
+  }
+  
+
+  p{
+    color: white;
+  }
+
+  &.secondary {
+    background: none;
+    border: 1px solid $separator;
+    padding: 10px 20px;
+  }
+
+  &:hover{
+    opacity: .9;
+  }
+}

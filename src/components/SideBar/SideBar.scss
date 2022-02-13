@@ -1,0 +1,206 @@
+@import '../../sass/variables.scss';
+
+
+@mixin collapsed {
+  width: 80px;
+
+  .brand-container {
+    .body-text {
+      display: none;
+    }
+  }
+
+  .items-container {
+    li {
+      a {
+        .body-text {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .bottom-section {
+    padding: 0;
+    margin: 20px;
+    margin-top: auto;
+
+    .profile-container {
+      flex-direction: column;
+      height: unset;
+      background: transparent;
+    }
+
+    .icon-loader {
+      margin: 0;
+    }
+
+    img {
+      margin: 0;
+      order: 3;
+      margin-top: 15px;
+    }
+
+    .body-text {
+      display: none;
+    }
+  }
+}
+
+.side-bar {
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  overflow: hidden;
+  transition: all .5s;
+  background: $background2;
+  top: 108px;
+  height: calc(100vh - 100px);
+  
+  .items-container {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 10px;
+
+      &:hover {
+        .body-text {
+          color: white;
+        }
+      }
+
+      &.selected {
+        background: $gradient;
+
+        .body-text {
+          color: white;
+        }
+      }
+
+      a {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        padding:  15px 30px;
+      }
+
+      .body-text {
+        margin-left: 15px;
+        font-size: 16px;
+        line-height: 24px;
+        transition: all .5s;
+      }
+    }
+  }
+
+  .bottom-section {
+    margin: 30px;
+    margin-top: auto;
+
+    .connect-wallet {
+      width: 100%;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .profile-container {
+      height: 50px;
+      background-color: $body-background;
+      border-radius: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      
+      img {
+        width: 25px;
+        height: 25px;
+        border-radius: 25px;
+        margin-right: 10px;
+      }
+
+      .body-text {
+        margin-right: 10px;
+        font-size: 13px;
+      }      
+    }
+
+    .expand-btn {
+      background: rgba(0, 0, 0, 0);
+      transition: all .5s;
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      width: 40px;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background: black;
+      }
+    }
+  }
+
+  &.collapsed {
+    @include collapsed();
+  }
+}
+
+@media only screen and (max-width: 1120px) {
+  .side-bar {
+    .bottom-section {
+      .expand-btn {
+        display: none;
+      }      
+    }
+  }
+}
+
+@media only screen and (max-width: 1120px) and (min-width: 768px) {
+  .side-bar {
+    @include collapsed();
+
+    .bottom-section {
+      .expand-btn {
+        display: none;
+      }      
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .side-bar {
+    position: fixed;
+    bottom: 0;
+    background: $background2;
+    width: 280px;  
+    z-index: 100;
+    transform: translateX(-100%);
+
+    &.show-mobile {
+      transform: translateX(0);
+    }    
+
+    &.collapsed {
+      
+    }
+
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .side-bar {    
+    .bottom-section {
+      .connect-wallet {
+        display: flex;
+      }      
+    }
+  }
+}

@@ -1,0 +1,58 @@
+.hero-section {
+  height: 650px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .section-padding {
+    z-index: 2;
+
+    .content {
+      .hero-text {
+        font-size: 53px;
+        max-width: 500px;
+        margin-bottom: 37px;
+      }
+    }
+  }
+
+
+  .bg-darkener,
+  .bg-img-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .bg-darkener {
+    z-index: 1;
+    background: radial-gradient(62.71% 238.37% at 55.24% 46.27%, #111321 0%, rgba(17, 19, 33, 0.4) 0.01%, #111321 100%);
+    background-blend-mode: multiply;
+  }
+
+  .bg-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      min-height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .hero-section {
+    .bg-img-container {
+      img {
+        height: 100%;
+        width: auto;
+      }
+    }
+  }
+}

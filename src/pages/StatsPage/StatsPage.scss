@@ -1,0 +1,64 @@
+@import '../../sass/variables.scss';
+@import '../../components/BodyText/BodyText.scss';
+
+.stats-page {
+  padding: 40px 30px 0;
+
+  .head {
+    text-align: center;
+    .body-text {
+      &.bold {
+        font-size: 27px;
+        line-height: 32px;
+        margin-bottom: 5px;
+      }
+
+      &.light {
+        font-size: 14px;
+        line-height: 21px;
+      }
+    }
+  }
+
+  .table-container {
+    .table-filters-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 40px 0 30px;
+
+      .sort-select-container {
+        border-radius: 15px;
+        border: 1px solid $separator;
+        padding: 9px 20px;
+
+        .sort-select {
+          color: $text-color-white;
+          background: $body-background;
+          @include body-text();
+          border: none;
+          outline: none;
+        }
+
+      }
+    }
+
+
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .stats-page {
+    .table-container {
+      .table-filters-container {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .sort-select-container {
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+}

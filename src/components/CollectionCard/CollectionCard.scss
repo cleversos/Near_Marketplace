@@ -1,0 +1,46 @@
+@import '../../sass/variables.scss';
+
+.collection-card {
+  background: $background2;
+  position: relative;
+  text-decoration: none;
+  transition: all .5s;
+  
+  &:hover {
+    background: #1e213b;
+    transform: scale(1.02);
+  }
+
+  .details-container {
+    padding: 16.5px;
+
+    .collection-name {
+      font-size: 13px;
+      line-height: 14px;
+      margin-bottom: 5px;
+    }
+    
+    .volume {
+      font-size: 11px;
+      margin-bottom: 5px;
+
+      span {
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.849);
+      }
+    }
+
+    .description-container {
+      .description {
+        font-size: 12px;
+        line-height: 16px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }      
+    }
+
+  }
+}

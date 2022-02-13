@@ -1,0 +1,176 @@
+@import "../../../sass/variables.scss";
+
+.top-collection-table {
+  width: 100%;
+  text-align: center;
+  border-collapse: separate !important;
+  border-style: hidden;
+  border-spacing: 0 10px;
+  border-collapse: collapse;
+
+  thead {
+    border: 1px solid $separator;
+    background: $background2;
+    tr {
+
+      th {
+        padding: 14px 20px;
+
+        &:nth-child(2) {
+          text-align: left;
+        }
+
+        .body-text {
+          font-size: 14px;
+          line-height: 21px;
+          color: rgba(255, 255, 255, 0.5);
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 5px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      td {
+        padding: 14px 20px;
+        border-top: 1px solid $separator;
+        border-bottom: 1px solid $separator;
+
+        &:first-child {
+          width: 100px;
+        }
+
+        .mobile-title {
+          display: none;
+        }
+      }
+
+      td,
+      th {
+        &:first-child {
+          border-left: 1px solid $separator;
+        }
+        &:last-child {
+          border-right: 1px solid $separator;
+        }
+      }
+    }
+  }
+}
+
+.collection-name-and-img-column {
+  width: 160px;
+  display: flex;
+  align-items: center;
+  margin-right: auto;
+
+  img {
+    height: 30px;
+    width: 30px;
+    border-radius: 30px;
+    margin-right: 10px;
+  }
+
+  .collection-title {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// mobile
+@media (max-width: 900px) {
+  .top-collection-table {
+    display: block;
+    padding: 0;
+    background-color: transparent;
+
+    thead {
+      display: none;
+    }
+    tbody {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 25px;
+
+      tr {
+        border-radius: 10px;
+        display: block;
+        padding: 10px 0;
+        margin: 0;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid $separator;
+
+        .number {
+          display: none;
+        }
+
+        td {
+          padding: 8px 30px;
+          display: flex;
+          justify-content: space-between;
+          box-sizing: border-box;
+          border: none;
+
+          .body-text,
+          .body-text-light {
+            font-size: 13px;
+            font-weight: 400;
+          }
+
+          .mobile-title {
+            display: block;
+            color: rgba(255, 255, 255, 0.36);
+          }
+
+          &:first-child {
+            width: 100%;
+            text-align: center;
+          }
+        }
+      }
+    }
+    & > thead > tr > th {
+      padding-top: 0;
+    }
+  }
+
+  .collection-name-and-img-column {
+    margin: 0;
+    display: block;
+    width: 100%;
+
+    & > div > img {
+      width: 20px;
+    }
+
+    .collection-title {
+      text-align: center;
+      font-family: "Montserrat", sans-serif;
+      font-style: normal;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .top-collection-table {
+    tbody {
+      grid-template-columns: 1fr;
+    }
+    & > thead > tr > th {
+      padding-top: 0;
+    }
+  }
+}
