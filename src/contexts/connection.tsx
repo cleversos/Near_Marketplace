@@ -1,9 +1,15 @@
-import * as nearAPI from "near-api-js";
-import { ConnectConfig, providers, WalletConnection } from "near-api-js";
-import { Provider } from "near-api-js/lib/providers";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import * as nearAPI from "near-api-js"
+import {
+  ConnectConfig,
+  providers,
+  WalletConnection as WalletConnectionProps,
+} from "near-api-js"
+import { Provider } from "near-api-js/lib/providers"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
+import * as buffer from "buffer"
+;(window as any).Buffer = buffer.Buffer
 
-const { connect, keyStores } = nearAPI;
+const { connect, keyStores, WalletConnection } = nearAPI
 
 const configs: ConnectConfig[] = [
   {
@@ -15,16 +21,16 @@ const configs: ConnectConfig[] = [
     // explorerUrl: "https://explorer.testnet.near.org",
     headers: {},
   },
-];
+]
 
 interface ConnectionContextProps {
-  near: nearAPI.Near | undefined;
-  wallet: WalletConnection | undefined;
-  network: string;
-  provider: Provider | undefined;
-  setNetwork: Function;
-  signIn: Function;
-  signOut: Function;
+  near: nearAPI.Near | undefined
+  wallet: WalletConnectionProps | undefined
+  network: string
+  provider: Provider | undefined
+  setNetwork: Function
+  signIn: Function
+  signOut: Function
 }
 
 export const ConnectionContext = React.createContext<ConnectionContextProps>({
@@ -35,45 +41,46 @@ export const ConnectionContext = React.createContext<ConnectionContextProps>({
   setNetwork: () => {},
   signIn: () => {},
   signOut: () => {},
-});
+})
 
 // connect to NEAR
 const ConnectionProvider = (props: any) => {
-  const [network, setNetwork] = useState("testnet");
-  const [near, setNear] = useState<nearAPI.Near>();
-  const [wallet, setWallet] = useState<WalletConnection>();
+  const [network, setNetwork] = useState("testnet")
+  const [near, setNear] = useState<nearAPI.Near>()
+  const [wallet, setWallet] = useState<WalletConnectionProps>()
 
   const config =
-    configs.find((config) => config.networkId === network) || configs[0];
+    configs.find((config) => config.networkId === network) || configs[0]
 
   const provider = useMemo(
     () => new providers.JsonRpcProvider(config.nodeUrl),
     [config.nodeUrl]
-  );
+  )
 
   const connectToNear = useCallback(async () => {
-    const near = await connect(config);
-    const wallet = new WalletConnection(near, null);
-    setNear(near);
-    setWallet(wallet);
-  }, [config]);
+    try {
+      const near = await connect(config)
+      const wallet = new WalletConnection(near, null)
+      setNear(near)
+      setWallet(wallet)
+      console.log({ near, wallet })
+    } catch (error) {
+      console.log(error)
+    }
+  }, [config])
 
   useEffect(() => {
-    connectToNear();
-  }, [connectToNear]);
+    connectToNear()
+  }, [connectToNear])
 
   const signIn = () => {
-    if (!wallet) return;
-    wallet.requestSignIn(
-      "example-contract.testnet", // contract requesting access
-      "Example App" // optional
-    );
-  };
+    wallet.requestSignIn("desmarket.hashdaan.testnet")
+  }
 
   const signOut = () => {
-    if (!wallet) return;
-    wallet.signOut();
-  };
+    if (!wallet) return
+    wallet.signOut()
+  }
 
   return (
     <ConnectionContext.Provider
@@ -81,7 +88,7 @@ const ConnectionProvider = (props: any) => {
     >
       {props.children}
     </ConnectionContext.Provider>
-  );
-};
+  )
+}
 
-export default ConnectionProvider;
+export default ConnectionProvider

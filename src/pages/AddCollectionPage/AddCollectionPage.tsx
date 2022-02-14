@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import BodyText from "../../components/BodyText/BodyText";
-import Button from "../../components/Button/Button";
-import InputBox from "../../components/InputBox/InputBox";
-import { ConnectionContext } from "../../contexts/connection";
-import { ContractContext } from "../../contexts/contract";
+import React, { useContext, useState } from "react"
+import BodyText from "../../components/BodyText/BodyText"
+import Button from "../../components/Button/Button"
+import InputBox from "../../components/InputBox/InputBox"
+import { ConnectionContext } from "../../contexts/connection"
+import { ContractContext } from "../../contexts/contract"
 
-import "./AddCollectionPage.scss";
+import "./AddCollectionPage.scss"
 
 const AddCollectionPage = () => {
-  const { contract } = useContext(ContractContext);
-  const { wallet } = useContext(ConnectionContext);
+  const { contract } = useContext(ContractContext)
+  const { wallet } = useContext(ConnectionContext)
   const [input, setInput] = useState({
     name: "",
     bannerImageUrl: "",
@@ -22,23 +22,23 @@ const AddCollectionPage = () => {
     telegram: "",
     instagram: "",
     medium: "",
-  });
+  })
 
   const onInputChange = (event: any) => {
-    const { value, name } = event.target;
-    if (!value) return;
+    const { value, name } = event.target
+    if (!value) return
     setInput((current) => ({
       ...current,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const onSubmit = async () => {
     try {
-      if (!contract || !wallet) return;
-      await contract.addCollection({
-        nft_contract_id: wallet.getAccountId(),
-        token_type: String,
+      if (!contract || !wallet) return
+      await contract.add_collection({
+        nft_contract_id: "desmarket.hashdaan.testnet",
+        token_type: String, //don't know what exactly goes here
         name: input.name,
         isVerified: false,
         bannerImageUrl: input.bannerImageUrl,
@@ -52,11 +52,11 @@ const AddCollectionPage = () => {
         telegram: input.telegram,
         instagram: input.instagram,
         medium: input.medium,
-      });
+      })
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   return (
     <div className="add-collection-page">
@@ -156,7 +156,7 @@ const AddCollectionPage = () => {
 
       <Button title="Save" onClick={onSubmit} />
     </div>
-  );
-};
+  )
+}
 
-export default AddCollectionPage;
+export default AddCollectionPage

@@ -1,23 +1,25 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-import HomeNavMenu from "../HomeNavMenu/HomeNavMenu";
-import VolumeAndLangBar from "../VolumeAndLangBar/VolumeAndLangBar";
-import BodyText from "../BodyText/BodyText";
-import Button from "../Button/Button";
-import CollectionSearchBox from "../CollectionSearchBox/CollectionSearchBox";
-import { IconLoader } from "../IconLoader";
-import "./AppNavbar.scss";
+import React, { useContext, useState } from "react"
+import { Link } from "react-router-dom"
+import HomeNavMenu from "../HomeNavMenu/HomeNavMenu"
+import VolumeAndLangBar from "../VolumeAndLangBar/VolumeAndLangBar"
+import BodyText from "../BodyText/BodyText"
+import Button from "../Button/Button"
+import CollectionSearchBox from "../CollectionSearchBox/CollectionSearchBox"
+import { IconLoader } from "../IconLoader"
+import "./AppNavbar.scss"
+import { ConnectionContext } from "../../contexts/connection"
 
 interface AppNavbarProps {
-  setOpenSidebar: Function;
-  dailyVolume: number;
-  totalVolume: number;
-  showVolBar: boolean;
+  setOpenSidebar: Function
+  dailyVolume: number
+  totalVolume: number
+  showVolBar: boolean
 }
 const AppNavbar = (props: AppNavbarProps) => {
-  const [expandSearchBox, setExpandSearchBox] = useState(false);
-  const [showMobileNavMenu, setShowMobileNavMenu] = useState(false);
-  const walletAddress = "FZXg6PdjCjoz54TTT5Tvq97Y9hnpWCLsCqPmfCHSSWYx"; // simulates connected wallet.
+  const [expandSearchBox, setExpandSearchBox] = useState(false)
+  const [showMobileNavMenu, setShowMobileNavMenu] = useState(false)
+  const { wallet, signIn } = useContext(ConnectionContext)
+  const walletAddress = wallet?.getAccountId()
 
   const navLinks = [
     {
@@ -36,7 +38,7 @@ const AppNavbar = (props: AppNavbarProps) => {
       name: "Community",
       onClick: () => {},
     },
-  ];
+  ]
 
   return (
     <>
@@ -103,7 +105,7 @@ const AppNavbar = (props: AppNavbarProps) => {
               className="connect-wallet-btn"
               title="Connect wallet"
               icon="wallet"
-              onClick={() => {}}
+              onClick={signIn}
             />
           )}
         </div>
@@ -114,7 +116,7 @@ const AppNavbar = (props: AppNavbarProps) => {
         setShowMobileNavMenu={setShowMobileNavMenu}
       />
     </>
-  );
-};
+  )
+}
 
-export default AppNavbar;
+export default AppNavbar
