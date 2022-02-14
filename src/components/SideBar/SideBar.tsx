@@ -1,20 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import ExpandIcon from "../../assets/icons/ExpandIcon";
-import BodyText from "../BodyText/BodyText";
-import Button from "../Button/Button";
-import { IconLoader } from "../IconLoader";
-import "./SideBar.scss";
+import React, { useContext, useEffect, useRef, useState } from "react"
+import { Link, useLocation } from "react-router-dom"
+import ExpandIcon from "../../assets/icons/ExpandIcon"
+import { ConnectionContext } from "../../contexts/connection"
+import BodyText from "../BodyText/BodyText"
+import Button from "../Button/Button"
+import { IconLoader } from "../IconLoader"
+import "./SideBar.scss"
 
 interface SideBarProps {
-  openMobileSidebar: boolean;
-  setOpenMobileSidebar: Function;
+  openMobileSidebar: boolean
+  setOpenMobileSidebar: Function
 }
 type TLinks = {
-  link: string;
-  name: string;
-  icon: string;
-};
+  link: string
+  name: string
+  icon: string
+}
 const links: TLinks[] = [
   {
     link: "/",
@@ -36,27 +37,28 @@ const links: TLinks[] = [
     name: "Settings",
     icon: "settings",
   },
-];
+]
 
 const SideBar = (props: SideBarProps) => {
-  const sideBarRef = useRef(null);
-  const { openMobileSidebar, setOpenMobileSidebar } = props;
-  const walletAddress = "FZXg6PdjCjoz54TTT5Tvq97Y9hnpWCLsCqPmfCHSSWYx";
+  const sideBarRef = useRef(null)
+  const { openMobileSidebar, setOpenMobileSidebar } = props
+  const { wallet, signIn } = useContext(ConnectionContext)
+  const walletAddress = wallet?.getAccountId()
 
   useEffect(() => {
     window.onclick = (event) => {
-      const menuToggler = document.querySelector(".sidebar-open-btn");
+      const menuToggler = document.querySelector(".sidebar-open-btn")
       if (event.target !== sideBarRef.current && event.target !== menuToggler) {
-        setOpenMobileSidebar(false);
+        setOpenMobileSidebar(false)
       }
-    };
+    }
     return () => {
-      window.onclick = null;
-    };
-  }, [sideBarRef, setOpenMobileSidebar]);
+      window.onclick = null
+    }
+  }, [sideBarRef, setOpenMobileSidebar])
 
-  const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const location = useLocation()
+  const [isExpanded, setIsExpanded] = useState(false)
   return (
     <div
       className={`side-bar ${openMobileSidebar ? "show-mobile" : ""} ${
@@ -107,13 +109,13 @@ const SideBar = (props: SideBarProps) => {
               icon="wallet"
               className="connect-wallet"
               title="Connect wallet"
-              onClick={() => {}}
+              onClick={signIn}
             />
           </>
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SideBar;
+export default SideBar
