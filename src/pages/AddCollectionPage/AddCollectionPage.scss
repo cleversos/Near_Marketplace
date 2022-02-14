@@ -1,0 +1,41 @@
+@import '../../sass/variables.scss';
+
+.add-collection-page {
+  padding: 40px 0;
+  margin: 0 auto;
+  max-width: 75%;
+
+  .head {
+    margin-bottom: 20px;
+
+    .page-title {
+      font-size: 35px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .form {
+    .input-box {
+      margin-bottom: 20px;
+    }
+
+    .section-label {
+      font-size: 20px;
+      margin: 15px 0 10px;
+    }
+
+    .links-container {
+      border-radius: 20px;
+      overflow: hidden;
+      .input-box {
+        margin-bottom: 0;
+        border-radius: 0;
+        border-bottom: 1px solid $separator;
+
+        &:last-child {
+          border-bottom: 0px;
+        }
+      }
+    }
+  }
+}

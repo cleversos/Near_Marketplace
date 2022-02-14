@@ -4,6 +4,7 @@ import CollectionIcon from "../../assets/icons/CollectionIcon";
 import CreditCardIcon from "../../assets/icons/CreditCardIcon";
 import DiscordIcon from "../../assets/icons/DiscordIcon";
 import HomeIcon from "../../assets/icons/HomeIcon";
+import InstagramIcon from "../../assets/icons/InstagramIcon";
 import LoadingCircleIcon from "../../assets/icons/LoadingCircleIcon";
 import MediumIcon from "../../assets/icons/MediumIcon";
 import MenuIcon from "../../assets/icons/MenuIcon";
@@ -11,8 +12,10 @@ import MoreIcon from "../../assets/icons/MoreIcon";
 import SearchIcon from "../../assets/icons/SearchIcon";
 import SettingsIcon from "../../assets/icons/SettingsIcon";
 import StatsIcon from "../../assets/icons/StatsIcon";
+import TelegramIcon from "../../assets/icons/TelegramIcon";
 import TwitterIcon from "../../assets/icons/TwitterIcon";
 import WalletIcon from "../../assets/icons/WalletIcon";
+import WebsiteIcon from "../../assets/icons/WebsiteIcon";
 // import solanaIcon from "../../images/solanaIcon.png";
 // import usdcIcon from "../../images/USDCIcon.png";
 
@@ -52,6 +55,12 @@ const resolveIcon = (props: IconLoaderProps): React.ReactNode => {
       return <SettingsIcon isSelected={props.isIconSelected} />
     case "more":
       return <MoreIcon />
+    case "website":
+      return <WebsiteIcon />
+    case "telegram":
+      return <TelegramIcon />
+      case "instagram":
+        return <InstagramIcon />
     default:
       return <div />;
   }

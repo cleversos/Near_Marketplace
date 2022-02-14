@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import AppNavbar from './components/AppNavbar/AppNavbar';
 import SideBar from './components/SideBar/SideBar';
+import AddCollectionPage from './pages/AddCollectionPage/AddCollectionPage';
 import AllCollectionsPage from './pages/AllCollectionsPage/AllCollectionsPage';
 import CollectionPage from './pages/CollectionPage/CollectionPage';
 import HomePage from './pages/HomePage/HomePage';
@@ -33,6 +34,7 @@ function App() {
             <Route path="/" element={ <HomePage /> } />
             <Route path="/collections" element={ <AllCollectionsPage /> } />
             <Route path="/me" element={ <ProfilePage /> } />
+            <Route path="/add-collection" element={ <AddCollectionPage/> } />
           </Routes>
         </div>
       </div>

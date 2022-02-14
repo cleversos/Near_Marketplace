@@ -1,0 +1,24 @@
+@import '../../sass/variables.scss';
+@import '../BodyText/BodyText.scss';
+
+.input-box {
+  background: $background2;
+  border-radius: 17.5px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  width: 100%;
+
+  input {
+    @include body-text();
+    background: none;
+    border: none;
+    margin-left: 10px;
+    color: white !important;
+    outline: none;
+    flex: 1;
+    height: 100%;
+    font-size: 14px;
+  }
+}
