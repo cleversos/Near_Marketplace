@@ -36,7 +36,7 @@ const AddCollectionPage = () => {
   const onSubmit = async () => {
     try {
       if (!contract || !wallet) return
-      await contract.addCollection({
+      await contract.add_collection({
         nft_contract_id: "desmarket.hashdaan.testnet",
         token_type: String, //don't know what exactly goes here
         name: input.name,
