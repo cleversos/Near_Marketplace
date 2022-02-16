@@ -5,6 +5,7 @@ import Button from "../../../components/Button/Button"
 import ImageWithLoadBg from "../../../components/ImageWithLoadBg/ImageWithLoadBg"
 import ModalContainer from "../../../components/ModalContainer/ModalContainer"
 import { defaultPopularCollections } from "../../../constants/defaultData"
+import { ConnectionContext } from "../../../contexts/connection"
 import { ContractContext } from "../../../contexts/contract"
 import AdminCollectionCard, {
   AdminCollectionCardProps,
@@ -14,6 +15,7 @@ import "./ViewCollectionAdminPage.scss"
 const ViewCollectionAdminPage = () => {
   const [collections, setCollections] = useState<AdminCollectionCardProps[]>([])
   const [isFetchingCollections, setIsFetchingCollections] = useState(true)
+  const { provider } = useContext(ConnectionContext)
   const { contract, contractAccountId } = useContext(ContractContext)
   const [collectionToDelete, setCollectionTodelete] =
     useState<AdminCollectionCardProps | null>(null)
@@ -22,16 +24,18 @@ const ViewCollectionAdminPage = () => {
   const getCollections = useCallback(async () => {
     try {
       // get collections from contract
-      // const rawResult: any = await provider.query({
-      //   request_type: "call_function",
-      //   account_id: contractAccountId,
-      //   method_name: "get_collections",
-      //   args_base64: btoa(`{sortBy: dateAdded, numberOfResults: 20}`),
-      //   finality: "optimistic",
-      // })
-      // const result = JSON.parse(Buffer.from(rawResult.result).toString())
-      setCollections([])
-    } catch (error) {}
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: contractAccountId,
+        method_name: "get_collections",
+        args_base64: btoa(`{sortBy: dateAdded, numberOfResults: 20}`),
+        finality: "optimistic",
+      })
+      const result = JSON.parse(Buffer.from(rawResult.result).toString())
+      setCollections(result)
+    } catch (error) {
+      console.log(error)
+    }
   }, [])
 
   useEffect(() => {
