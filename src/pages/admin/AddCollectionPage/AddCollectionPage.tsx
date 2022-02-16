@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react"
-import BodyText from "../../components/BodyText/BodyText"
-import Button from "../../components/Button/Button"
-import InputBox from "../../components/InputBox/InputBox"
-import { ConnectionContext } from "../../contexts/connection"
-import { ContractContext } from "../../contexts/contract"
+import BodyText from "../../../components/BodyText/BodyText"
+import Button from "../../../components/Button/Button"
+import InputBox from "../../../components/InputBox/InputBox"
+import { ConnectionContext } from "../../../contexts/connection"
+import { ContractContext } from "../../../contexts/contract"
 
 import "./AddCollectionPage.scss"
 
