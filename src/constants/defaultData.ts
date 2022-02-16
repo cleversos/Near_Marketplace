@@ -3,79 +3,79 @@ import { TCollection, TItem } from "../pages/CollectionPage/CollectionPage"
 
 export const defaultPopularItems: TItem[] = [
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     collection: "NFTKingCreator",
     price: 0.5,
-    id: "asdasd"
+    id: "asdasd",
   },
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     collection: "NFTKingCreator",
     price: 0.5,
-    id: "afsdasd"
+    id: "afsdasd",
   },
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     collection: "NFTKingCreator",
     price: 0.5,
-    id: "adssdasd"
+    id: "adssdasd",
   },
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     collection: "NFTKingCreator",
     price: 0.5,
-    id: "asdasdsaklhjlj"
+    id: "asdasdsaklhjlj",
   },
 ]
 
 export const defaultPopularCollections: CollectionCardProps[] = [
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     id: "asdasd",
     volTraded: 120,
     description: `3333 generative Kongz conquering NEAR-by jungles.
-    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz. `
+    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz. `,
   },
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     id: "asdasd",
     volTraded: 120,
     description: `3333 generative Kongz conquering NEAR-by jungles.
-    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz`
+    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz`,
   },
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     id: "asdasd",
     volTraded: 120,
     description: `3333 generative Kongz conquering NEAR-by jungles.
-    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz`
+    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz`,
   },
   {
-    image: require('../assets/images/defaultPopularItem1.png'),
+    image: require("../assets/images/defaultPopularItem1.png"),
     name: "Grouchy Tiger",
     id: "asdasd",
     volTraded: 120,
     description: `3333 generative Kongz conquering NEAR-by jungles.
-    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz`
+    Produce Baby Kongz with Breeding | Stake Evil Baby Kongz to steal Baby Kongz`,
   },
 ]
 
 export const placeHolderCollection: TCollection = {
-  name: 'Pixel Birds',
+  name: "Pixel Birds",
   isVerified: true,
   bannerImageUrl: "",
   links: {
     discord: "ygvygy",
     twitter: "tg",
     website: "adf",
-    telegram: ""
+    telegram: "",
   },
   profileImageUrl: "",
   creator: "The Sandbox Game",
@@ -87,5 +87,6 @@ export const placeHolderCollection: TCollection = {
   owners: 23,
   floorPrice: 2.3,
   volTraded: 200,
-  items: [...defaultPopularItems, ...defaultPopularItems],
+  collectionId: "fdasfasd",
+  royalty: 1.3,
 }
