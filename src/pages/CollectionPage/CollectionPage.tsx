@@ -98,8 +98,8 @@ const CollectionPage = () => {
         volTraded: 2391,
       }
       setCollection(collection)
+      setIsLoading(false)
     } catch (error) {}
-    setIsLoading(false)
   }, [])
 
   const fetchItems = useCallback(async () => {}, [])

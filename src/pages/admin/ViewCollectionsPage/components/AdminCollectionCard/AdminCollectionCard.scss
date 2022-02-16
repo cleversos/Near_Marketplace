@@ -1,0 +1,31 @@
+@import "../../../../../sass/variables.scss";
+
+.admin-collection-card {
+  background: $background2;
+  position: relative;
+  text-decoration: none;
+  transition: all 0.5s;
+  z-index: 10;
+
+  .details-container {
+    padding: 16.5px;
+
+    .collection-name {
+      font-size: 13px;
+      line-height: 14px;
+      margin-bottom: 5px;
+    }
+
+    .options-container {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .edit-btn,
+      .delete-btn {
+        cursor: pointer;
+      }
+    }
+  }
+}
