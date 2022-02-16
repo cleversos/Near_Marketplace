@@ -15,7 +15,8 @@ const ViewCollectionAdminPage = () => {
   const [collections, setCollections] = useState<AdminCollectionCardProps[]>([])
   const [isFetchingCollections, setIsFetchingCollections] = useState(true)
   const { contract, contractAccountId } = useContext(ContractContext)
-  const [collectionToDelete, setCollectionTodelete] = useState(null)
+  const [collectionToDelete, setCollectionTodelete] =
+    useState<AdminCollectionCardProps | null>(null)
   const navigate = useNavigate()
 
   const getCollections = useCallback(async () => {
@@ -29,12 +30,7 @@ const ViewCollectionAdminPage = () => {
       //   finality: "optimistic",
       // })
       // const result = JSON.parse(Buffer.from(rawResult.result).toString())
-
-      const collections = defaultPopularCollections
-      setCollections([
-        ...defaultPopularCollections,
-        ...defaultPopularCollections,
-      ])
+      setCollections([])
     } catch (error) {}
   }, [])
 
@@ -45,8 +41,8 @@ const ViewCollectionAdminPage = () => {
   const deleteCollection = async () => {
     try {
       await contract.delete_collection({
-        nft_contract_id: contractAccountId,
-        token_type: "token_type",
+        nft_contract_id: collectionToDelete.id,
+        token_type: collectionToDelete.tokenType,
       })
     } catch (error) {
       console.log(error)
@@ -57,6 +53,8 @@ const ViewCollectionAdminPage = () => {
     navigate("/add-collection", {
       state: {
         mode: "edit",
+        collectionId: collection.id,
+        collectionTokenType: collection.tokenType,
       },
     })
   }
@@ -64,7 +62,7 @@ const ViewCollectionAdminPage = () => {
   return (
     <div className="view-collection-admin-page">
       <ModalContainer
-        isVisible={collectionToDelete}
+        isVisible={Boolean(collectionToDelete)}
         className="view-collection-page-modal"
         onClose={() => setCollectionTodelete(null)}
       >
@@ -107,6 +105,7 @@ const ViewCollectionAdminPage = () => {
             image={collection.image}
             name={collection.name}
             id={collection.id}
+            tokenType={collection.tokenType}
             key={i}
             onEditClick={() => onEdit(collection)}
             onDeleteClick={() => setCollectionTodelete(collection)}

@@ -8,6 +8,7 @@ export interface AdminCollectionCardProps {
   image: any
   name: string
   id: string
+  tokenType: string
   onDeleteClick?: Function
   onEditClick?: Function
 }

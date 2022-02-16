@@ -14,6 +14,7 @@ const AddCollectionPage = () => {
   const locationState: any = useLocation().state
   const mode = locationState?.mode || "new"
   const collectionId = locationState?.collectionId || null
+  const collectionTokenType = locationState?.collectionTokenType || null
   const { contract, contractAccountId } = useContext(ContractContext)
   const { wallet, provider } = useContext(ConnectionContext)
   const [input, setInput] = useState({
@@ -46,13 +47,13 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.add_collection({
-        nft_contract_id: "desmarket.hashdaan.testnet",
-        token_type: String, //don't know what exactly goes here
+        nft_contract_id: "newcontract.resdde.testnet",
+        token_type: "tokenType",
         name: input.name,
         isVerified: false,
         bannerImageUrl: input.bannerImageUrl,
         profileImageUrl: input.profileImageUrl,
-        creator: "AccountId",
+        creator: "resdde.testnet",
         description: input.description,
         royalty: input.royalty,
         discord: input.discord,
@@ -71,13 +72,13 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.edit_collection({
-        nft_contract_id: "desmarket.hashdaan.testnet",
-        token_type: String, //don't know what exactly goes here
+        nft_contract_id: "newcontract.resdde.testnet",
+        token_type: "tokenType",
         name: input.name,
         isVerified: false,
         bannerImageUrl: input.bannerImageUrl,
         profileImageUrl: input.profileImageUrl,
-        creator: "AccountId",
+        creator: "resdde.testnet",
         description: input.description,
         royalty: input.royalty,
         discord: input.discord,
@@ -103,18 +104,17 @@ const AddCollectionPage = () => {
   const fetchCollectionDetails = useCallback(async () => {
     setIsFetchingCollectionDetails(true)
     try {
-      //FETCH THE COLLECTION DETAILS OF THE COLLECTION TO BE EDITED.
-
-      // const rawResult: any = await provider.query({
-      //   request_type: "call_function",
-      //   account_id: contractAccountId,
-      //   method_name: "get_collection",
-      //   args_base64: btoa(
-      //     `{nft_contract_id: ${contractAccountId}, token_type: "token_type"}`
-      //   ),
-      //   finality: "optimistic",
-      // })
-      // const result = JSON.parse(Buffer.from(rawResult.result).toString())
+      // FETCHES THE COLLECTION DETAILS OF THE COLLECTION TO BE EDITED.
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: contractAccountId,
+        method_name: "get_collection",
+        args_base64: btoa(
+          `{nft_contract_id: ${collectionId}, token_type: ${collectionTokenType}}`
+        ),
+        finality: "optimistic",
+      })
+      const result = JSON.parse(Buffer.from(rawResult.result).toString())
 
       const placeholderResult = {
         nft_contract_id: "asdlkf",
@@ -145,7 +145,7 @@ const AddCollectionPage = () => {
         royalty,
         links,
       } = placeholderResult
-      const collectionId = nft_contract_id + token_type
+
       setInput({
         name,
         bannerImageUrl,
