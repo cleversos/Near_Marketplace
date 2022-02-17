@@ -1,0 +1,71 @@
+.view-collection-admin-page {
+  padding: 40px 0;
+  margin: 0 auto;
+  max-width: 75%;
+
+  .view-collection-page-modal {
+    .modal-content {
+      max-width: 400px;
+      padding: 35px;
+
+      .delete-confirm-modal {
+        min-height: 500px;
+        text-align: center;
+
+        .collection-name {
+          font-size: 25px;
+        }
+
+        .btns-container {
+          margin: 30px 0;
+          .main-button {
+            width: 100%;
+            margin-bottom: 20px;
+
+            &.delete-btn {
+              background: red;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .head {
+    margin-bottom: 20px;
+
+    .page-title {
+      font-size: 35px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .collections-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 25px;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .view-collection-admin-page {
+    .collections-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .popular-section {
+    .head {
+      .page-title {
+        font-size: 24px;
+        line-height: 30px;
+      }
+    }
+
+    .collections-container {
+      grid-template-columns: 1fr;
+    }
+  }
+}

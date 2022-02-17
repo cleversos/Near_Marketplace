@@ -4,32 +4,31 @@ import { ConnectionContext } from "./connection"
 
 interface ContractContextProps {
   contract: any
+  contractAccountId: string
 }
 
 export const ContractContext = React.createContext<ContractContextProps>({
   contract: undefined,
+  contractAccountId: "",
 })
 
 const ContractProvider = (props: any) => {
   const [contract, setContract] = useState<nearAPI.Contract>()
   const { wallet } = useContext(ConnectionContext)
+  const contractAccountId = "desmarket.hashdaan.testnet"
 
   useEffect(() => {
     if (!wallet) return
-    const contract = new nearAPI.Contract(
-      wallet.account(),
-      "marketplace_test_2.xuguangxia.testnet",
-      {
-        viewMethods: [],
-        changeMethods: ["add_collection"],
-        // sender: wallet.account(),
-      }
-    )
+    const contract = new nearAPI.Contract(wallet.account(), contractAccountId, {
+      viewMethods: [],
+      changeMethods: ["add_collection"],
+      // sender: wallet.account(),
+    })
     setContract(contract)
   }, [wallet])
 
   return (
-    <ContractContext.Provider value={{ contract }}>
+    <ContractContext.Provider value={{ contract, contractAccountId }}>
       {props.children}
     </ContractContext.Provider>
   )
