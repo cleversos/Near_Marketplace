@@ -47,7 +47,7 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.add_collection({
-        nft_contract_id: "marketplace_test_2.xuguangxia.testnet",
+        nft_contract_id: "marketplace_test_5.xuguangxia.testnet",
         token_type: "nft_collection_1",
         name: input.name,
         isVerified: false,
@@ -71,7 +71,7 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.edit_collection({
-        nft_contract_id: "marketplace_test_2.xuguangxia.testnet",
+        nft_contract_id: "marketplace_test_5.xuguangxia.testnet",
         token_type: "nft_collection_1",
         name: input.name,
         isVerified: false,

@@ -74,7 +74,7 @@ const ConnectionProvider = (props: any) => {
   }, [connectToNear])
 
   const signIn = () => {
-    wallet.requestSignIn("marketplace_test_2.xuguangxia.testnet")
+    wallet.requestSignIn("marketplace_test_5.xuguangxia.testnet")
   }
 
   const signOut = () => {
