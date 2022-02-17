@@ -18,7 +18,7 @@ const ContractProvider = (props: any) => {
     if (!wallet) return
     const contract = new nearAPI.Contract(
       wallet.account(),
-      "desmarket.hashdaan.testnet",
+      "marketplace_test_2.xuguangxia.testnet",
       {
         viewMethods: [],
         changeMethods: ["add_collection"],

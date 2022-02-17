@@ -37,15 +37,14 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.add_collection({
-        nft_contract_id: "desmarket.hashdaan.testnet",
-        token_type: String, //don't know what exactly goes here
+        nft_contract_id: "marketplace_test_2.xuguangxia.testnet",
+        token_type: "nft_collection_1", //don't know what exactly goes here
         name: input.name,
         isVerified: false,
         bannerImageUrl: input.bannerImageUrl,
         profileImageUrl: input.profileImageUrl,
-        creator: "AccountId",
         description: input.description,
-        royalty: input.royalty,
+        royalty: Number.parseFloat(input.royalty),
         discord: input.discord,
         twitter: input.twitter,
         website: input.website,
