@@ -1,31 +1,29 @@
-import React from 'react';
-import { IconLoader } from '../IconLoader';
-import './InputBox.scss';
+import React from "react"
+import { IconLoader } from "../IconLoader"
+import "./InputBox.scss"
 
 interface InputBoxProps {
-  icon?: string;
-  onInputChange: Function;
-  placeholder: string;
-  name: string;
+  icon?: string
+  onInputChange: Function
+  placeholder: string
+  name: string
   value: any
+  type?: string
 }
 
 const InputBox = (props: InputBoxProps) => {
-  return(
+  return (
     <div className="input-box">
-      {
-        props.icon &&
-        <IconLoader icon={props.icon} />
-      }
+      {props.icon && <IconLoader icon={props.icon} />}
       <input
-        type="text"
+        type={props.type || "text"}
         value={props.value}
         name={props.name}
         placeholder={props.placeholder}
-        onChange={ (event) => props.onInputChange(event)}
+        onChange={(event) => props.onInputChange(event)}
       />
     </div>
   )
 }
 
-export default InputBox;
+export default InputBox

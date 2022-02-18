@@ -1,0 +1,31 @@
+@import "../../../../sass/variables.scss";
+
+.bid-modal {
+  .modal-content {
+    max-width: 400px;
+    min-height: 300px;
+    text-align: center;
+    padding: 30px;
+    justify-content: flex-start;
+
+    .head {
+      padding-bottom: 20px;
+      border-bottom: 1px solid $separator;
+      .title {
+        font-size: 18px;
+      }
+    }
+
+    .body {
+      .input-box {
+        margin-top: 40px;
+        background-color: $body-background;
+      }
+
+      .main-button {
+        margin-top: 40px;
+        width: 100%;
+      }
+    }
+  }
+}

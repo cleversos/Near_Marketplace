@@ -10,11 +10,13 @@ import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
 import { ChoiceRenderer } from "../../components/ChoiceRenderer"
 import ImageWithLoadBg from "../../components/ImageWithLoadBg/ImageWithLoadBg"
+import InputBox from "../../components/InputBox/InputBox"
 import LoadingCircle from "../../components/LoadingCircle/LoadingCircle"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
 import formatAmount from "../../helpers/formatAmount"
 import AttributeCard from "./components/AttributeCard/AttributeCard"
+import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
 
 type TAttributes = {
@@ -32,6 +34,7 @@ type TItem = {
   name: string
   collectionName: string
   imageUrl: string
+  isOnSale: boolean
 }
 
 const placeHolderItem: TItem = {
@@ -59,8 +62,9 @@ const placeHolderItem: TItem = {
     },
   ],
   id: "faofd",
-  ownerId: "string",
+  ownerId: "hashdaan.testnet",
   contractId: "string",
+  isOnSale: true,
 }
 
 const ItemPage = () => {
@@ -70,6 +74,9 @@ const ItemPage = () => {
   const { itemId } = useParams()
   const { wallet, signIn } = useContext(ConnectionContext)
   const { contract } = useContext(ContractContext)
+  const [showBidModal, setShowBidModal] = useState(false)
+  const [listingPrice, setListingPrice] = useState()
+  const isOwner = wallet?.getAccountId() === item?.ownerId
 
   const nearPriceInUSD = 18 //get this from a real source
   const itemPriceInUSD = ((item?.price || 0) * nearPriceInUSD).toFixed(2)
@@ -87,13 +94,18 @@ const ItemPage = () => {
     fetchItemDetails()
   }, [fetchItemDetails])
 
-  const onBid = async () => {
-    await contract.method_name({
-      arg_name: "value",
-    })
+  const cancelSale = async () => {
+    try {
+      await contract.remove_sale({
+        arg_name: {
+          nft_contract_id: item.contractId,
+          token_id: item.id,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
-
-  const onBuy = () => {}
 
   const updatePrice = async () => {
     try {
@@ -108,7 +120,7 @@ const ItemPage = () => {
     } catch (error) {}
   }
 
-  const makeOffer = async () => {
+  const makeOffer = async (amount) => {
     try {
       await contract.offer({
         nft_contract_id: item.contractId,
@@ -116,7 +128,7 @@ const ItemPage = () => {
       })
     } catch (error) {}
   }
-  const addBid = () => {}
+
   const acceptOffer = async () => {
     try {
       await contract.accept_offer({
@@ -129,16 +141,9 @@ const ItemPage = () => {
     } catch (error) {}
   }
 
-  const cancelSale = async () => {
-    try {
-      await contract.remove_sale({
-        arg_name: {
-          nft_contract_id: item.contractId,
-          token_id: item.id,
-        },
-      })
-    } catch (error) {}
-  }
+  const listItem = async () => {}
+
+  const onBuy = () => {}
 
   return (
     <div className="item-page">
@@ -148,6 +153,12 @@ const ItemPage = () => {
         </div>
       ) : (
         <>
+          <BidModal
+            onClose={() => setShowBidModal(false)}
+            isVisible={showBidModal}
+            price={item.price}
+            onMakeBid={makeOffer}
+          />
           <div className="content">
             <div className="left-side">
               <ImageWithLoadBg
@@ -187,33 +198,52 @@ const ItemPage = () => {
                 </div>
               </div>
               <div className="price-detail-container">
-                <BodyText light className="label">
-                  Current Price
-                </BodyText>
-                <div className="price-container">
-                  <BodyText bold>{`${item?.price} Ⓝ`}</BodyText>
-                  <BodyText light>{`$${formatAmount(
-                    Number(itemPriceInUSD),
-                    3,
-                    ","
-                  )}`}</BodyText>
-                </div>
-                {!wallet.isSignedIn ? (
-                  <Button
-                    icon="wallet"
-                    title="Connect Wallet"
-                    onClick={signIn}
-                  />
+                {isOwner && !item.isOnSale ? (
+                  <div className="list-item-container">
+                    <InputBox
+                      name="listingPrice"
+                      type="number"
+                      placeholder="Enter price"
+                      value={listingPrice}
+                      onInputChange={(event) =>
+                        setListingPrice(event.target.value)
+                      }
+                    />
+                    <Button title="List" onClick={listItem} />
+                  </div>
                 ) : (
-                  <Button title="Ⓝ Buy Now" onClick={onBuy} />
+                  <>
+                    <BodyText light className="label">
+                      Current Price
+                    </BodyText>
+                    <div className="price-container">
+                      <BodyText bold>{`${item?.price} Ⓝ`}</BodyText>
+                      <BodyText light>{`$${formatAmount(
+                        Number(itemPriceInUSD),
+                        3,
+                        ","
+                      )}`}</BodyText>
+                    </div>
+                    {!wallet?.isSignedIn ? (
+                      <Button
+                        icon="wallet"
+                        title="Connect Wallet"
+                        onClick={signIn}
+                      />
+                    ) : isOwner ? (
+                      <Button title="Cancel listing" onClick={cancelSale} />
+                    ) : (
+                      <>
+                        <Button title="Buy Now" onClick={onBuy} />
+                        <Button
+                          secondary
+                          title="Bid"
+                          onClick={() => setShowBidModal(true)}
+                        />
+                      </>
+                    )}
+                  </>
                 )}
-
-                <Button
-                  icon="creditCard"
-                  secondary
-                  title="Bid"
-                  onClick={onBid}
-                />
               </div>
               <ChoiceRenderer
                 changeHandler={(index) => setSelectedDetailsIndex(index)}

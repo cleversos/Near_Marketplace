@@ -1,37 +1,40 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import ActivityTable from "../../components/ActivityTable/ActivityTable";
-import BodyText from "../../components/BodyText/BodyText";
-import Button from "../../components/Button/Button";
-import { defaultPopularItems } from "../../constants/defaultData";
-import { TItem } from "../CollectionPage/CollectionPage";
-import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet";
-import "./ProfilePage.scss";
+import React, { useCallback, useContext, useEffect, useState } from "react"
+import ActivityTable from "../../components/ActivityTable/ActivityTable"
+import BodyText from "../../components/BodyText/BodyText"
+import Button from "../../components/Button/Button"
+import { defaultPopularItems } from "../../constants/defaultData"
+import { ConnectionContext } from "../../contexts/connection"
+import { TItem } from "../CollectionPage/CollectionPage"
+import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
+import "./ProfilePage.scss"
 
 type TProfile = {
-  imageUrl: string;
-  description: string;
-  items: TItem[];
-};
+  imageUrl: string
+  description: string
+  items: TItem[]
+}
 type TProfileMode =
   | "myItems"
   | "listedItems"
   | "offersMade"
   | "offersRecieved"
-  | "activities";
+  | "activities"
 export type TProfileCollection = {
-  id: string;
-  imageUrl: string;
-  name: string;
-  floorPrice: number;
-  items: TItem[];
-};
+  id: string
+  imageUrl: string
+  name: string
+  floorPrice: number
+  items: TItem[]
+}
 
 const ProfilePage = () => {
-  const [profile, setProfile] = useState<TProfile | null>(null);
-  const walletAddress = "FZXg6PdjCjoz54TTT5Tvq97Y9hnpWCLsCqPmfCHSSWYx";
-  const [mode, setMode] = useState<TProfileMode>("myItems");
+  const [profile, setProfile] = useState<TProfile | null>(null)
+  const { wallet, provider } = useContext(ConnectionContext)
+  const walletAddress = wallet.getAccountId()
+  const [mode, setMode] = useState<TProfileMode>("myItems")
+  const getWalletNFTs = async () => {}
 
-  const totalFloorValue = 235.3;
+  const totalFloorValue = 235.3
   let listedItemsCollections: TProfileCollection[] = [
     {
       id: "fdfa",
@@ -49,9 +52,9 @@ const ProfilePage = () => {
       floorPrice: 128,
       items: defaultPopularItems,
     },
-  ];
-  let myItems = listedItemsCollections; //fetch this
-  let offersMade = listedItemsCollections; //fetch this
+  ]
+  let myItems = listedItemsCollections //fetch this
+  let offersMade = listedItemsCollections //fetch this
 
   const fetchUserData = useCallback(() => {
     const defaultProfile: TProfile = {
@@ -60,13 +63,13 @@ const ProfilePage = () => {
       description:
         "As you can see from my collection, I'm poor. Send help to my wallet address and be blessed. Thanks.",
       items: defaultPopularItems,
-    };
-    setProfile(defaultProfile);
-  }, []);
+    }
+    setProfile(defaultProfile)
+  }, [])
 
   useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
+    fetchUserData()
+  }, [fetchUserData])
 
   return (
     <div className="profile-page">
@@ -149,7 +152,7 @@ const ProfilePage = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProfilePage;
+export default ProfilePage
