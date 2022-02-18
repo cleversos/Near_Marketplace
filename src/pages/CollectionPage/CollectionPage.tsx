@@ -34,6 +34,7 @@ export type TItem = {
 
 export type TCollection = {
   collectionId: string
+  tokenType: string
   name: string
   isVerified: boolean
   bannerImageUrl: string
@@ -83,7 +84,8 @@ const CollectionPage = () => {
         links,
       } = result
       const collection: TCollection = {
-        collectionId: nft_contract_id + token_type,
+        collectionId: nft_contract_id,
+        tokenType: token_type,
         name,
         isVerified,
         bannerImageUrl,

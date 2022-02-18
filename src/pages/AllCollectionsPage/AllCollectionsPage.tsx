@@ -1,28 +1,33 @@
-import React from 'react';
-import BodyText from '../../components/BodyText/BodyText';
-import CollectionCard from '../../components/CollectionCard/CollectionCard';
-import { defaultPopularCollections } from '../../constants/defaultData';
-import './AllCollectionsPage.scss';
+import React from "react"
+import BodyText from "../../components/BodyText/BodyText"
+import CollectionCard from "../../components/CollectionCard/CollectionCard"
+import { defaultPopularCollections } from "../../constants/defaultData"
+import "./AllCollectionsPage.scss"
 
 const AllCollectionsPage = () => {
-  return(
+  return (
     <div className="all-collections-page">
-      <BodyText bold className="page-title">All Collections</BodyText>
+      <BodyText bold className="page-title">
+        All Collections
+      </BodyText>
       <div className="collections-container">
-        {
-          [...defaultPopularCollections, ...defaultPopularCollections, ...defaultPopularCollections].map((collection, i) => (
-            <CollectionCard
-              image={collection.image}
-              name={collection.name}
-              id={collection.name}
-              volTraded={collection.volTraded}
-              description={collection.description}
-            />
-          ))
-        }
+        {[
+          ...defaultPopularCollections,
+          ...defaultPopularCollections,
+          ...defaultPopularCollections,
+        ].map((collection, i) => (
+          <CollectionCard
+            image={collection.image}
+            name={collection.name}
+            tokenType={collection.tokenType}
+            id={collection.name}
+            volTraded={collection.volTraded}
+            description={collection.description}
+          />
+        ))}
       </div>
     </div>
   )
 }
 
-export default AllCollectionsPage;
+export default AllCollectionsPage
