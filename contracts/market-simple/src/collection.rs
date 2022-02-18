@@ -76,6 +76,7 @@ impl Contract {
             &newCollection);
     }
 
+    #[payable]
     pub fn edit_collection(&mut self,
         nft_contract_id: AccountId,
         token_type: String,
@@ -120,6 +121,13 @@ impl Contract {
             &newCollection);
     }
 
+    pub fn get_collections(
+        &self
+    ) -> Vec<(ContractAndTokenType, CollectionInfo)> {
+        let tmp = self.collections.to_vec();
+        tmp
+    }
+
     pub fn get_collection(&mut self,
         nft_contract_id: AccountId,
         token_type: String) -> CollectionInfo{
@@ -129,6 +137,7 @@ impl Contract {
         temp
     }
     
+    #[payable]
     pub fn delete_collection(&mut self,
         nft_contract_id: AccountId,
         token_type: String

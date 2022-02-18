@@ -28,7 +28,7 @@ const ViewCollectionAdminPage = () => {
         request_type: "call_function",
         account_id: contractAccountId,
         method_name: "get_collections",
-        args_base64: btoa(`{sortBy: dateAdded, numberOfResults: 20}`),
+        args_base64: btoa(`{}`),
         finality: "optimistic",
       })
       const result = JSON.parse(Buffer.from(rawResult.result).toString())
