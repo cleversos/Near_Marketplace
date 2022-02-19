@@ -15,6 +15,7 @@ import CollectionInfoSection from "./components/CollectionInfoSection/Collection
 import FilterSection from "./components/FilterSection/FilterSection"
 import GallerySection from "./components/GallerySection/GallerySection"
 import * as nearAPI from "near-api-js"
+
 type TCollectionLinks = {
   discord?: string
   twitter?: string
