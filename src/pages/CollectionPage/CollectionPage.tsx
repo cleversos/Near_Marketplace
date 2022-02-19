@@ -1,5 +1,6 @@
 import { CodeResult } from "near-api-js/lib/providers/provider"
 import React, { useCallback, useContext, useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import ActivityIcon from "../../assets/icons/ActivityIcon"
 import ItemsIcon from "../../assets/icons/ItemsIcon"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
@@ -13,7 +14,7 @@ import "./CollectionPage.scss"
 import CollectionInfoSection from "./components/CollectionInfoSection/CollectionInfoSection"
 import FilterSection from "./components/FilterSection/FilterSection"
 import GallerySection from "./components/GallerySection/GallerySection"
-
+import * as nearAPI from "near-api-js"
 type TCollectionLinks = {
   discord?: string
   twitter?: string
@@ -26,7 +27,7 @@ type TCollectionLinks = {
 export type TItem = {
   image: any
   name: string
-  collection: string
+  collectionTitle: string
   collectionId?: string
   price: number
   id: string
@@ -50,14 +51,14 @@ export type TCollection = {
 }
 
 const CollectionPage = () => {
-  // const {collectionId} = useParams();
+  const { collectionId } = useParams()
   const [collection, setCollection] = useState<TCollection>(null)
   const [items, setItems] = useState<TItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [collapseFilterContainer, setCollapseFilterContainer] = useState(false)
   const [mode, setMode] = useState<"items" | "activities">("items")
-  const { provider } = useContext(ConnectionContext)
-  const { contractAccountId } = useContext(ContractContext)
+  const { provider, wallet } = useContext(ConnectionContext)
+  const { contractAccountId, contract } = useContext(ContractContext)
 
   // fetch collection details using collectionId
   const fetchCollectionDetails = useCallback(async () => {
@@ -67,7 +68,7 @@ const CollectionPage = () => {
         account_id: contractAccountId,
         method_name: "get_collection",
         args_base64: btoa(
-          `{nft_contract_id: ${contractAccountId}, token_type: "token_type"}`
+          `{nft_contract_id: ${collectionId}, token_type: "token_type"}`
         ),
         finality: "optimistic",
       })
@@ -104,11 +105,51 @@ const CollectionPage = () => {
     } catch (error) {}
   }, [])
 
-  const fetchItems = useCallback(async () => {}, [])
+  const fetchItems = useCallback(async () => {
+    //get all listed sales by collection id on marketplace contract
+    const sales = await contract.get_sales_by_nft_contract_id({
+      nft_contract_id: collectionId,
+      from_index: "0",
+      limit: 50,
+    })
+
+    //get the token object for all the sales
+    const saleTokens = await contract.nft_tokens_batch({
+      token_ids: sales
+        .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
+        .map(({ token_id }) => token_id),
+    })
+
+    for (let i = 0; i < sales.length; i++) {
+      const { token_id } = sales[i]
+      let token = saleTokens.find(({ token_id: t }) => t === token_id)
+      if (!token) {
+        token = await contract.nft_token({
+          token_id,
+        })
+      }
+      sales[i] = Object.assign(sales[i], token)
+    }
+
+    const items = sales.map((result) => ({
+      image: result.metadata.media,
+      name: result.metadata.title,
+      collectionTitle: collection.name,
+      collectionId: collection.collectionId,
+      price: result.sale_condition,
+      id: result.token_id,
+      ownerId: result.owner_id,
+    }))
+    setItems(items)
+  }, [])
 
   useEffect(() => {
     fetchCollectionDetails()
   }, [fetchCollectionDetails])
+
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   const switchToActivities = () => {
     setMode("activities")
