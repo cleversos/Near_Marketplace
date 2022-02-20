@@ -1,3 +1,4 @@
+import { parseNearAmount } from "near-api-js/lib/utils/format"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import HeartIcon from "../../assets/icons/HeartIcon"
@@ -64,16 +65,16 @@ const placeHolderItem: TItem = {
   id: "faofd",
   ownerId: "hashdaan.testnet",
   contractId: "string",
-  isOnSale: true,
+  isOnSale: false,
 }
 
 const ItemPage = () => {
   const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
   const [item, setItem] = useState<TItem | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const { itemId } = useParams()
-  const { wallet, signIn } = useContext(ConnectionContext)
-  const { contract } = useContext(ContractContext)
+  const { itemId, collectionId } = useParams()
+  const { wallet, signIn, provider } = useContext(ConnectionContext)
+  const { contract, contractAccountId } = useContext(ContractContext)
   const [showBidModal, setShowBidModal] = useState(false)
   const [listingPrice, setListingPrice] = useState()
   const isOwner = wallet?.getAccountId() === item?.ownerId
@@ -84,6 +85,14 @@ const ItemPage = () => {
   // fetch item details using itemId
   const fetchItemDetails = useCallback(async () => {
     try {
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: collectionId,
+        method_name: "nft_token",
+        args_base64: btoa(`{token_id: ${itemId}}`),
+        finality: "optimistic",
+      })
+
       const result: TItem = placeHolderItem
       setItem(result)
     } catch (error) {}
@@ -120,12 +129,16 @@ const ItemPage = () => {
     } catch (error) {}
   }
 
-  const makeOffer = async (amount) => {
+  const onBid = async (amount) => {
     try {
-      await contract.offer({
-        nft_contract_id: item.contractId,
-        token_id: item.id,
-      })
+      await contract.offer(
+        {
+          nft_contract_id: item.contractId,
+          token_id: item.id,
+        },
+        null, //gas
+        parseNearAmount(amount)
+      )
     } catch (error) {}
   }
 
@@ -141,9 +154,36 @@ const ItemPage = () => {
     } catch (error) {}
   }
 
-  const listItem = async () => {}
+  const listItem = async () => {
+    try {
+      await wallet.account().functionCall(item.contractId, "nft_approve", {
+        token_id: item.id,
+        account_id: contractAccountId,
+        msg: JSON.stringify({
+          sale_conditions: {
+            price: listingPrice,
+          },
+        }),
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  const onBuy = () => {}
+  const onBuy = async () => {
+    try {
+      await contract.offer(
+        {
+          nft_contract_id: item.contractId,
+          token_id: item.id,
+        },
+        null, //gas
+        parseNearAmount(item.price.toString())
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="item-page">
@@ -156,8 +196,8 @@ const ItemPage = () => {
           <BidModal
             onClose={() => setShowBidModal(false)}
             isVisible={showBidModal}
-            price={item.price}
-            onMakeBid={makeOffer}
+            price={item?.price}
+            onMakeBid={onBid}
           />
           <div className="content">
             <div className="left-side">
@@ -224,7 +264,7 @@ const ItemPage = () => {
                         ","
                       )}`}</BodyText>
                     </div>
-                    {!wallet?.isSignedIn ? (
+                    {!wallet?.isSignedIn() ? (
                       <Button
                         icon="wallet"
                         title="Connect Wallet"
