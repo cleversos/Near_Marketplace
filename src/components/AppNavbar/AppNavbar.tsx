@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import HomeNavMenu from "../HomeNavMenu/HomeNavMenu"
 import VolumeAndLangBar from "../VolumeAndLangBar/VolumeAndLangBar"
@@ -18,8 +18,10 @@ interface AppNavbarProps {
 const AppNavbar = (props: AppNavbarProps) => {
   const [expandSearchBox, setExpandSearchBox] = useState(false)
   const [showMobileNavMenu, setShowMobileNavMenu] = useState(false)
-  const { wallet, signIn } = useContext(ConnectionContext)
+  const { wallet, signIn, signOut } = useContext(ConnectionContext)
   const walletAddress = wallet?.getAccountId()
+  const [hideWalletOptions, setHideWalletOptions] = useState(true)
+  const walletOptionsRef = useRef(null)
 
   const navLinks = [
     {
@@ -39,6 +41,17 @@ const AppNavbar = (props: AppNavbarProps) => {
       onClick: () => {},
     },
   ]
+
+  useEffect(() => {
+    window.onclick = (event) => {
+      if (!hideWalletOptions && event.target !== walletOptionsRef.current) {
+        setHideWalletOptions(true)
+      }
+    }
+    return () => {
+      window.onclick = null
+    }
+  }, [setHideWalletOptions, hideWalletOptions, walletOptionsRef])
 
   return (
     <>
@@ -90,16 +103,31 @@ const AppNavbar = (props: AppNavbarProps) => {
             ))}
           </ul>
           {walletAddress ? (
-            <Button
-              secondary
-              title={`
+            <div className="wallet-options-container">
+              <Button
+                secondary
+                title={`
                 ${walletAddress.slice(0, 4)}...${walletAddress.slice(
-                walletAddress.length - 4,
-                walletAddress.length
-              )}
+                  walletAddress.length - 4,
+                  walletAddress.length
+                )}
               `}
-              onClick={() => {}}
-            />
+                className="wallet-address-btn"
+                onClick={() => setHideWalletOptions(!hideWalletOptions)}
+              />
+              <ul
+                className={`dropdown-options ${
+                  hideWalletOptions ? "hidden" : "visible"
+                }`}
+              >
+                <li onClick={() => signOut()}>
+                  <BodyText light>Copy address</BodyText>
+                </li>
+                <li onClick={() => signOut()}>
+                  <BodyText light>Disconnect</BodyText>
+                </li>
+              </ul>
+            </div>
           ) : (
             <Button
               className="connect-wallet-btn"
