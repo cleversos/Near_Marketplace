@@ -21,6 +21,7 @@ const CollectionAndItemsSet = (props: { collection: TProfileCollection }) => {
         {collection.items?.map((item, i) => (
           <NFTItemCard
             id={item.id}
+            collectionId={collection.id}
             image={item.image}
             name={item.name}
             collectionTitle={collection.name}

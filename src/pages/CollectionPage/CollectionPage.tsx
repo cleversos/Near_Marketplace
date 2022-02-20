@@ -29,7 +29,7 @@ export type TItem = {
   image: any
   name: string
   collectionTitle: string
-  collectionId?: string
+  collectionId: string
   price: number
   id: string
 }
@@ -193,6 +193,7 @@ const CollectionPage = () => {
             <GallerySection
               isLoading={isLoading}
               items={items || null}
+              collectionId={collectionId}
               setCollapseFilterContainer={setCollapseFilterContainer}
             />
           </div>

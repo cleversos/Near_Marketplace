@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
-import { defaultPopularItems } from "../../constants/defaultData"
 import { ConnectionContext } from "../../contexts/connection"
 import { TItem } from "../CollectionPage/CollectionPage"
 import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
@@ -42,7 +41,7 @@ const ProfilePage = () => {
         "https://www.arweave.net/OHFIbHqpFpgERaUhApaCFCwclAP_KrBoD0MixurXTDk?ext=png",
       name: "Stressed coders",
       floorPrice: 128,
-      items: defaultPopularItems,
+      items: [],
     },
     {
       id: "fdfa",
@@ -50,7 +49,7 @@ const ProfilePage = () => {
         "https://www.arweave.net/OHFIbHqpFpgERaUhApaCFCwclAP_KrBoD0MixurXTDk?ext=png",
       name: "Chop life crew",
       floorPrice: 128,
-      items: defaultPopularItems,
+      items: [],
     },
   ]
   let myItems = listedItemsCollections //fetch this
@@ -62,7 +61,7 @@ const ProfilePage = () => {
         "https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://iah4a6tcxv5lewkfzajxddmm7xgktorcgj3wa34476nawekxi44a.arweave.net/QA_AemK9erJZRcgTcY2M_cypuiIyd2BvnP-aCxFXRzg/958.png",
       description:
         "As you can see from my collection, I'm poor. Send help to my wallet address and be blessed. Thanks.",
-      items: defaultPopularItems,
+      items: [],
     }
     setProfile(defaultProfile)
   }, [])

@@ -1,37 +1,6 @@
 import { CollectionCardProps } from "../components/CollectionCard/CollectionCard"
 import { TCollection, TItem } from "../pages/CollectionPage/CollectionPage"
 
-export const defaultPopularItems: TItem[] = [
-  {
-    image: require("../assets/images/defaultPopularItem1.png"),
-    name: "Grouchy Tiger",
-    collectionTitle: "NFTKingCreator",
-    price: 0.5,
-    id: "asdasd",
-  },
-  {
-    image: require("../assets/images/defaultPopularItem1.png"),
-    name: "Grouchy Tiger",
-    collectionTitle: "NFTKingCreator",
-    price: 0.5,
-    id: "afsdasd",
-  },
-  {
-    image: require("../assets/images/defaultPopularItem1.png"),
-    name: "Grouchy Tiger",
-    collectionTitle: "NFTKingCreator",
-    price: 0.5,
-    id: "adssdasd",
-  },
-  {
-    image: require("../assets/images/defaultPopularItem1.png"),
-    name: "Grouchy Tiger",
-    collectionTitle: "NFTKingCreator",
-    price: 0.5,
-    id: "asdasdsaklhjlj",
-  },
-]
-
 export const defaultPopularCollections: CollectionCardProps[] = [
   {
     image: require("../assets/images/defaultPopularItem1.png"),

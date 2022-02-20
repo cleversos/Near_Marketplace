@@ -9,14 +9,15 @@ export interface NFTItemCardProps {
   image: any
   name: string
   collectionTitle: string
+  collectionId: string
   price: number
   id: string
 }
 
 const NFTItemCard = (props: NFTItemCardProps) => {
-  const { image, name, collectionTitle, price } = props
+  const { image, name, collectionTitle, collectionId, price } = props
   return (
-    <Link to={`/item/${props.id}`} className="nft-item-card">
+    <Link to={`/${collectionId}/item/${props.id}`} className="nft-item-card">
       <ImageWithLoadBg aspectRatio={1.386} src={image} alt={name} />
       <div className="like-btn">
         <HeartIcon />
