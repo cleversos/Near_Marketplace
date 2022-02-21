@@ -34,7 +34,7 @@ function App() {
           <Routes>
             <Route path="/stats" element={<StatsPage />} />
             <Route
-              path="/collection/:collectionId"
+              path="/collection/:collectionId/:tokenType"
               element={<CollectionPage />}
             />
             <Route path="/:collectionId/item/:itemId" element={<ItemPage />} />

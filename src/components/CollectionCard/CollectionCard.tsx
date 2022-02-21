@@ -14,9 +14,9 @@ export interface CollectionCardProps {
 }
 
 const CollectionCard = (props: CollectionCardProps) => {
-  const { image, name, id, volTraded, description } = props
+  const { image, name, id, volTraded, description, tokenType } = props
   return (
-    <Link to={`/collection/${id}`} className="collection-card">
+    <Link to={`/collection/${id}/${tokenType}`} className="collection-card">
       <ImageWithLoadBg aspectRatio={1.386} src={image} alt={name} />
       <div className="details-container">
         <BodyText className="collection-name" bold>
