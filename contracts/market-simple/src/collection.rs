@@ -128,7 +128,7 @@ impl Contract {
         tmp
     }
 
-    pub fn get_collection(&mut self,
+    pub fn get_collection(&self,
         nft_contract_id: AccountId,
         token_type: String) -> CollectionInfo{
         let nft_contract: AccountId = nft_contract_id.clone();

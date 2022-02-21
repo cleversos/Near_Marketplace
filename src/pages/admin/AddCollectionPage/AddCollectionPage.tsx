@@ -115,7 +115,7 @@ const AddCollectionPage = () => {
         finality: "optimistic",
       })
       const result = JSON.parse(Buffer.from(rawResult.result).toString())
-
+      
       const placeholderResult = {
         nft_contract_id: "asdlkf",
         token_type: "asdlkf",

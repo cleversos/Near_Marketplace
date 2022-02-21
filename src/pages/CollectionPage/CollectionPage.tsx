@@ -69,7 +69,7 @@ const CollectionPage = () => {
         account_id: contractAccountId,
         method_name: "get_collection",
         args_base64: btoa(
-          `{nft_contract_id: ${collectionId}, token_type: ${tokenType}}`
+          `{"nft_contract_id": "${collectionId}", "token_type": "${tokenType}"}`
         ),
         finality: "optimistic",
       })
@@ -103,10 +103,13 @@ const CollectionPage = () => {
       }
       setCollection(collection)
       setIsLoading(false)
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }, [])
 
   const fetchItems = useCallback(async () => {
+    console.log(contract)
     //get all listed sales by collection id on marketplace contract
     const sales = await contract.get_sales_by_nft_contract_id({
       nft_contract_id: collectionId,
