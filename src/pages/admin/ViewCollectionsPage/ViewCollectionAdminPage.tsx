@@ -3,61 +3,67 @@ import { useNavigate } from "react-router-dom"
 import BodyText from "../../../components/BodyText/BodyText"
 import Button from "../../../components/Button/Button"
 import ImageWithLoadBg from "../../../components/ImageWithLoadBg/ImageWithLoadBg"
+import LoadingCircle from "../../../components/LoadingCircle/LoadingCircle"
 import ModalContainer from "../../../components/ModalContainer/ModalContainer"
-import { defaultPopularCollections } from "../../../constants/defaultData"
 import { ConnectionContext } from "../../../contexts/connection"
 import { ContractContext } from "../../../contexts/contract"
-import AdminCollectionCard, {
-  AdminCollectionCardProps,
-} from "./components/AdminCollectionCard/AdminCollectionCard"
+import { getCollections } from "../../../helpers/collections"
+import { TCollection } from "../../CollectionPage/CollectionPage"
+import AdminCollectionCard from "./components/AdminCollectionCard/AdminCollectionCard"
 import "./ViewCollectionAdminPage.scss"
 
 const ViewCollectionAdminPage = () => {
-  const [collections, setCollections] = useState<AdminCollectionCardProps[]>([])
+  const [collections, setCollections] = useState<TCollection[]>([])
   const [isFetchingCollections, setIsFetchingCollections] = useState(true)
   const { provider } = useContext(ConnectionContext)
   const { contract, contractAccountId } = useContext(ContractContext)
   const [collectionToDelete, setCollectionTodelete] =
-    useState<AdminCollectionCardProps | null>(null)
+    useState<TCollection>(null)
   const navigate = useNavigate()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteBtnFeedback, setDeleteBtnFeedback] = useState("")
 
-  const getCollections = useCallback(async () => {
+  const fetchCollections = useCallback(async () => {
     try {
-      // get collections from contract
-      const rawResult: any = await provider.query({
-        request_type: "call_function",
-        account_id: contractAccountId,
-        method_name: "get_collections",
-        args_base64: btoa(`{}`),
-        finality: "optimistic",
-      })
-      const result = JSON.parse(Buffer.from(rawResult.result).toString())
-      setCollections(result)
+      setIsFetchingCollections(true)
+      const results = await getCollections(provider, contractAccountId)
+      setCollections(results)
+      setIsFetchingCollections(false)
     } catch (error) {
       console.log(error)
     }
   }, [])
 
   useEffect(() => {
-    getCollections()
-  }, [getCollections])
+    fetchCollections()
+  }, [fetchCollections])
 
   const deleteCollection = async () => {
     try {
+      setDeleteBtnFeedback("Deleting")
+      setIsDeleting(true)
       await contract.delete_collection({
-        nft_contract_id: collectionToDelete.id,
+        nft_contract_id: collectionToDelete.collectionId,
         token_type: collectionToDelete.tokenType,
       })
+      setDeleteBtnFeedback("Deleted")
     } catch (error) {
+      setDeleteBtnFeedback("Failed")
       console.log(error)
     }
+    setIsDeleting(false)
+    setTimeout(async () => {
+      setDeleteBtnFeedback("")
+      setCollectionTodelete(null)
+      await fetchCollections()
+    }, 2000)
   }
 
   const onEdit = (collection) => {
     navigate("/add-collection", {
       state: {
         mode: "edit",
-        collectionId: collection.id,
+        collectionId: collection.collectionId,
         collectionTokenType: collection.tokenType,
       },
     })
@@ -74,7 +80,7 @@ const ViewCollectionAdminPage = () => {
           <ImageWithLoadBg
             aspectRatio={1}
             alt={collectionToDelete?.name}
-            src={collectionToDelete?.image}
+            src={collectionToDelete?.profileImageUrl}
           />
           <BodyText bold className="collection-name">
             {collectionToDelete?.name}
@@ -83,7 +89,8 @@ const ViewCollectionAdminPage = () => {
           <div className="btns-container">
             <Button
               className="delete-btn"
-              title="Delete"
+              isLoading={isDeleting}
+              title={deleteBtnFeedback || "Delete"}
               onClick={deleteCollection}
             />
             <Button
@@ -103,19 +110,25 @@ const ViewCollectionAdminPage = () => {
           statistics.
         </BodyText>
       </div>
-      <div className="collections-container">
-        {collections.map((collection, i) => (
-          <AdminCollectionCard
-            image={collection.image}
-            name={collection.name}
-            id={collection.id}
-            tokenType={collection.tokenType}
-            key={i}
-            onEditClick={() => onEdit(collection)}
-            onDeleteClick={() => setCollectionTodelete(collection)}
-          />
-        ))}
-      </div>
+      {isFetchingCollections ? (
+        <div className="loading-circle-container">
+          <LoadingCircle />
+        </div>
+      ) : (
+        <div className="collections-container">
+          {collections.map((collection, i) => (
+            <AdminCollectionCard
+              image={collection.profileImageUrl}
+              name={collection.name}
+              id={collection.collectionId}
+              tokenType={collection.tokenType}
+              key={i}
+              onEditClick={() => onEdit(collection)}
+              onDeleteClick={() => setCollectionTodelete(collection)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

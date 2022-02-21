@@ -45,10 +45,10 @@ export type TCollection = {
   creator: string
   royalty: number
   description: string
-  numberOfItems: number
-  owners: number
-  floorPrice: number
-  volTraded: number
+  numberOfItems?: number
+  owners?: number
+  floorPrice?: number
+  volTraded?: number
 }
 
 const CollectionPage = () => {
@@ -61,9 +61,10 @@ const CollectionPage = () => {
   const { provider, wallet } = useContext(ConnectionContext)
   const { contractAccountId, contract } = useContext(ContractContext)
 
-  // fetch collection details using collectionId
+  // fetch collection details using collectionId and tokenType
   const fetchCollectionDetails = useCallback(async () => {
     try {
+      // call get_collection fn on the marketplace contract to get the details of the collection
       const rawResult: any = await provider.query({
         request_type: "call_function",
         account_id: contractAccountId,
@@ -74,77 +75,93 @@ const CollectionPage = () => {
         finality: "optimistic",
       })
       const result = JSON.parse(Buffer.from(rawResult.result).toString())
-      const {
-        nft_contract_id,
-        token_type,
-        name,
-        isVerified,
-        bannerImageUrl,
-        profileImageUrl,
-        description,
-        royalty,
-        links,
-      } = result
-      const collection: TCollection = {
-        collectionId: nft_contract_id,
-        tokenType: token_type,
-        name,
-        isVerified,
-        bannerImageUrl,
-        profileImageUrl,
-        description,
-        royalty,
-        links,
+
+      // Use result to create new collection object
+      const collectionDetails: TCollection = {
+        collectionId: result.nft_contract_id,
+        tokenType: result.token_type,
+        name: result.name,
+        isVerified: result.isVerified,
+        bannerImageUrl: result.bannerImageUrl,
+        profileImageUrl: result.profileImageUrl,
+        description: result.description,
+        royalty: result.royalty,
+        links: result.links,
         creator: "",
         numberOfItems: 1212,
         owners: 10,
         floorPrice: 2,
         volTraded: 2391,
       }
-      setCollection(collection)
+      console.log({ collectionDetails })
+      setCollection(collectionDetails)
       setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
   }, [])
 
+  // fetch items on sale in this collection
   const fetchItems = useCallback(async () => {
-    console.log(contract)
-    //get all listed sales by collection id on marketplace contract
-    const sales = await contract.get_sales_by_nft_contract_id({
-      nft_contract_id: collectionId,
-      from_index: "0",
-      limit: 50,
-    })
+    console.log({ collectionId, contractAccountId })
+    try {
+      //get all listed sales in a collection from marketplace contract
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: contractAccountId,
+        method_name: "get_sales_by_nft_contract_id",
+        args_base64: btoa(
+          `{nft_contract_id: '${collectionId}', from_index: 0, limit: 50}}`
+        ),
+        finality: "optimistic",
+      })
+      const sales = JSON.parse(Buffer.from(rawResult.result).toString())
 
-    //get the token object for all the sales
-    const saleTokens = await contract.nft_tokens_batch({
-      token_ids: sales
-        .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
-        .map(({ token_id }) => token_id),
-    })
+      // //get the token object for all the sales
+      // const saleTokensResults: any = await provider.query({
+      //   request_type: "call_function",
+      //   account_id: collectionId,
+      //   method_name: "nft_tokens_batch",
+      //   args_base64: btoa(
+      //     `{token_ids: ${sales
+      //       .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
+      //       .map(({ token_id }) => token_id)}}`
+      //   ),
+      //   finality: "optimistic",
+      // })
+      // const saleTokens = JSON.parse(
+      //   Buffer.from(saleTokensResults.result).toString()
+      // )
 
-    for (let i = 0; i < sales.length; i++) {
-      const { token_id } = sales[i]
-      let token = saleTokens.find(({ token_id: t }) => t === token_id)
-      if (!token) {
-        token = await contract.nft_token({
-          token_id,
-        })
-      }
-      sales[i] = Object.assign(sales[i], token)
+      // for (let i = 0; i < sales.length; i++) {
+      //   const { token_id } = sales[i]
+      //   let token = saleTokens.find(({ token_id: t }) => t === token_id)
+      //   if (!token) {
+      //     const tokenRawResult: any = await provider.query({
+      //       request_type: "call_function",
+      //       account_id: collectionId,
+      //       method_name: "nft_token",
+      //       args_base64: btoa(`{token_id: ${token_id}}`),
+      //       finality: "optimistic",
+      //     })
+      //     token = JSON.parse(Buffer.from(tokenRawResult.result).toString())
+      //   }
+      //   sales[i] = Object.assign(sales[i], token)
+      // }
+
+      // const items = sales.map((result) => ({
+      //   image: result.metadata.media,
+      //   name: result.metadata.title,
+      //   collectionTitle: collection.name,
+      //   collectionId: collection.collectionId,
+      //   price: result.sale_condition,
+      //   id: result.token_id,
+      //   ownerId: result.owner_id,
+      // }))
+      // setItems(items)
+    } catch (error) {
+      console.log(error)
     }
-
-    const items = sales.map((result) => ({
-      image: result.metadata.media,
-      name: result.metadata.title,
-      collectionTitle: collection.name,
-      collectionId: collection.collectionId,
-      price: result.sale_condition,
-      id: result.token_id,
-      ownerId: result.owner_id,
-    }))
-    setItems(items)
   }, [])
 
   useEffect(() => {

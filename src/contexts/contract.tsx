@@ -20,8 +20,20 @@ const ContractProvider = (props: any) => {
   useEffect(() => {
     if (!wallet) return
     const contract = new nearAPI.Contract(wallet.account(), contractAccountId, {
-      viewMethods: ["get_sales_by_nft_contract_id","nft_tokens_batch"],
-      changeMethods: ["add_collection"],
+      viewMethods: [
+        "get_collection",
+        "get_collections",
+        "get_sales_by_nft_contract_id",
+      ],
+      changeMethods: [
+        "add_collection",
+        "edit_collection",
+        "delete_collection",
+        "remove_sale",
+        "offer",
+        "accept_offer",
+        "update_price",
+      ],
       // sender: wallet.account(),
     })
     setContract(contract)

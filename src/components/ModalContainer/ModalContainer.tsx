@@ -15,6 +15,7 @@ const ModalContainer = (props: ModalContainerProps) => {
     if (!target) return
     target.style.opacity = 1
     target.style.pointerEvents = "auto"
+    target.style.zIndex = 100
   }, [])
 
   const closeModal = useCallback(
@@ -22,6 +23,7 @@ const ModalContainer = (props: ModalContainerProps) => {
       if (!target) return
       target.style.opacity = 0
       target.style.pointerEvents = "none"
+      target.style.zIndex = 10
       if (onClose) {
         setTimeout(() => {
           onClose()

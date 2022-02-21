@@ -33,12 +33,14 @@ const AddCollectionPage = () => {
     instagram: "",
     medium: "",
   })
+  console.log({ collectionId, collectionTokenType })
   const [isFetchingCollectionDetails, setIsFetchingCollectionDetails] =
     useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [btnFeedbackMsg, setBtnFeedbackMsg] = useState("")
 
   const onInputChange = (event: any) => {
     const { value, name } = event.target
-    if (!value) return
     setInput((current) => ({
       ...current,
       [name]: value,
@@ -48,6 +50,8 @@ const AddCollectionPage = () => {
   const addCollection = async () => {
     try {
       if (!contract || !wallet) return
+      setIsLoading(true)
+      setBtnFeedbackMsg("Adding collection")
       await contract.add_collection({
         nft_contract_id: input.contractId,
         token_type: input.tokenType,
@@ -64,14 +68,22 @@ const AddCollectionPage = () => {
         instagram: input.instagram,
         medium: input.medium,
       })
+      setBtnFeedbackMsg("Successful")
     } catch (error) {
-      console.log(error)
+      console.log()
+      setBtnFeedbackMsg("Failed")
     }
+    setIsLoading(false)
+    setTimeout(() => {
+      setBtnFeedbackMsg("")
+    }, 2000)
   }
 
   const editCollection = async () => {
     try {
       if (!contract || !wallet) return
+      setIsLoading(true)
+      setBtnFeedbackMsg("Editing collection")
       await contract.edit_collection({
         nft_contract_id: input.contractId,
         token_type: input.tokenType,
@@ -88,9 +100,15 @@ const AddCollectionPage = () => {
         instagram: input.instagram,
         medium: input.medium,
       })
+      setBtnFeedbackMsg("Successful")
     } catch (error) {
       console.log()
+      setBtnFeedbackMsg("Failed")
     }
+    setIsLoading(false)
+    setTimeout(() => {
+      setBtnFeedbackMsg("")
+    }, 2000)
   }
 
   const onSubmit = () => {
@@ -103,6 +121,8 @@ const AddCollectionPage = () => {
 
   const fetchCollectionDetails = useCallback(async () => {
     setIsFetchingCollectionDetails(true)
+    console.log({ contractAccountId, collectionId, collectionTokenType })
+
     try {
       // FETCHES THE COLLECTION DETAILS OF THE COLLECTION TO BE EDITED.
       const rawResult: any = await provider.query({
@@ -163,7 +183,9 @@ const AddCollectionPage = () => {
         medium: links.medium,
       })
       setIsFetchingCollectionDetails(false)
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }, [])
 
   useEffect(() => {
@@ -286,7 +308,11 @@ const AddCollectionPage = () => {
             />
           </div>
 
-          <Button title="Save" onClick={onSubmit} />
+          <Button
+            isLoading={isLoading}
+            title={btnFeedbackMsg || "Save"}
+            onClick={onSubmit}
+          />
         </>
       )}
     </div>

@@ -5,6 +5,12 @@
     margin-bottom: 30px;
   }
 
+  .loading-circle-container {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .collections-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -15,7 +21,6 @@
 @media only screen and (max-width: 900px) {
   .all-collections-page {
     .head {
-
     }
 
     .collections-container {
@@ -27,7 +32,6 @@
 @media only screen and (max-width: 600px) {
   .all-collections-page {
     .head {
-
     }
 
     .collections-container {

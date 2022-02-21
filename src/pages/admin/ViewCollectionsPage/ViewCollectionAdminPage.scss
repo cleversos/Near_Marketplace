@@ -40,6 +40,13 @@
     }
   }
 
+  .loading-circle-container {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .collections-container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
