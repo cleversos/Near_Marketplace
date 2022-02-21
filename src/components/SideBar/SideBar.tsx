@@ -23,7 +23,7 @@ const links: TLinks[] = [
     icon: "home",
   },
   {
-    link: "/collection/sfasf",
+    link: "/collections",
     name: "Collection",
     icon: "collection",
   },
