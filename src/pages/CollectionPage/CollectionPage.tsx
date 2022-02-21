@@ -52,7 +52,7 @@ export type TCollection = {
 }
 
 const CollectionPage = () => {
-  const { collectionId } = useParams()
+  const { collectionId, tokenType } = useParams()
   const [collection, setCollection] = useState<TCollection>(null)
   const [items, setItems] = useState<TItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -69,7 +69,7 @@ const CollectionPage = () => {
         account_id: contractAccountId,
         method_name: "get_collection",
         args_base64: btoa(
-          `{nft_contract_id: ${collectionId}, token_type: "token_type"}`
+          `{nft_contract_id: ${collectionId}, token_type: ${tokenType}}`
         ),
         finality: "optimistic",
       })

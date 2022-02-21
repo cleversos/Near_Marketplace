@@ -19,6 +19,8 @@ const AddCollectionPage = () => {
   const { wallet, provider } = useContext(ConnectionContext)
   const [input, setInput] = useState({
     name: "",
+    tokenType: "",
+    contractId: "",
     bannerImageUrl: "",
     isVerified: false,
     profileImageUrl: "",
@@ -47,8 +49,8 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.add_collection({
-        nft_contract_id: "marketplace_test_5.xuguangxia.testnet",
-        token_type: "nft_collection_1",
+        nft_contract_id: input.contractId,
+        token_type: input.tokenType,
         name: input.name,
         isVerified: false,
         bannerImageUrl: input.bannerImageUrl,
@@ -71,8 +73,8 @@ const AddCollectionPage = () => {
     try {
       if (!contract || !wallet) return
       await contract.edit_collection({
-        nft_contract_id: "marketplace_test_5.xuguangxia.testnet",
-        token_type: "nft_collection_1",
+        nft_contract_id: input.contractId,
+        token_type: input.tokenType,
         name: input.name,
         isVerified: false,
         bannerImageUrl: input.bannerImageUrl,
@@ -148,6 +150,8 @@ const AddCollectionPage = () => {
         name,
         bannerImageUrl,
         profileImageUrl,
+        tokenType: token_type,
+        contractId: nft_contract_id,
         description,
         isVerified,
         royalty,
@@ -191,6 +195,18 @@ const AddCollectionPage = () => {
               name="name"
               value={input.name}
               placeholder="Name of collection"
+              onInputChange={onInputChange}
+            />
+            <InputBox
+              name="tokenType"
+              value={input.tokenType}
+              placeholder="Collection Token type"
+              onInputChange={onInputChange}
+            />
+            <InputBox
+              name="contractId"
+              value={input.contractId}
+              placeholder="Collection Contract Id"
               onInputChange={onInputChange}
             />
             <InputBox
