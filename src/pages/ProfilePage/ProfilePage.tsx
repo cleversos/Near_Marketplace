@@ -2,8 +2,10 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
+import { CollectionContext } from "../../contexts/collections"
 import { ConnectionContext } from "../../contexts/connection"
-import { TItem } from "../CollectionPage/CollectionPage"
+import { convertTokenResultToItemStruct } from "../../helpers/utils"
+import { TCollection, TItem } from "../CollectionPage/CollectionPage"
 import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
 import "./ProfilePage.scss"
 
@@ -29,9 +31,63 @@ export type TProfileCollection = {
 const ProfilePage = () => {
   const [profile, setProfile] = useState<TProfile | null>(null)
   const { wallet, provider } = useContext(ConnectionContext)
-  const walletAddress = wallet.getAccountId()
+  const walletAddress = wallet?.getAccountId()
   const [mode, setMode] = useState<TProfileMode>("myItems")
-  const getWalletNFTs = async () => {}
+  const { collections } = useContext(CollectionContext)
+  const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
+
+  const getUserTokensInACollection = useCallback(
+    async (collection: TCollection, provider, accountId) => {
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: collection.collectionId,
+        method_name: "nft_tokens_for_owner",
+        args_base64: btoa(
+          `{"account_id": "${accountId}", "from_index": "0", "limit": 100}`
+        ),
+        finality: "optimistic",
+      })
+      const items = JSON.parse(Buffer.from(rawResult.result).toString())
+      console.log({ items })
+      if (!items || !items.length) return null
+      return {
+        id: collection.collectionId,
+        imageUrl: collection.profileImageUrl,
+        name: collection.name,
+        floorPrice: collection.floorPrice,
+        items: items.map((item) =>
+          convertTokenResultToItemStruct(
+            item,
+            collection.name,
+            collection.collectionId
+          )
+        ),
+      }
+    },
+    []
+  )
+
+  const getWalletNFTs = useCallback(async () => {
+    try {
+      const promises = collections.map(
+        async (collection) =>
+          await getUserTokensInACollection(
+            collection,
+            provider,
+            wallet?.getAccountId()
+          )
+      )
+      await Promise.all(promises).then((results) =>
+        setWalletNFTs(results.filter((result) => result))
+      )
+    } catch (error) {
+      console.log
+    }
+  }, [])
+
+  useEffect(() => {
+    getWalletNFTs()
+  }, [getWalletNFTs])
 
   const totalFloorValue = 235.3
   let listedItemsCollections: TProfileCollection[] = [
@@ -43,16 +99,7 @@ const ProfilePage = () => {
       floorPrice: 128,
       items: [],
     },
-    {
-      id: "fdfa",
-      imageUrl:
-        "https://www.arweave.net/OHFIbHqpFpgERaUhApaCFCwclAP_KrBoD0MixurXTDk?ext=png",
-      name: "Chop life crew",
-      floorPrice: 128,
-      items: [],
-    },
   ]
-  let myItems = listedItemsCollections //fetch this
   let offersMade = listedItemsCollections //fetch this
 
   const fetchUserData = useCallback(() => {
@@ -117,7 +164,7 @@ const ProfilePage = () => {
           />
         </div>
         {mode === "myItems" &&
-          myItems.map((collection, i) => (
+          walletNFTs?.map((collection, i) => (
             <CollectionAndItemsSet collection={collection} />
           ))}
         {mode === "listedItems" &&

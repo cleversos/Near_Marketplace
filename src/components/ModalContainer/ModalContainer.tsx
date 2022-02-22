@@ -23,7 +23,7 @@ const ModalContainer = (props: ModalContainerProps) => {
       if (!target) return
       target.style.opacity = 0
       target.style.pointerEvents = "none"
-      target.style.zIndex = 10
+      target.style.zIndex = -10
       if (onClose) {
         setTimeout(() => {
           onClose()

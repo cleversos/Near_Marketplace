@@ -16,6 +16,7 @@ import LoadingCircle from "../../components/LoadingCircle/LoadingCircle"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
 import formatAmount from "../../helpers/formatAmount"
+import { convertTokenResultToItemStruct } from "../../helpers/utils"
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
@@ -25,77 +26,98 @@ type TAttributes = {
   value: string
 }
 
-type TItem = {
-  favorites: number
+export type TItem = {
+  image: any
+  name: string
+  collectionTitle: string
+  collectionId: string
   price: number
-  attributes: TAttributes[]
   id: string
   ownerId: string
-  contractId: string
-  name: string
-  collectionName: string
-  imageUrl: string
-  isOnSale: boolean
 }
 
-const placeHolderItem: TItem = {
-  name: "Anatomy Science Ape Club #1700",
-  collectionName: "Anatomy Science Ape Club",
-  imageUrl: "",
-  favorites: 23,
-  price: 530,
-  attributes: [
-    {
-      name: "background",
-      value: "red",
-    },
-    {
-      name: "eye",
-      value: "blue",
-    },
-    {
-      name: "background",
-      value: "red",
-    },
-    {
-      name: "eye",
-      value: "blue",
-    },
-  ],
-  id: "faofd",
-  ownerId: "hashdaan.testnet",
-  contractId: "string",
-  isOnSale: false,
+export type TItemSalesDetails = {
+  price: NumberConstructor
+}
+
+export type TItemMarketPlaceDetails = {
+  favorites: number
 }
 
 const ItemPage = () => {
-  const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
-  const [item, setItem] = useState<TItem | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
   const { itemId, collectionId } = useParams()
-  const { wallet, signIn, provider } = useContext(ConnectionContext)
-  const { contract, contractAccountId } = useContext(ContractContext)
+
+  const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
   const [showBidModal, setShowBidModal] = useState(false)
   const [listingPrice, setListingPrice] = useState()
+
+  const [item, setItem] = useState<TItem | null>(null)
+  const [salesDetail, setSalesDetail] = useState<TItemSalesDetails>(null)
+  const [itemMarketDetails, setItemMarketDetails] =
+    useState<TItemMarketPlaceDetails>(null)
+
+  const { wallet, signIn, provider } = useContext(ConnectionContext)
+  const { contract, contractAccountId } = useContext(ContractContext)
+
   const isOwner = wallet?.getAccountId() === item?.ownerId
 
   const nearPriceInUSD = 18 //get this from a real source
   const itemPriceInUSD = ((item?.price || 0) * nearPriceInUSD).toFixed(2)
 
-  // fetch item details using itemId
+  // fetch item sales details from marketplace
+  const fetchItemSalesDetails = useCallback(async () => {
+    try {
+      //get sales details
+      const salesDetail = await provider.query({
+        request_type: "call_function",
+        account_id: contractAccountId,
+        method_name: "nft_token",
+        args_base64: btoa(`{"token_id": "${itemId}"}`),
+        finality: "optimistic",
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    setIsLoading(false)
+  }, [])
+
+  // fetch item sales details from marketplace
+  const fetchItemMarketplaceDetails = useCallback(async () => {
+    try {
+      //get sales details
+      const salesDetail = await provider.query({
+        request_type: "call_function",
+        account_id: contractAccountId,
+        method_name: "nft_token",
+        args_base64: btoa(`{"token_id": "${itemId}"}`),
+        finality: "optimistic",
+      })
+    } catch (error) {
+      console.log(error)
+    }
+    setIsLoading(false)
+  }, [])
+
+  // fetch item details using itemId from the collection contract
   const fetchItemDetails = useCallback(async () => {
     try {
+      //get token details
       const rawResult: any = await provider.query({
         request_type: "call_function",
         account_id: collectionId,
         method_name: "nft_token",
-        args_base64: btoa(`{token_id: ${itemId}}`),
+        args_base64: btoa(`{"token_id": "${itemId}"}`),
         finality: "optimistic",
       })
-
-      const result: TItem = placeHolderItem
-      setItem(result)
-    } catch (error) {}
+      const result = JSON.parse(Buffer.from(rawResult.result).toString())
+      setItem(
+        convertTokenResultToItemStruct(result, "collection name", collectionId)
+      )
+      console.log({ result })
+    } catch (error) {
+      console.log(error)
+    }
     setIsLoading(false)
   }, [])
 
@@ -107,7 +129,7 @@ const ItemPage = () => {
     try {
       await contract.remove_sale({
         arg_name: {
-          nft_contract_id: item.contractId,
+          nft_contract_id: item.collectionId,
           token_id: item.id,
         },
       })
@@ -120,7 +142,7 @@ const ItemPage = () => {
     try {
       await contract.update_price({
         arg_name: {
-          nft_contract_id: item.contractId,
+          nft_contract_id: item.collectionId,
           token_id: item.id,
           ft_token_id: "string",
           price: 10,
@@ -133,7 +155,7 @@ const ItemPage = () => {
     try {
       await contract.offer(
         {
-          nft_contract_id: item.contractId,
+          nft_contract_id: item.collectionId,
           token_id: item.id,
         },
         null, //gas
@@ -146,7 +168,7 @@ const ItemPage = () => {
     try {
       await contract.accept_offer({
         arg_name: {
-          nft_contract_id: item.contractId,
+          nft_contract_id: item.collectionId,
           token_id: item.id,
           ft_token_id: "ft_token_id",
         },
@@ -155,16 +177,23 @@ const ItemPage = () => {
   }
 
   const listItem = async () => {
+    const account: any = wallet.account()
     try {
-      await wallet.account().functionCall(item.contractId, "nft_approve", {
-        token_id: item.id,
-        account_id: contractAccountId,
-        msg: JSON.stringify({
-          sale_conditions: {
-            price: listingPrice,
-          },
-        }),
-      })
+      await account.functionCall(
+        item.collectionId,
+        "nft_approve",
+        {
+          token_id: item.id,
+          account_id: contractAccountId,
+          msg: JSON.stringify({
+            sale_conditions: {
+              price: listingPrice,
+            },
+          }),
+        },
+        "200000000000000",
+        parseNearAmount("0.01")
+      )
     } catch (error) {
       console.log(error)
     }
@@ -174,7 +203,7 @@ const ItemPage = () => {
     try {
       await contract.offer(
         {
-          nft_contract_id: item.contractId,
+          nft_contract_id: item.collectionId,
           token_id: item.id,
         },
         null, //gas
@@ -203,14 +232,14 @@ const ItemPage = () => {
             <div className="left-side">
               <ImageWithLoadBg
                 aspectRatio={1}
-                src={require("../../assets/images/placeHolderNFT.png")} //replace with item.imageUrl
+                src={item.image}
                 alt="placeholder nft"
               />
             </div>
             <div className="right-side">
               <div className="first-detail-set">
                 <div className="row-container">
-                  <BodyText light>{item?.collectionName}</BodyText>
+                  <BodyText light>{item?.collectionTitle}</BodyText>
                   <div className="icons-container">
                     <div className="share-btn icon">
                       <ShareIcon />
@@ -231,14 +260,18 @@ const ItemPage = () => {
                     <OwnersIcon />
                     <BodyText light>Owners</BodyText>
                   </div>
-                  <div className="faves-container">
-                    <HeartIcon />
-                    <BodyText light>{`${item?.favorites} Favorites`}</BodyText>
-                  </div>
+                  {itemMarketDetails?.favorites && (
+                    <div className="faves-container">
+                      <HeartIcon />
+                      <BodyText
+                        light
+                      >{`${itemMarketDetails?.favorites} Favorites`}</BodyText>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="price-detail-container">
-                {isOwner && !item.isOnSale ? (
+                {isOwner && !salesDetail ? (
                   <div className="list-item-container">
                     <InputBox
                       name="listingPrice"
@@ -293,12 +326,12 @@ const ItemPage = () => {
                     title: "Attributes",
                     component: (
                       <div className="attributes-container">
-                        {item?.attributes.map((attribute, i) => (
+                        {/* {item?.attributes?.map((attribute, i) => (
                           <AttributeCard
                             name={attribute.name}
                             value={attribute.value}
                           />
-                        ))}
+                        ))} */}
                       </div>
                     ),
                   },

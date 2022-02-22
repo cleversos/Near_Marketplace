@@ -73,18 +73,12 @@ const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
         </div>
         <div className="image-container">
           <div className="darkener" />
-          <img
-            src={require("../../../../assets/images/placeHolderBanner.png")} //replace with colletion.bannerImageUrl
-            alt="collection"
-          />
+          <img src={collection?.bannerImageUrl} alt="collection" />
         </div>
       </div>
       <div className="details-container">
         <div className="collection-image-container">
-          <img
-            src={require("../../../../assets/images/collectionImage.png")} //replace with collection.profleImageUrl
-            alt={collection?.name}
-          />
+          <img src={collection?.profileImageUrl} alt={collection?.name} />
         </div>
         <div className="name-container">
           <BodyText bold>{collection?.name}</BodyText>

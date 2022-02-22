@@ -5,6 +5,7 @@ import Button from "../../../components/Button/Button"
 import ImageWithLoadBg from "../../../components/ImageWithLoadBg/ImageWithLoadBg"
 import LoadingCircle from "../../../components/LoadingCircle/LoadingCircle"
 import ModalContainer from "../../../components/ModalContainer/ModalContainer"
+import { CollectionContext } from "../../../contexts/collections"
 import { ConnectionContext } from "../../../contexts/connection"
 import { ContractContext } from "../../../contexts/contract"
 import { getCollections } from "../../../helpers/collections"
@@ -13,30 +14,14 @@ import AdminCollectionCard from "./components/AdminCollectionCard/AdminCollectio
 import "./ViewCollectionAdminPage.scss"
 
 const ViewCollectionAdminPage = () => {
-  const [collections, setCollections] = useState<TCollection[]>([])
-  const [isFetchingCollections, setIsFetchingCollections] = useState(true)
-  const { provider } = useContext(ConnectionContext)
-  const { contract, contractAccountId } = useContext(ContractContext)
+  const { contract } = useContext(ContractContext)
   const [collectionToDelete, setCollectionTodelete] =
     useState<TCollection>(null)
   const navigate = useNavigate()
   const [isDeleting, setIsDeleting] = useState(false)
   const [deleteBtnFeedback, setDeleteBtnFeedback] = useState("")
-
-  const fetchCollections = useCallback(async () => {
-    try {
-      setIsFetchingCollections(true)
-      const results = await getCollections(provider, contractAccountId)
-      setCollections(results)
-      setIsFetchingCollections(false)
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchCollections()
-  }, [fetchCollections])
+  const { collections, isFetchingCollections, fetchCollections } =
+    useContext(CollectionContext)
 
   const deleteCollection = async () => {
     try {

@@ -15,6 +15,7 @@ import CollectionInfoSection from "./components/CollectionInfoSection/Collection
 import FilterSection from "./components/FilterSection/FilterSection"
 import GallerySection from "./components/GallerySection/GallerySection"
 import * as nearAPI from "near-api-js"
+import { convertTokenResultToItemStruct } from "../../helpers/utils"
 
 type TCollectionLinks = {
   discord?: string
@@ -32,6 +33,7 @@ export type TItem = {
   collectionId: string
   price: number
   id: string
+  ownerId: string
 }
 
 export type TCollection = {
@@ -93,7 +95,6 @@ const CollectionPage = () => {
         floorPrice: 2,
         volTraded: 2391,
       }
-      console.log({ collectionDetails })
       setCollection(collectionDetails)
       setIsLoading(false)
     } catch (error) {
@@ -103,7 +104,6 @@ const CollectionPage = () => {
 
   // fetch items on sale in this collection
   const fetchItems = useCallback(async () => {
-    console.log({ collectionId, contractAccountId })
     try {
       //get all listed sales in a collection from marketplace contract
       const rawResult: any = await provider.query({
@@ -111,54 +111,49 @@ const CollectionPage = () => {
         account_id: contractAccountId,
         method_name: "get_sales_by_nft_contract_id",
         args_base64: btoa(
-          `{nft_contract_id: '${collectionId}', from_index: 0, limit: 50}}`
+          `{"nft_contract_id": "${collectionId}", "from_index": "0", "limit": 50}`
         ),
         finality: "optimistic",
       })
       const sales = JSON.parse(Buffer.from(rawResult.result).toString())
+      console.log({ sales })
 
-      // //get the token object for all the sales
-      // const saleTokensResults: any = await provider.query({
-      //   request_type: "call_function",
-      //   account_id: collectionId,
-      //   method_name: "nft_tokens_batch",
-      //   args_base64: btoa(
-      //     `{token_ids: ${sales
-      //       .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
-      //       .map(({ token_id }) => token_id)}}`
-      //   ),
-      //   finality: "optimistic",
-      // })
-      // const saleTokens = JSON.parse(
-      //   Buffer.from(saleTokensResults.result).toString()
-      // )
+      //get the token object for all the sales
+      const saleTokensResults: any = await provider.query({
+        request_type: "call_function",
+        account_id: collectionId,
+        method_name: "nft_tokens_batch",
+        args_base64: btoa(
+          `{"token_ids": ${sales
+            .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
+            .map(({ token_id }) => token_id)}}`
+        ),
+        finality: "optimistic",
+      })
+      const saleTokens = JSON.parse(
+        Buffer.from(saleTokensResults.result).toString()
+      )
 
-      // for (let i = 0; i < sales.length; i++) {
-      //   const { token_id } = sales[i]
-      //   let token = saleTokens.find(({ token_id: t }) => t === token_id)
-      //   if (!token) {
-      //     const tokenRawResult: any = await provider.query({
-      //       request_type: "call_function",
-      //       account_id: collectionId,
-      //       method_name: "nft_token",
-      //       args_base64: btoa(`{token_id: ${token_id}}`),
-      //       finality: "optimistic",
-      //     })
-      //     token = JSON.parse(Buffer.from(tokenRawResult.result).toString())
-      //   }
-      //   sales[i] = Object.assign(sales[i], token)
-      // }
+      for (let i = 0; i < sales.length; i++) {
+        const { token_id } = sales[i]
+        let token = saleTokens.find(({ token_id: t }) => t === token_id)
+        if (!token) {
+          const tokenRawResult: any = await provider.query({
+            request_type: "call_function",
+            account_id: collectionId,
+            method_name: "nft_token",
+            args_base64: btoa(`{token_id: ${token_id}}`),
+            finality: "optimistic",
+          })
+          token = JSON.parse(Buffer.from(tokenRawResult.result).toString())
+        }
+        sales[i] = Object.assign(sales[i], token)
+      }
 
-      // const items = sales.map((result) => ({
-      //   image: result.metadata.media,
-      //   name: result.metadata.title,
-      //   collectionTitle: collection.name,
-      //   collectionId: collection.collectionId,
-      //   price: result.sale_condition,
-      //   id: result.token_id,
-      //   ownerId: result.owner_id,
-      // }))
-      // setItems(items)
+      const items = sales.map((result) =>
+        convertTokenResultToItemStruct(result, collection.name, collectionId)
+      )
+      setItems(items)
     } catch (error) {
       console.log(error)
     }
