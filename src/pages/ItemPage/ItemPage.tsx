@@ -1,3 +1,4 @@
+import { METHODS } from "http"
 import { parseNearAmount } from "near-api-js/lib/utils/format"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -20,6 +21,12 @@ import { convertTokenResultToItemStruct } from "../../helpers/utils"
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
+
+//////////////////////////////////
+//please add gas and required deposit in all transaction METHODS.
+//collection/nft_contract_id/token_type page does not shows listed items
+//please fix saleArg as I wrote.
+//////////////////////////////////
 
 type TAttributes = {
   name: string
@@ -144,8 +151,8 @@ const ItemPage = () => {
         arg_name: {
           nft_contract_id: item.collectionId,
           token_id: item.id,
-          ft_token_id: "string",
-          price: 10,
+          ft_token_id: "near",
+          price: parseNearAmount("10"),
         },
       })
     } catch (error) {}
@@ -170,7 +177,7 @@ const ItemPage = () => {
         arg_name: {
           nft_contract_id: item.collectionId,
           token_id: item.id,
-          ft_token_id: "ft_token_id",
+          ft_token_id: "near",
         },
       })
     } catch (error) {}
@@ -187,7 +194,7 @@ const ItemPage = () => {
           account_id: contractAccountId,
           msg: JSON.stringify({
             sale_conditions: {
-              price: listingPrice,
+              "near": parseNearAmount(listingPrice),
             },
           }),
         },
@@ -201,13 +208,14 @@ const ItemPage = () => {
 
   const onBuy = async () => {
     try {
+      console.log(item)
       await contract.offer(
         {
           nft_contract_id: item.collectionId,
           token_id: item.id,
         },
-        null, //gas
-        parseNearAmount(item.price.toString())
+        "200000000000000", //gas
+        parseNearAmount("1.0") //parseNearAmount(item.price.toString()) item.price is undefined
       )
     } catch (error) {
       console.log(error)

@@ -15,7 +15,7 @@ export const ContractContext = React.createContext<ContractContextProps>({
 const ContractProvider = (props: any) => {
   const [contract, setContract] = useState<nearAPI.Contract>()
   const { wallet } = useContext(ConnectionContext)
-  const contractAccountId = "marketplace_test_7.xuguangxia.testnet"
+  const contractAccountId = "marketplace_test_9.xuguangxia.testnet"
 
   useEffect(() => {
     if (!wallet) return
