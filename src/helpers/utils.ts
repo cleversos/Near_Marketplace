@@ -1,8 +1,10 @@
+import { TItem } from "../pages/ItemPage/ItemPage"
+
 export const convertTokenResultToItemStruct = (
   item,
   collectionTitle,
   collectionId
-) => {
+): TItem => {
   return {
     image: item.metadata.media,
     name: item.metadata.title,

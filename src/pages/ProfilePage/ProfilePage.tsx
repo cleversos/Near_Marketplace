@@ -5,7 +5,8 @@ import Button from "../../components/Button/Button"
 import { CollectionContext } from "../../contexts/collections"
 import { ConnectionContext } from "../../contexts/connection"
 import { convertTokenResultToItemStruct } from "../../helpers/utils"
-import { TCollection, TItem } from "../CollectionPage/CollectionPage"
+import { TCollection } from "../CollectionPage/CollectionPage"
+import { TItem } from "../ItemPage/ItemPage"
 import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
 import "./ProfilePage.scss"
 
@@ -54,7 +55,7 @@ const ProfilePage = () => {
         id: collection.collectionId,
         imageUrl: collection.profileImageUrl,
         name: collection.name,
-        floorPrice: collection.floorPrice,
+        floorPrice: 10,
         items: items.map((item) =>
           convertTokenResultToItemStruct(
             item,

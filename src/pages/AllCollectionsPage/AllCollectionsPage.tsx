@@ -26,7 +26,7 @@ const AllCollectionsPage = () => {
               name={collection.name}
               tokenType={collection.tokenType}
               id={collection.collectionId}
-              volTraded={collection.volTraded}
+              volTraded={100} //TODO
               description={collection.description}
             />
           ))}

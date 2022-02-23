@@ -1,5 +1,5 @@
 import { METHODS } from "http"
-import { parseNearAmount } from "near-api-js/lib/utils/format"
+import { parseNearAmount, formatNearAmount } from "near-api-js/lib/utils/format"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import HeartIcon from "../../assets/icons/HeartIcon"
@@ -44,7 +44,12 @@ export type TItem = {
 }
 
 export type TItemSalesDetails = {
-  price: NumberConstructor
+  approvalId: number
+  saleConditions: { near: string }
+  ownerId: string
+  bids: {}
+  createdAt: string
+  isAuction: boolean
 }
 
 export type TItemMarketPlaceDetails = {
@@ -60,39 +65,28 @@ const ItemPage = () => {
   const [listingPrice, setListingPrice] = useState()
 
   const [item, setItem] = useState<TItem | null>(null)
-  const [salesDetail, setSalesDetail] = useState<TItemSalesDetails>(null)
+  const [saleDetails, setSaleDetails] = useState<TItemSalesDetails>(null)
   const [itemMarketDetails, setItemMarketDetails] =
     useState<TItemMarketPlaceDetails>(null)
 
   const { wallet, signIn, provider } = useContext(ConnectionContext)
   const { contract, contractAccountId } = useContext(ContractContext)
 
-  const isOwner = wallet?.getAccountId() === item?.ownerId
+  const isOwner =
+    wallet?.getAccountId() === item?.ownerId ||
+    wallet?.getAccountId() === saleDetails?.ownerId
 
   const nearPriceInUSD = 18 //get this from a real source
-  const itemPriceInUSD = ((item?.price || 0) * nearPriceInUSD).toFixed(2)
+  const itemPriceInUSD = (
+    Number(saleDetails?.saleConditions.near) * nearPriceInUSD
+  ).toFixed(2)
 
-  // fetch item sales details from marketplace
-  const fetchItemSalesDetails = useCallback(async () => {
-    try {
-      //get sales details
-      const salesDetail = await provider.query({
-        request_type: "call_function",
-        account_id: contractAccountId,
-        method_name: "nft_token",
-        args_base64: btoa(`{"token_id": "${itemId}"}`),
-        finality: "optimistic",
-      })
-    } catch (error) {
-      console.log(error)
-    }
-    setIsLoading(false)
-  }, [])
+  const GAS = "200000000000000"
+  const deposit = parseNearAmount("0.1")
 
-  // fetch item sales details from marketplace
+  //TODO fetch item details from marketplace
   const fetchItemMarketplaceDetails = useCallback(async () => {
     try {
-      //get sales details
       const salesDetail = await provider.query({
         request_type: "call_function",
         account_id: contractAccountId,
@@ -103,43 +97,77 @@ const ItemPage = () => {
     } catch (error) {
       console.log(error)
     }
-    setIsLoading(false)
   }, [])
 
-  // fetch item details using itemId from the collection contract
-  const fetchItemDetails = useCallback(async () => {
+  //TODO fetch item sales details from marketplace
+  const fetchItemSalesDetails = useCallback(async () => {
+    const saleDetail: any = await provider.query({
+      request_type: "call_function",
+      account_id: contractAccountId,
+      method_name: "get_sale",
+      args_base64: btoa(`{"nft_contract_token": "${collectionId}||${itemId}"}`),
+      finality: "optimistic",
+    })
+    const result = JSON.parse(Buffer.from(saleDetail.result).toString())
+    if (!result) {
+      setSaleDetails(null)
+      return
+    }
+    setSaleDetails({
+      approvalId: result.approval_id,
+      saleConditions: {
+        near: formatNearAmount(result.sale_conditions.near),
+      },
+      ownerId: result.owner_id,
+      bids: result.bids,
+      createdAt: result.created_at,
+      isAuction: result.is_auction,
+    })
+  }, [])
+
+  // fetch item token details using itemId from the collection contract
+  const fetchItemTokenDetails = useCallback(async () => {
+    const rawResult: any = await provider.query({
+      request_type: "call_function",
+      account_id: collectionId,
+      method_name: "nft_token",
+      args_base64: btoa(`{"token_id": "${itemId}"}`),
+      finality: "optimistic",
+    })
+    const result = JSON.parse(Buffer.from(rawResult.result).toString())
+    setItem(
+      convertTokenResultToItemStruct(result, "collection name", collectionId)
+    )
+  }, [])
+
+  //Call all fetches
+  const fetchAll = useCallback(async () => {
+    setIsLoading(true)
     try {
-      //get token details
-      const rawResult: any = await provider.query({
-        request_type: "call_function",
-        account_id: collectionId,
-        method_name: "nft_token",
-        args_base64: btoa(`{"token_id": "${itemId}"}`),
-        finality: "optimistic",
-      })
-      const result = JSON.parse(Buffer.from(rawResult.result).toString())
-      setItem(
-        convertTokenResultToItemStruct(result, "collection name", collectionId)
-      )
-      console.log({ result })
+      await fetchItemTokenDetails()
+      await fetchItemSalesDetails()
+      // await fetchItemMarketplaceDetails()
+      setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
-    setIsLoading(false)
   }, [])
 
   useEffect(() => {
-    fetchItemDetails()
-  }, [fetchItemDetails])
+    fetchAll()
+  }, [fetchAll])
 
   const cancelSale = async () => {
+    console.log({ collectionId, itemId })
     try {
-      await contract.remove_sale({
-        arg_name: {
-          nft_contract_id: item.collectionId,
-          token_id: item.id,
+      await contract.remove_sale(
+        {
+          nft_contract_id: collectionId,
+          token_id: itemId,
         },
-      })
+        GAS,
+        deposit
+      )
     } catch (error) {
       console.log(error)
     }
@@ -147,14 +175,18 @@ const ItemPage = () => {
 
   const updatePrice = async () => {
     try {
-      await contract.update_price({
-        arg_name: {
-          nft_contract_id: item.collectionId,
-          token_id: item.id,
-          ft_token_id: "near",
-          price: parseNearAmount("10"),
+      await contract.update_price(
+        {
+          arg_name: {
+            nft_contract_id: item.collectionId,
+            token_id: item.id,
+            ft_token_id: "near",
+            price: parseNearAmount("10"),
+          },
         },
-      })
+        GAS,
+        deposit
+      )
     } catch (error) {}
   }
 
@@ -165,7 +197,7 @@ const ItemPage = () => {
           nft_contract_id: item.collectionId,
           token_id: item.id,
         },
-        null, //gas
+        GAS,
         parseNearAmount(amount)
       )
     } catch (error) {}
@@ -173,13 +205,17 @@ const ItemPage = () => {
 
   const acceptOffer = async () => {
     try {
-      await contract.accept_offer({
-        arg_name: {
-          nft_contract_id: item.collectionId,
-          token_id: item.id,
-          ft_token_id: "near",
+      await contract.accept_offer(
+        {
+          arg_name: {
+            nft_contract_id: item.collectionId,
+            token_id: item.id,
+            ft_token_id: "near",
+          },
         },
-      })
+        GAS,
+        deposit
+      )
     } catch (error) {}
   }
 
@@ -194,12 +230,12 @@ const ItemPage = () => {
           account_id: contractAccountId,
           msg: JSON.stringify({
             sale_conditions: {
-              "near": parseNearAmount(listingPrice),
+              near: parseNearAmount(listingPrice),
             },
           }),
         },
-        "200000000000000",
-        parseNearAmount("0.01")
+        GAS,
+        deposit
       )
     } catch (error) {
       console.log(error)
@@ -208,14 +244,13 @@ const ItemPage = () => {
 
   const onBuy = async () => {
     try {
-      console.log(item)
       await contract.offer(
         {
           nft_contract_id: item.collectionId,
           token_id: item.id,
         },
-        "200000000000000", //gas
-        parseNearAmount("1.0") //parseNearAmount(item.price.toString()) item.price is undefined
+        GAS,
+        parseNearAmount(saleDetails?.saleConditions.near)
       )
     } catch (error) {
       console.log(error)
@@ -279,7 +314,7 @@ const ItemPage = () => {
                 </div>
               </div>
               <div className="price-detail-container">
-                {isOwner && !salesDetail ? (
+                {isOwner && !saleDetails ? (
                   <div className="list-item-container">
                     <InputBox
                       name="listingPrice"
@@ -298,12 +333,14 @@ const ItemPage = () => {
                       Current Price
                     </BodyText>
                     <div className="price-container">
-                      <BodyText bold>{`${item?.price} Ⓝ`}</BodyText>
-                      <BodyText light>{`$${formatAmount(
+                      <BodyText
+                        bold
+                      >{`${saleDetails?.saleConditions.near} Ⓝ`}</BodyText>
+                      <BodyText light>{`( $${formatAmount(
                         Number(itemPriceInUSD),
                         3,
                         ","
-                      )}`}</BodyText>
+                      )} )`}</BodyText>
                     </div>
                     {!wallet?.isSignedIn() ? (
                       <Button

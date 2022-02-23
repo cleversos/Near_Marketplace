@@ -55,3 +55,21 @@ export const getUserTokensInACollection = async (
   })
   return JSON.parse(Buffer.from(rawResult.result).toString())
 }
+
+export const getAllSalesInCollection = async (
+  provider,
+  contractAccountId,
+  collectionId
+) => {
+  const rawResult: any = await provider.query({
+    request_type: "call_function",
+    account_id: contractAccountId,
+    method_name: "get_sales_by_nft_contract_id",
+    args_base64: btoa(
+      `{"nft_contract_id": "${collectionId}", "from_index": "0", "limit": 50}`
+    ),
+    finality: "optimistic",
+  })
+  const sales = JSON.parse(Buffer.from(rawResult.result).toString())
+  return sales
+}

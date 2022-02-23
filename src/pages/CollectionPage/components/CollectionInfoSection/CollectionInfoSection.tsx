@@ -7,63 +7,69 @@ import TwitterIcon from "../../../../assets/icons/TwitterIcon"
 import VerifiedIcon from "../../../../assets/icons/VerifiedIcon"
 import WebsiteIcon from "../../../../assets/icons/WebsiteIcon"
 import BodyText from "../../../../components/BodyText/BodyText"
-import { TCollection } from "../../CollectionPage"
+import { TCollection, TCollectionContractDetails } from "../../CollectionPage"
 import "./CollectionInfoSection.scss"
 
 interface CollectionInfoSectionProps {
-  collection: TCollection | null
+  collectionMarketplaceDetails: TCollection | null
+  collectionContractDetails: TCollectionContractDetails
   isLoading: boolean
 }
 const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
-  const { collection, isLoading } = props
+  const { collectionMarketplaceDetails, collectionContractDetails, isLoading } =
+    props
   return (
     <div className="collection-info-section">
       <div className="banner-section">
         <div className="collection-links">
-          {collection?.links.website && (
+          {collectionMarketplaceDetails?.links.website && (
             <a
-              href={collection?.links.website}
+              href={collectionMarketplaceDetails?.links.website}
               rel="noreferrer"
               target="_blank"
             >
               <WebsiteIcon />
             </a>
           )}
-          {collection?.links.discord && (
+          {collectionMarketplaceDetails?.links.discord && (
             <a
-              href={collection?.links.discord}
+              href={collectionMarketplaceDetails?.links.discord}
               rel="noreferrer"
               target="_blank"
             >
               <DiscordIcon />
             </a>
           )}
-          {collection?.links.telegram && (
+          {collectionMarketplaceDetails?.links.telegram && (
             <a
-              href={collection?.links.telegram}
+              href={collectionMarketplaceDetails?.links.telegram}
               rel="noreferrer"
               target="_blank"
             >
               <TelegramIcon />
             </a>
           )}
-          {collection?.links.medium && (
-            <a href={collection?.links.medium} rel="noreferrer" target="_blank">
+          {collectionMarketplaceDetails?.links.medium && (
+            <a
+              href={collectionMarketplaceDetails?.links.medium}
+              rel="noreferrer"
+              target="_blank"
+            >
               <MediumIcon />
             </a>
           )}
-          {collection?.links.instagram && (
+          {collectionMarketplaceDetails?.links.instagram && (
             <a
-              href={collection?.links.instagram}
+              href={collectionMarketplaceDetails?.links.instagram}
               rel="noreferrer"
               target="_blank"
             >
               <InstagramIcon />
             </a>
           )}
-          {collection?.links.twitter && (
+          {collectionMarketplaceDetails?.links.twitter && (
             <a
-              href={collection?.links.twitter}
+              href={collectionMarketplaceDetails?.links.twitter}
               rel="noreferrer"
               target="_blank"
             >
@@ -73,16 +79,22 @@ const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
         </div>
         <div className="image-container">
           <div className="darkener" />
-          <img src={collection?.bannerImageUrl} alt="collection" />
+          <img
+            src={collectionMarketplaceDetails?.bannerImageUrl}
+            alt="collection"
+          />
         </div>
       </div>
       <div className="details-container">
         <div className="collection-image-container">
-          <img src={collection?.profileImageUrl} alt={collection?.name} />
+          <img
+            src={collectionMarketplaceDetails?.profileImageUrl}
+            alt={collectionMarketplaceDetails?.name}
+          />
         </div>
         <div className="name-container">
-          <BodyText bold>{collection?.name}</BodyText>
-          {collection?.isVerified && (
+          <BodyText bold>{collectionMarketplaceDetails?.name}</BodyText>
+          {collectionMarketplaceDetails?.isVerified && (
             <div className="verified-icon">
               <VerifiedIcon />
             </div>
@@ -90,31 +102,31 @@ const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
         </div>
         <BodyText className="creator-text">
           Created by
-          <span className="green">{` ${collection?.creator}`}</span>
+          <span className="green">{` ${collectionMarketplaceDetails?.creator}`}</span>
         </BodyText>
         <BodyText light className="description">
-          {collection?.description}
+          {collectionMarketplaceDetails?.description}
         </BodyText>
       </div>
       <div className="collection-stats-container">
         <div className="stat-set">
-          <BodyText bold>{collection?.numberOfItems}</BodyText>
+          <BodyText bold>{collectionContractDetails?.numberOfItems}</BodyText>
           <BodyText light>Items</BodyText>
         </div>
         <div className="stat-set">
-          <BodyText bold>{collection?.owners}</BodyText>
+          <BodyText bold>{collectionContractDetails?.owners}</BodyText>
           <BodyText light>Owners</BodyText>
         </div>
         <div className="stat-set">
           <BodyText bold>
-            {collection?.floorPrice}
+            {collectionContractDetails?.floorPrice}
             <span style={{ marginLeft: "5px" }}>Ⓝ</span>
           </BodyText>
           <BodyText light>Floor price</BodyText>
         </div>
         <div className="stat-set">
           <BodyText bold>
-            {collection?.volTraded}
+            {collectionContractDetails?.volTraded}
             <span style={{ marginLeft: "5px" }}>Ⓝ</span>
           </BodyText>
           <BodyText light>Volume traded</BodyText>

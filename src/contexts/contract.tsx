@@ -23,6 +23,7 @@ const ContractProvider = (props: any) => {
       viewMethods: [
         "get_collection",
         "get_collections",
+        "get_sale",
         "get_sales_by_nft_contract_id",
       ],
       changeMethods: [
