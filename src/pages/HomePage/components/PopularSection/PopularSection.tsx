@@ -1,4 +1,5 @@
-import React, { useContext, useEffect } from "react"
+import { useContext } from "react"
+import { Link } from "react-router-dom"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
 import CollectionCard from "../../../../components/CollectionCard/CollectionCard"
@@ -8,15 +9,14 @@ import "./PopularSection.scss"
 
 const PopularSection = () => {
   const { collections } = useContext(CollectionContext)
-  useEffect(() => {
-    console.log(collections, "collections");
-  }, [])
   return (
     <div className="popular-section">
       <SectionPadding>
         <div className="head">
           <BodyText className="section-title-text">Popular</BodyText>
-          <Button title="See All" onClick={() => { }} secondary />
+          <Link to="/collections">
+            <Button title="See All" onClick={() => {}} secondary />
+          </Link>
         </div>
         <div className="cards-container">
           {collections.slice(0, 4).map((item, i) => (

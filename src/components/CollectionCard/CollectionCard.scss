@@ -5,6 +5,8 @@
   position: relative;
   text-decoration: none;
   transition: all .5s;
+  border-radius: 5px;
+  overflow: hidden;
   
   &:hover {
     background: #1e213b;

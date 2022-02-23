@@ -1,4 +1,3 @@
-import React from "react"
 import { Link } from "react-router-dom"
 import BodyText from "../BodyText/BodyText"
 import ImageWithLoadBg from "../ImageWithLoadBg/ImageWithLoadBg"

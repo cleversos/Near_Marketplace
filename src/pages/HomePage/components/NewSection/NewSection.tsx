@@ -1,27 +1,31 @@
-import React from "react"
+import React, { useContext } from "react"
+import { Link } from "react-router-dom"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
 import CollectionCard from "../../../../components/CollectionCard/CollectionCard"
 import SectionPadding from "../../../../components/SectionPadding/SectionPadding"
 import { defaultPopularCollections } from "../../../../constants/defaultData"
+import { CollectionContext } from "../../../../contexts/collections"
 import "./NewSection.scss"
 
 const NewSection = () => {
+  const { collections } = useContext(CollectionContext)
   return (
     <div className="home-collections-section">
       <SectionPadding>
         <div className="head">
           <BodyText className="section-title-text">New</BodyText>
-          <Button title="See All" onClick={() => {}} secondary />
+          <Link to="/collections">
+            <Button title="See All" onClick={() => {}} secondary />
+          </Link>
         </div>
         <div className="cards-container">
-          {defaultPopularCollections.map((item, i) => (
+          {collections.slice(0, 4).map((item, i) => (
             <CollectionCard
-              id={item.id}
+              id={item.collectionId}
               tokenType={item.tokenType}
-              image={item.image}
+              image={item.bannerImageUrl}
               name={item.name}
-              description={item.description}
             />
           ))}
         </div>
