@@ -26,16 +26,16 @@ const featuredPost: TFeaturedPost[] = [
 ]
 
 const HeroSection = () => {
-  return(
+  return (
     <Carousel controls={false}>
       {
-        featuredPost.map((post) => (
-          <CarouselItem>
+        featuredPost.map((post, i) => (
+          <CarouselItem key={i}>
             <div className="hero-section">
               <SectionPadding>
                 <div className="content">
                   <BodyText className="hero-text">{post.caption}</BodyText>
-                  <Button title="Explore more" onClick={ () => {} } />
+                  <Button title="Explore more" onClick={() => { }} />
                 </div>
               </SectionPadding>
               <div className="bg-darkener" />

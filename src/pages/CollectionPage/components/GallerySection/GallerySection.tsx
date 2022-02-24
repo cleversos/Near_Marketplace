@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import FilterIcon from "../../../../assets/icons/FilterIcon"
 import GalleryIcon1 from "../../../../assets/icons/GalleryIcon1"
 import GalleryIcon2 from "../../../../assets/icons/GalleyIcon2"
@@ -42,17 +42,18 @@ const GallerySection = (props: GallerySectionProps) => {
       </div>
       <div className={`cards-container ${showMore ? "show-more" : ""}`}>
         {props.isLoading || !props.items
-          ? [1, 2, 3, 4, 5, 6, 7, 8, 8, 9].map(() => <NFTItemLoadingCard />)
+          ? [1, 2, 3, 4, 5, 6, 7, 8, 8, 9].map((item, key) => <NFTItemLoadingCard key={key} />)
           : props.items?.map((item, i) => (
-              <NFTItemCard
-                name={item.name}
-                collectionTitle={item.collectionTitle}
-                collectionId={props.collectionId}
-                price={item.price}
-                image={item.image}
-                id={item.id}
-              />
-            ))}
+            <NFTItemCard
+              key={i}
+              name={item.name}
+              collectionTitle={item.collectionTitle}
+              collectionId={props.collectionId}
+              price={item.price}
+              image={item.image}
+              id={item.id}
+            />
+          ))}
       </div>
     </div>
   )

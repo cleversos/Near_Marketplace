@@ -1,11 +1,13 @@
-@import '../../sass/variables.scss';
+@import "../../sass/variables.scss";
 
 .nft-item-card {
   background: $background2;
   position: relative;
   text-decoration: none;
-  transition: all .5s;
-  
+  transition: all 0.5s;
+  border-radius: 5px;
+  overflow: hidden;
+
   &:hover {
     background: #1e213b;
     transform: scale(1.02);
@@ -44,13 +46,12 @@
         .price {
           font-size: 12px;
         }
-      }      
+      }
     }
 
     .item-name {
       font-size: 16px;
       line-height: 22px;
     }
-
   }
 }

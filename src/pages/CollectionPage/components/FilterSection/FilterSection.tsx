@@ -48,9 +48,8 @@ const FilterSection = (props: FilterSectionProps) => {
       <div onClick={toggleCollapse} className="row-container head">
         <BodyText light>Filter</BodyText>
         <div
-          className={`toggle-hidden-btn ${
-            collapseFilterContainer ? "front" : ""
-          }`}
+          className={`toggle-hidden-btn ${collapseFilterContainer ? "front" : ""
+            }`}
         >
           <ArrowBackIcon />
         </div>
@@ -73,7 +72,7 @@ const FilterSection = (props: FilterSectionProps) => {
               {resolveIcon(currencyOptions[0].icon)}
               <select>
                 {currencyOptions.map((option, i) => (
-                  <option>{option.currency}</option>
+                  <option key={i}>{option.currency}</option>
                 ))}
               </select>
             </div>
@@ -82,7 +81,7 @@ const FilterSection = (props: FilterSectionProps) => {
           </div>
         )}
 
-        <Button title="Apply" onClick={() => {}} />
+        <Button title="Apply" onClick={() => { }} />
       </div>
     </div>
   )

@@ -15,12 +15,13 @@ const PopularSection = () => {
         <div className="head">
           <BodyText className="section-title-text">Popular</BodyText>
           <Link to="/collections">
-            <Button title="See All" onClick={() => {}} secondary />
+            <Button title="See All" onClick={() => { }} secondary />
           </Link>
         </div>
         <div className="cards-container">
           {collections.slice(0, 4).map((item, i) => (
             <CollectionCard
+              key={i}
               id={item.collectionId}
               tokenType={item.tokenType}
               image={item.bannerImageUrl}

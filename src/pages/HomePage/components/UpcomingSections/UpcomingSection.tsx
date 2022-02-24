@@ -31,22 +31,22 @@ const defaultUpcomingLaunches: TUpcomingLaunches[] = [
     name: "Virtual Reality",
     link: "https://www.facebook.com",
   },
-  
+
 ]
 
 const UpcomingSection = () => {
-  return(
+  return (
     <div className="home-upcoming-section">
       <SectionPadding>
         <div className="head">
           <BodyText className="section-title-text">Upcoming Launches</BodyText>
-          <Button title="See all" secondary onClick={ () => {} }/>
+          <Button title="See all" secondary onClick={() => { }} />
         </div>
         <div className="cards-container">
           {
             defaultUpcomingLaunches.map((launch, i) => (
-              <a href={launch.link} target="_blank" rel="noreferrer" className="upcoming-launch-card">
-                <ImageWithLoadBg aspectRatio={0.9375} src={launch.image} alt={launch.name}/>
+              <a href={launch.link} target="_blank" rel="noreferrer" className="upcoming-launch-card" key={i}>
+                <ImageWithLoadBg aspectRatio={0.9375} src={launch.image} alt={launch.name} />
                 <div className="img-darkener" />
                 <div className="details">
                   <BodyText bold className="name">{launch.name}</BodyText>

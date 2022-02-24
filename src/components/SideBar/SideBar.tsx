@@ -61,14 +61,13 @@ const SideBar = (props: SideBarProps) => {
   const [isExpanded, setIsExpanded] = useState(false)
   return (
     <div
-      className={`side-bar ${openMobileSidebar ? "show-mobile" : ""} ${
-        isExpanded ? "expanded" : "collapsed"
-      }`}
+      className={`side-bar ${openMobileSidebar ? "show-mobile" : ""} ${isExpanded ? "expanded" : "collapsed"
+        }`}
     >
       <ul className="items-container">
         {links.map((link, i) => (
           <li
-            className={`${link.link === location.pathname ? "selected" : ""}`}
+            className={`${link.link === location.pathname ? "selected" : ""}`} key={i}
           >
             <Link to={link.link}>
               <IconLoader
