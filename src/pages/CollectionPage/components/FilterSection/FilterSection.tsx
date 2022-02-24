@@ -4,6 +4,7 @@ import ChevronDownIcon from "../../../../assets/icons/ChevronDownIcon"
 import DollarIcon from "../../../../assets/icons/DollarIcon"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
+import PriceSelect from "../../../../components/PriceSelect/PriceSelect"
 import "./FilterSection.scss"
 
 const currencyOptions = [
@@ -12,16 +13,12 @@ const currencyOptions = [
     symbol: "USD",
     icon: "usd",
   },
+  {
+    currency: "NEAR Protocol",
+    symbol: "NEAR",
+    icon: "near",
+  },
 ]
-
-const resolveIcon = (icon: string) => {
-  switch (icon) {
-    case "usd":
-      return <DollarIcon />
-    default:
-      break
-  }
-}
 
 interface FilterSectionProps {
   collapseFilterContainer: boolean
@@ -68,14 +65,8 @@ const FilterSection = (props: FilterSectionProps) => {
         </div>
         {showPriceOptions && (
           <div className="price-options-container">
-            <div className="currency-option-select">
-              {resolveIcon(currencyOptions[0].icon)}
-              <select>
-                {currencyOptions.map((option, i) => (
-                  <option key={i}>{option.currency}</option>
-                ))}
-              </select>
-            </div>
+            {/* {resolveIcon(currencyOptions[0].icon)} */}
+            <PriceSelect options={currencyOptions} />
             <input type="text" placeholder="Min" />
             <input type="text" placeholder="Max" />
           </div>

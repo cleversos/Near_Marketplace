@@ -1,13 +1,12 @@
-@import '../../../../sass/variables.scss';
-@import '../../../../components/BodyText/BodyText.scss';
-
+@import "../../../../sass/variables.scss";
+@import "../../../../components/BodyText/BodyText.scss";
 
 .filter-section {
   background: $background2;
   height: 100%;
   border: 1px solid $separator;
   width: 250px;
-  transition: width .5s;
+  transition: width 0.5s;
   margin-right: 30px;
 
   &.hidden {
@@ -32,7 +31,7 @@
     cursor: pointer;
 
     svg {
-      transition: all .5s;
+      transition: all 0.5s;
     }
 
     &.up {
@@ -55,7 +54,7 @@
 
   .toggle-hidden-btn {
     cursor: pointer;
-    transition: all .5s;
+    transition: all 0.5s;
 
     &.front {
       transform: rotate(180deg);
@@ -105,7 +104,14 @@
     box-sizing: border-box;
   }
 }
-
+.price-select-box {
+  display: flex;
+  align-items: center;
+  background: #090619;
+  padding-left: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
 @media only screen and (max-width: 720px) {
   .filter-section {
     position: fixed;
@@ -115,12 +121,12 @@
     padding: 30px 15px;
     z-index: 10;
     margin: 0;
-    transition: all .5s;
+    transition: all 0.5s;
 
     &.hidden {
       width: 350px;
       transform: translateX(-100%);
-  
+
       .head {
         .body-text {
           display: block;

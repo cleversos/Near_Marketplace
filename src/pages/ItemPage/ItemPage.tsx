@@ -17,7 +17,7 @@ import LoadingCircle from "../../components/LoadingCircle/LoadingCircle"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
 import formatAmount from "../../helpers/formatAmount"
-import { convertTokenResultToItemStruct } from "../../helpers/utils"
+import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } from "../../helpers/utils"
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
@@ -136,7 +136,7 @@ const ItemPage = () => {
     })
     const result = JSON.parse(Buffer.from(rawResult.result).toString())
     setItem(
-      convertTokenResultToItemStruct(result, "collection name", collectionId)
+      convertTokenResultToItemStructItem(result, "collection name", collectionId)
     )
   }, [])
 
@@ -187,7 +187,7 @@ const ItemPage = () => {
         GAS,
         deposit
       )
-    } catch (error) {}
+    } catch (error) { }
   }
 
   const onBid = async (amount) => {
@@ -200,7 +200,7 @@ const ItemPage = () => {
         GAS,
         parseNearAmount(amount)
       )
-    } catch (error) {}
+    } catch (error) { }
   }
 
   const acceptOffer = async () => {
@@ -216,7 +216,7 @@ const ItemPage = () => {
         GAS,
         deposit
       )
-    } catch (error) {}
+    } catch (error) { }
   }
 
   const listItem = async () => {

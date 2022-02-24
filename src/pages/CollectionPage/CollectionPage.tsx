@@ -147,7 +147,7 @@ const CollectionPage = () => {
           collectionId
         )
       )
-      console.log(items)
+      console.log(items, " ====> items")
       return items
     } catch (error) {
       console.log(error)

@@ -50,7 +50,8 @@ const GallerySection = (props: GallerySectionProps) => {
               collectionTitle={item.collectionTitle}
               collectionId={props.collectionId}
               price={item.price}
-              image={item.image}
+              image="https://content.solsea.io/files/thumbnail/1645619337748-2199247.jpg"
+              // image={item.image}
               id={item.id}
             />
           ))}

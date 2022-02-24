@@ -16,8 +16,8 @@ type TActivity = {
   seller?: string;
 }
 
-const ActivityTable = (props: {activities: TActivity[]}) => {
-  return(
+const ActivityTable = (props: { activities: TActivity[] }) => {
+  return (
     <table className="top-collection-table">
       <thead>
         <tr>
@@ -38,11 +38,11 @@ const ActivityTable = (props: {activities: TActivity[]}) => {
             props.activities[0].seller &&
             <th><BodyText light>Seller</BodyText></th>
           }
-         
+
         </tr>
       </thead>
       <tbody>
-        {props.activities.map((activity, i) => 
+        {props.activities.map((activity, i) =>
           <tr key={i}>
             <td>
               <div className="collection-name-and-img-column">
@@ -57,7 +57,7 @@ const ActivityTable = (props: {activities: TActivity[]}) => {
                   activity.trxId.length - 4,
                   activity.trxId.length
                 )
-              }</BodyText>
+                }</BodyText>
             </td>
             <td>
               <BodyText className="mobile-title">Transaction Type</BodyText>
@@ -65,7 +65,7 @@ const ActivityTable = (props: {activities: TActivity[]}) => {
             </td>
             <td>
               <BodyText className="mobile-title">Time</BodyText>
-              <BodyText light>{moment(activity.time).fromNow() }</BodyText>
+              <BodyText light>{moment(activity.time).fromNow()}</BodyText>
             </td>
             <td>
               <BodyText className="mobile-title">Total Amount</BodyText>
@@ -80,7 +80,7 @@ const ActivityTable = (props: {activities: TActivity[]}) => {
                     activity.mintAddress.length - 4,
                     activity.mintAddress.length
                   )
-                }</BodyText>
+                  }</BodyText>
               </td>
             }
             {
@@ -92,8 +92,8 @@ const ActivityTable = (props: {activities: TActivity[]}) => {
                     activity.buyer.length - 4,
                     activity.buyer.length
                   )
-                }</BodyText>
-              </td>              
+                  }</BodyText>
+              </td>
             }
             {
               props.activities[0].seller &&
@@ -104,13 +104,13 @@ const ActivityTable = (props: {activities: TActivity[]}) => {
                     activity.seller.length - 4,
                     activity.seller.length
                   )
-                }</BodyText>
-              </td>              
+                  }</BodyText>
+              </td>
             }
           </tr>
         )}
       </tbody>
-    </table>    
+    </table>
   )
 }
 
