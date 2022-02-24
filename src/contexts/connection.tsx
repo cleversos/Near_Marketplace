@@ -48,7 +48,7 @@ const ConnectionProvider = (props: any) => {
   const [network, setNetwork] = useState("testnet")
   const [near, setNear] = useState<nearAPI.Near>()
   const [wallet, setWallet] = useState<WalletConnectionProps>()
-
+  const [forseRender, setForseRender] = useState<boolean>(false)
   const config =
     configs.find((config) => config.networkId === network) || configs[0]
 
@@ -70,8 +70,13 @@ const ConnectionProvider = (props: any) => {
   }, [config])
 
   useEffect(() => {
+    setForseRender(!forseRender)
     connectToNear()
   }, [connectToNear])
+
+  useEffect(() => {
+    connectToNear()
+  }, [])
 
   const signIn = () => {
     wallet.requestSignIn("marketplace_test_9.xuguangxia.testnet")

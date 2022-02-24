@@ -1,4 +1,3 @@
-import React from "react"
 import BodyText from "../../../../components/BodyText/BodyText"
 import NFTItemCard from "../../../../components/NFTItemCard/NFTItemCard"
 import { TProfileCollection } from "../../ProfilePage"

@@ -6,7 +6,6 @@ export const convertTokenResultToItemStruct = (
   collectionTitle,
   collectionId
 ): TItem => {
-  console.log(item, "===> convertoken")
   return {
     image: item.metadata.media,
     name: item.metadata.title,

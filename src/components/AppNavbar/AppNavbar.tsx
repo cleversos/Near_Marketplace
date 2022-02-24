@@ -16,29 +16,26 @@ interface AppNavbarProps {
   showVolBar: boolean
 }
 const AppNavbar = (props: AppNavbarProps) => {
+  const walletOptionsRef = useRef(null)
+
   const [expandSearchBox, setExpandSearchBox] = useState(false)
   const [showMobileNavMenu, setShowMobileNavMenu] = useState(false)
   const { wallet, signIn, signOut } = useContext(ConnectionContext)
   const walletAddress = wallet?.getAccountId()
   const [hideWalletOptions, setHideWalletOptions] = useState(true)
-  const walletOptionsRef = useRef(null)
 
   const navLinks = [
     {
       name: "Apply",
-      onClick: () => { },
+      link: "/#",
     },
     {
       name: "Browse",
-      onClick: () => { },
+      link: "/collections",
     },
     {
       name: "Sell",
-      onClick: () => { },
-    },
-    {
-      name: "Community",
-      onClick: () => { },
+      link: "/me",
     },
   ]
 
@@ -96,7 +93,7 @@ const AppNavbar = (props: AppNavbarProps) => {
           <ul className="nav-links">
             {navLinks.map((link, i) => (
               <li key={link.name}>
-                <BodyText>{link.name}</BodyText>
+                <Link to={link.link} style={{ color: "#b3b9c4" }}>{link.name}</Link>
               </li>
             ))}
           </ul>

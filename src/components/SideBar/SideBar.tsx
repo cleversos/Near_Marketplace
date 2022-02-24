@@ -33,9 +33,9 @@ const links: TLinks[] = [
     icon: "stats",
   },
   {
-    link: "/settings",
-    name: "Settings",
-    icon: "settings",
+    link: "/me",
+    name: "Profile",
+    icon: "profile",
   },
 ]
 
@@ -81,21 +81,14 @@ const SideBar = (props: SideBarProps) => {
       </ul>
       <div className="bottom-section">
         {walletAddress ? (
-          <Link to="/me" className="profile-container">
-            <BodyText>
-              {walletAddress.slice(0, 4)}...$
-              {walletAddress.slice(
-                walletAddress.length - 4,
-                walletAddress.length
-              )}
-            </BodyText>
+          <div className="profile-container">
             <div
               onClick={() => setIsExpanded((current) => !current)}
               className="expand-btn"
             >
               <ExpandIcon />
             </div>
-          </Link>
+          </div>
         ) : (
           <>
             <div

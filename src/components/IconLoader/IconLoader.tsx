@@ -18,6 +18,7 @@ import TelegramIcon from "../../assets/icons/TelegramIcon"
 import TwitterIcon from "../../assets/icons/TwitterIcon"
 import WalletIcon from "../../assets/icons/WalletIcon"
 import WebsiteIcon from "../../assets/icons/WebsiteIcon"
+import ProfileIcon from "../../assets/icons/ProfileIcon"
 // import solanaIcon from "../../images/solanaIcon.png";
 // import usdcIcon from "../../images/USDCIcon.png";
 
@@ -66,6 +67,9 @@ const resolveIcon = (props: IconLoaderProps): React.ReactNode => {
       return <EditIcon />
     case "delete":
       return <DeleteIcon />
+    case "profile":
+      return <ProfileIcon />
+
     default:
       return <div />
   }

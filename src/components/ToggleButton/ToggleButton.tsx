@@ -7,7 +7,7 @@ type TButton = {
   onClick: Function;
 }
 interface ToggleButtonProps {
-  buttons: TButton[] 
+  buttons: TButton[]
 }
 const ToggleButton = (props: ToggleButtonProps) => {
   const [selectedIndex, setSelectedIndex] = useState<Number>(0);
@@ -16,15 +16,16 @@ const ToggleButton = (props: ToggleButtonProps) => {
     setSelectedIndex(index);
     props.buttons[index].onClick();
   }
-  return(
+  return (
     <div className="filter-toggle-button">
       {
         props.buttons.map((button, i) => (
-        <Button
-          className={selectedIndex !== i ? "inactive" : ""}
-          title={button.title}
-          onClick={() => onButtonClick(i) }
-        />          
+          <Button
+            key={i}
+            className={selectedIndex !== i ? "inactive" : ""}
+            title={button.title}
+            onClick={() => onButtonClick(i)}
+          />
         ))
       }
     </div>

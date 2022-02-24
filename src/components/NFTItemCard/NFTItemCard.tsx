@@ -1,4 +1,3 @@
-import React from "react"
 import { Link } from "react-router-dom"
 import HeartIcon from "../../assets/icons/HeartIcon"
 import BodyText from "../BodyText/BodyText"

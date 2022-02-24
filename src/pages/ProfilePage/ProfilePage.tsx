@@ -122,18 +122,29 @@ const ProfilePage = () => {
     fetchUserData()
   }, [fetchUserData])
 
+  useEffect(() => {
+    console.log(walletAddress, " : walletAddress")
+  }, [])
+
   return (
     <div className="profile-page">
       <div className="profile-details-container">
         <div className="image-container">
-          <img src={profile?.imageUrl} alt={walletAddress || ""} />
+          <svg width="145" height="145" viewBox="0 0 145 145" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="72.5" cy="72.5" r="72.5" fill="url(#paint0_linear_1_9)" />
+            <path d="M40.5 112C40.5 112 34 112 34 105.5C34 99 40.5 79.5 73 79.5C105.5 79.5 112 99 112 105.5C112 112 105.5 112 105.5 112H40.5ZM73 73C78.1717 73 83.1316 70.9455 86.7886 67.2886C90.4455 63.6316 92.5 58.6717 92.5 53.5C92.5 48.3283 90.4455 43.3684 86.7886 39.7114C83.1316 36.0545 78.1717 34 73 34C67.8283 34 62.8684 36.0545 59.2114 39.7114C55.5545 43.3684 53.5 48.3283 53.5 53.5C53.5 58.6717 55.5545 63.6316 59.2114 67.2886C62.8684 70.9455 67.8283 73 73 73Z" fill="white" />
+            <defs>
+              <linearGradient id="paint0_linear_1_9" x1="129.5" y1="29.5" x2="30.5" y2="124.5" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#3AB8FF" />
+                <stop offset="0.484375" stopColor="#8028FF" />
+                <stop offset="1" stopColor="#E912FE" />
+              </linearGradient>
+            </defs>
+          </svg>
         </div>
         <BodyText className="address" light>
           {walletAddress?.slice(0, 6)}...
           {walletAddress?.slice(walletAddress.length - 4, walletAddress.length)}
-        </BodyText>
-        <BodyText className="description" light>
-          {profile?.description}
         </BodyText>
       </div>
       <div className="items-container">
