@@ -90,6 +90,10 @@ const ProfilePage = () => {
     getWalletNFTs()
   }, [getWalletNFTs])
 
+  useEffect(() => {
+    getWalletNFTs()
+  }, [])
+
   const totalFloorValue = 235.3
   let listedItemsCollections: TProfileCollection[] = [
     {

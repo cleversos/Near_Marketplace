@@ -24,6 +24,8 @@ interface PriceRange {
 }
 const GallerySection = (props: GallerySectionProps) => {
   const [showMore, setShowMore] = useState(false)
+  const [searchString, setSearchString] = useState<string>("")
+
   return (
     <div className="gallery-section">
       <div className="head">
@@ -35,7 +37,7 @@ const GallerySection = (props: GallerySectionProps) => {
         </div>
         <div className="search-bar">
           <SearchIcon />
-          <input type="text" placeholder="Search" />
+          <input type="text" value={searchString} placeholder="Search" onChange={(e) => setSearchString(e.target.value)} />
         </div>
         <div className="icons-container">
           <div className="icon" onClick={() => setShowMore(false)}>
@@ -55,7 +57,7 @@ const GallerySection = (props: GallerySectionProps) => {
               (props.priceRange.max === "" && item.price >= parseFloat(props.priceRange.min)) ||
               (props.priceRange.min === "" && item.price <= parseFloat(props.priceRange.max)) ||
               (item.price >= parseFloat(props.priceRange.min) && item.price < parseFloat(props.priceRange.max))) &&
-
+            ((item.name + item.image + item.price).toLowerCase().indexOf(searchString) !== -1 || searchString === "") &&
             <NFTItemCard
               key={i}
               name={item.name}

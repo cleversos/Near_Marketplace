@@ -63,7 +63,6 @@ const CollectionPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [collapseFilterContainer, setCollapseFilterContainer] = useState(false)
   const [mode, setMode] = useState<"items" | "activities">("items")
-
   const [priceRange, setPriceRange] = useState<PriceRange>({
     currency: "USD",
     min: "min",

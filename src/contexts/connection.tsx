@@ -7,7 +7,7 @@ import {
 import { Provider } from "near-api-js/lib/providers"
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import * as buffer from "buffer"
-;(window as any).Buffer = buffer.Buffer
+  ; (window as any).Buffer = buffer.Buffer
 
 const { connect, keyStores, WalletConnection } = nearAPI
 
@@ -38,9 +38,9 @@ export const ConnectionContext = React.createContext<ConnectionContextProps>({
   wallet: undefined,
   network: "testnet",
   provider: undefined,
-  setNetwork: () => {},
-  signIn: () => {},
-  signOut: () => {},
+  setNetwork: () => { },
+  signIn: () => { },
+  signOut: () => { },
 })
 
 // connect to NEAR
