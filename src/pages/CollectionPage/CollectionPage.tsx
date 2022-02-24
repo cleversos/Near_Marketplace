@@ -23,6 +23,12 @@ type TCollectionLinks = {
   medium?: string
 }
 
+type PriceRange = {
+  currency: string
+  min: string
+  max: string
+}
+
 export type TCollection = {
   collectionId: string
   tokenType: string
@@ -57,6 +63,12 @@ const CollectionPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [collapseFilterContainer, setCollapseFilterContainer] = useState(false)
   const [mode, setMode] = useState<"items" | "activities">("items")
+
+  const [priceRange, setPriceRange] = useState<PriceRange>({
+    currency: "USD",
+    min: "min",
+    max: "max"
+  });
 
   // fetch collection details using collectionId and tokenType
   const fetchCollectionMarketDetails = useCallback(async () => {
@@ -147,7 +159,6 @@ const CollectionPage = () => {
           collectionId
         )
       )
-      console.log(items, " ====> items")
       return items
     } catch (error) {
       console.log(error)
@@ -214,11 +225,14 @@ const CollectionPage = () => {
           <FilterSection
             collapseFilterContainer={collapseFilterContainer}
             setCollapseFilterContainer={setCollapseFilterContainer}
+            priceRange={priceRange}
+            setPriceRange={(e) => setPriceRange(e)}
           />
         </div>
         {mode === "items" ? (
           <div className="gallery-section-container">
             <GallerySection
+              priceRange={priceRange}
               isLoading={isLoading}
               items={items || null}
               collectionId={collectionId}

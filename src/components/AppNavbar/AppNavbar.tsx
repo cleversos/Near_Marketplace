@@ -26,19 +26,19 @@ const AppNavbar = (props: AppNavbarProps) => {
   const navLinks = [
     {
       name: "Apply",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       name: "Browse",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       name: "Sell",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       name: "Community",
-      onClick: () => {},
+      onClick: () => { },
     },
   ]
 
@@ -56,16 +56,15 @@ const AppNavbar = (props: AppNavbarProps) => {
   return (
     <>
       <nav className="app-navbar">
-        <VolumeAndLangBar
+        {/* <VolumeAndLangBar
           dailyVolume={props.dailyVolume}
           totalVolume={props.totalVolume}
-        />
+        /> */}
         <div className="main-navbar">
           <div
             onClick={() => props.setOpenSidebar(true)}
-            className={`sidebar-open-btn ${
-              expandSearchBox ? "hide-mobile" : ""
-            }`}
+            className={`sidebar-open-btn ${expandSearchBox ? "hide-mobile" : ""
+              }`}
           >
             <IconLoader icon="menu" />
           </div>
@@ -83,9 +82,8 @@ const AppNavbar = (props: AppNavbarProps) => {
           </div>
           <div
             onClick={() => setExpandSearchBox((current) => !current)}
-            className={`search-icon-btn ${
-              !expandSearchBox ? "search" : "cancel"
-            }`}
+            className={`search-icon-btn ${!expandSearchBox ? "search" : "cancel"
+              }`}
           >
             <IconLoader icon={!expandSearchBox ? "search" : "cancel"} />
           </div>
@@ -116,9 +114,8 @@ const AppNavbar = (props: AppNavbarProps) => {
                 onClick={() => setHideWalletOptions(!hideWalletOptions)}
               />
               <ul
-                className={`dropdown-options ${
-                  hideWalletOptions ? "hidden" : "visible"
-                }`}
+                className={`dropdown-options ${hideWalletOptions ? "hidden" : "visible"
+                  }`}
               >
                 <li onClick={() => signOut()}>
                   <BodyText light>Copy address</BodyText>

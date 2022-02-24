@@ -5,6 +5,7 @@ import DollarIcon from "../../../../assets/icons/DollarIcon"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
 import PriceSelect from "../../../../components/PriceSelect/PriceSelect"
+import FilterPriceInput from "../FitlerPriceInput/FilterPriceInput"
 import "./FilterSection.scss"
 
 const currencyOptions = [
@@ -23,6 +24,14 @@ const currencyOptions = [
 interface FilterSectionProps {
   collapseFilterContainer: boolean
   setCollapseFilterContainer: Function
+  priceRange: PriceRange
+  setPriceRange: Function
+}
+
+type PriceRange = {
+  currency: string
+  min: string
+  max: string
 }
 
 const FilterSection = (props: FilterSectionProps) => {
@@ -30,12 +39,24 @@ const FilterSection = (props: FilterSectionProps) => {
   const [showPriceOptions, setShowPriceOptions] = useState(true)
   const { collapseFilterContainer, setCollapseFilterContainer } = props
 
+  const [priceMin, setPriceMin] = useState("")
+  const [priceMax, setPriceMax] = useState("")
+
   const toggleCollapse = () => {
     setCollapseFilterContainer(!collapseFilterContainer)
   }
 
   const togglePriceOptions = () => {
     setShowPriceOptions((current) => !current)
+  }
+
+  const handleApply = () => {
+    props.setPriceRange({
+      currency: "USD",
+      min: priceMin,
+      max: priceMax
+    })
+    console.log(priceMin, priceMax)
   }
 
   return (
@@ -65,14 +86,13 @@ const FilterSection = (props: FilterSectionProps) => {
         </div>
         {showPriceOptions && (
           <div className="price-options-container">
-            {/* {resolveIcon(currencyOptions[0].icon)} */}
-            <PriceSelect options={currencyOptions} />
-            <input type="text" placeholder="Min" />
-            <input type="text" placeholder="Max" />
+            <PriceSelect options={currencyOptions} minValue={priceMin} maxValue={priceMax} setPriceRange={(e) => props.setPriceRange(e)} />
+            <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e) => setPriceMin(e)} />
+            <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e) => setPriceMax(e)} />
           </div>
         )}
 
-        <Button title="Apply" onClick={() => { }} />
+        <Button title="Apply" onClick={() => handleApply()} />
       </div>
     </div>
   )

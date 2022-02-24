@@ -14,8 +14,14 @@ interface GallerySectionProps {
   items: NFTItemCardProps[] | null
   setCollapseFilterContainer: Function
   collectionId: string
+  priceRange: PriceRange
 }
 
+interface PriceRange {
+  currency: string
+  min: string
+  max: string
+}
 const GallerySection = (props: GallerySectionProps) => {
   const [showMore, setShowMore] = useState(false)
   return (
@@ -44,6 +50,12 @@ const GallerySection = (props: GallerySectionProps) => {
         {props.isLoading || !props.items
           ? [1, 2, 3, 4, 5, 6, 7, 8, 8, 9].map((item, key) => <NFTItemLoadingCard key={key} />)
           : props.items?.map((item, i) => (
+
+            ((props.priceRange.max === "" && props.priceRange.min === "") ||
+              (props.priceRange.max === "" && item.price >= parseFloat(props.priceRange.min)) ||
+              (props.priceRange.min === "" && item.price <= parseFloat(props.priceRange.max)) ||
+              (item.price >= parseFloat(props.priceRange.min) && item.price < parseFloat(props.priceRange.max))) &&
+
             <NFTItemCard
               key={i}
               name={item.name}
