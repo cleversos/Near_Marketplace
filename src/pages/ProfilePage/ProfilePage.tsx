@@ -174,11 +174,11 @@ const ProfilePage = () => {
           ))}
         {mode === "offersMade" &&
           offersMade.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} />
+            <CollectionAndItemsSet collection={collection} key={i} />
           ))}
         {mode === "offersRecieved" &&
           offersMade.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} />
+            <CollectionAndItemsSet collection={collection} key={i} />
           ))}
         {mode === "activities" && (
           <ActivityTable
