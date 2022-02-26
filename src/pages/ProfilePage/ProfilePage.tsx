@@ -1,7 +1,9 @@
+import { formatNearAmount } from "near-api-js/lib/utils/format"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
+import NFTItemCard from "../../components/NFTItemCard/NFTItemCard"
 import { CollectionContext } from "../../contexts/collections"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
@@ -40,7 +42,7 @@ const ProfilePage = () => {
   const { collections } = useContext(CollectionContext)
   const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
   const { contractAccountId, contract } = useContext(ContractContext)
-  const [listedNfts, setListedNfts] = useState();
+  const [listedNfts, setListedNfts] = useState<any>();
 
   const getUserTokensInACollection = useCallback(
     async (collection: TCollection, provider, accountId) => {
@@ -80,7 +82,6 @@ const ProfilePage = () => {
         walletAddress
       )
       setListedNfts(sales)
-      console.log(sales, "salesaaa")
     } catch (error) {
       console.log(error)
     }
@@ -91,7 +92,6 @@ const ProfilePage = () => {
   }, [])
 
   const getWalletNFTs = useCallback(async () => {
-    console.log(collections, " : collections")
     try {
       const promises = collections.map(
         async (collection) =>
@@ -112,7 +112,6 @@ const ProfilePage = () => {
       await Promise.all(promises).then((results) =>
         setWalletNFTs(results.filter((result) => result))
       )
-      console.log(walletNFTs, "walletNfts")
     } catch (error) {
       console.log
     }
@@ -205,21 +204,72 @@ const ProfilePage = () => {
           />
         </div>
         {mode === "myItems" &&
+          walletNFTs.length !== 0 ?
           walletNFTs?.map((collection, i) => (
             <CollectionAndAllItemsSet collection={collection} listedNfts={listedNfts} key={i} />
-          ))}
+          ))
+          :
+          <div className="collection-and-items-set">
+            <div className="nfts-container">
+              {listedNfts.map((item, i) => (
+                <NFTItemCard
+                  key={i}
+                  id={item.token_id}
+                  collectionId={item.nft_contract_id}
+                  image={item.metadata.media}
+                  // image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
+                  name={item.metadata.title}
+                  collectionTitle={item.metadata.title}
+                  price={parseFloat(formatNearAmount(item.sale_conditions.near))}
+                />
+              ))}
+            </div>
+          </div>
+          // walletNFTs?.map((collection, i) => (
+          //   <CollectionAndAllItemsSet collection={collection} listedNfts={listedNfts} key={i} />
+          // ))}
+        }
         {mode === "listedItems" &&
-          listedItemsCollections.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} key={i} />
-          ))}
+          <div className="collection-and-items-set">
+            <div className="nfts-container">
+              {listedNfts.map((item, i) => (
+                <NFTItemCard
+                  key={i}
+                  id={item.token_id}
+                  collectionId={item.nft_contract_id}
+                  image={item.metadata.media}
+                  // image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
+                  name={item.metadata.title}
+                  collectionTitle={item.metadata.title}
+                  price={parseFloat(formatNearAmount(item.sale_conditions.near))}
+                />
+              ))}
+            </div>
+          </div>
+        }
         {mode === "offersMade" &&
           offersMade.map((collection, i) => (
             <CollectionAndItemsSet collection={collection} key={i} />
           ))}
         {mode === "offersRecieved" &&
-          offersMade.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} key={i} />
-          ))}
+          <div className="collection-and-items-set">
+            <div className="nfts-container">
+              {listedNfts.map((item, i) => (
+                item.bids.near &&
+                <NFTItemCard
+                  key={i}
+                  id={item.token_id}
+                  collectionId={item.nft_contract_id}
+                  image={item.metadata.media}
+                  // image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
+                  name={item.metadata.title}
+                  collectionTitle={item.metadata.title}
+                  price={parseFloat(formatNearAmount(item.sale_conditions.near))}
+                />
+              ))}
+            </div>
+          </div>
+        }
         {mode === "activities" && (
           <ActivityTable
             activities={[

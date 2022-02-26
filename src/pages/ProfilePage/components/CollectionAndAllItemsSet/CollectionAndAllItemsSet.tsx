@@ -8,7 +8,7 @@ import "./CollectionAndAllItemsSet.scss"
 const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, listedNfts: any }) => {
   const { collection } = props
   useEffect(() => {
-    console.log(props.listedNfts)
+    console.log(props.listedNfts, props.collection)
   }, [])
   return (
     <div className="collection-and-items-set">
@@ -35,6 +35,7 @@ const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, liste
           />
         ))}
         {props.listedNfts?.map((item, i) => (
+          collection.id === item.nft_contract_id &&
           <NFTItemCard
             key={i}
             id={item.token_id}

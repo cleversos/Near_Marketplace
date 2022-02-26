@@ -144,7 +144,6 @@ export const getUserSalesInMarketplace = async (
     }
     sales[i] = Object.assign(sales[i], token);
   }
-  console.log(sales);
   return sales
 }
 

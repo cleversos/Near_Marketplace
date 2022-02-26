@@ -63,7 +63,6 @@ const ConnectionProvider = (props: any) => {
       const wallet = new WalletConnection(near, null)
       setNear(near)
       setWallet(wallet)
-      console.log({ near, wallet })
     } catch (error) {
       console.log(error)
     }
