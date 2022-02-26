@@ -22,6 +22,7 @@ const ToggleButton = (props: ToggleButtonProps) => {
         props.buttons.map((button, i) => (
           <Button
             key={i}
+            disabled={false}
             className={selectedIndex !== i ? "inactive" : ""}
             title={button.title}
             onClick={() => onButtonClick(i)}

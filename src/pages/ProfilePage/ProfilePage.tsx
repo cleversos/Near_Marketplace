@@ -4,9 +4,12 @@ import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
 import { CollectionContext } from "../../contexts/collections"
 import { ConnectionContext } from "../../contexts/connection"
-import { convertTokenResultToItemStruct } from "../../helpers/utils"
+import { ContractContext } from "../../contexts/contract"
+import { getUserSalesInMarketplace } from "../../helpers/collections"
+import { convertTokenResultToItemStructItem } from "../../helpers/utils"
 import { TCollection } from "../CollectionPage/CollectionPage"
 import { TItem } from "../ItemPage/ItemPage"
+import CollectionAndAllItemsSet from "./components/CollectionAndAllItemsSet/CollectionAndAllItemsSet"
 import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
 import "./ProfilePage.scss"
 
@@ -36,6 +39,8 @@ const ProfilePage = () => {
   const [mode, setMode] = useState<TProfileMode>("myItems")
   const { collections } = useContext(CollectionContext)
   const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
+  const { contractAccountId, contract } = useContext(ContractContext)
+  const [listedNfts, setListedNfts] = useState();
 
   const getUserTokensInACollection = useCallback(
     async (collection: TCollection, provider, accountId) => {
@@ -49,7 +54,6 @@ const ProfilePage = () => {
         finality: "optimistic",
       })
       const items = JSON.parse(Buffer.from(rawResult.result).toString())
-      console.log({ items })
       if (!items || !items.length) return null
       return {
         id: collection.collectionId,
@@ -57,7 +61,7 @@ const ProfilePage = () => {
         name: collection.name,
         floorPrice: 10,
         items: items.map((item) =>
-          convertTokenResultToItemStruct(
+          convertTokenResultToItemStructItem(
             item,
             collection.name,
             collection.collectionId
@@ -68,7 +72,26 @@ const ProfilePage = () => {
     []
   )
 
+  const getUserSales = async () => {
+    try {
+      const sales = await getUserSalesInMarketplace(
+        provider,
+        contractAccountId,
+        walletAddress
+      )
+      setListedNfts(sales)
+      console.log(sales, "salesaaa")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getUserSales()
+  }, [])
+
   const getWalletNFTs = useCallback(async () => {
+    console.log(collections, " : collections")
     try {
       const promises = collections.map(
         async (collection) =>
@@ -78,9 +101,18 @@ const ProfilePage = () => {
             wallet?.getAccountId()
           )
       )
+
+      const sales = await getUserSalesInMarketplace(
+        provider,
+        contractAccountId,
+        walletAddress
+      )
+      setListedNfts(sales)
+
       await Promise.all(promises).then((results) =>
         setWalletNFTs(results.filter((result) => result))
       )
+      console.log(walletNFTs, "walletNfts")
     } catch (error) {
       console.log
     }
@@ -89,10 +121,6 @@ const ProfilePage = () => {
   useEffect(() => {
     getWalletNFTs()
   }, [getWalletNFTs])
-
-  useEffect(() => {
-    console.log(walletNFTs, " : walletNFTS")
-  }, [walletNFTs])
 
   const totalFloorValue = 235.3
   let listedItemsCollections: TProfileCollection[] = [
@@ -122,10 +150,6 @@ const ProfilePage = () => {
     fetchUserData()
   }, [fetchUserData])
 
-  useEffect(() => {
-    console.log(walletAddress, " : walletAddress")
-  }, [])
-
   return (
     <div className="profile-page">
       <div className="profile-details-container">
@@ -152,36 +176,41 @@ const ProfilePage = () => {
           <Button
             secondary={mode !== "myItems"}
             title="My items"
+            disabled={false}
             onClick={() => setMode("myItems")}
           />
           <Button
             secondary={mode !== "listedItems"}
             title="Listed items"
+            disabled={false}
             onClick={() => setMode("listedItems")}
           />
           <Button
             secondary={mode !== "offersMade"}
             title="Offers made"
+            disabled={false}
             onClick={() => setMode("offersMade")}
           />
           <Button
             secondary={mode !== "offersRecieved"}
             title="Offers received"
+            disabled={false}
             onClick={() => setMode("offersRecieved")}
           />
           <Button
             secondary={mode !== "activities"}
             title="Activities"
+            disabled={false}
             onClick={() => setMode("activities")}
           />
         </div>
         {mode === "myItems" &&
           walletNFTs?.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} />
+            <CollectionAndAllItemsSet collection={collection} listedNfts={listedNfts} key={i} />
           ))}
         {mode === "listedItems" &&
           listedItemsCollections.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} />
+            <CollectionAndItemsSet collection={collection} key={i} />
           ))}
         {mode === "offersMade" &&
           offersMade.map((collection, i) => (

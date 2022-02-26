@@ -75,11 +75,13 @@ const ViewCollectionAdminPage = () => {
             <Button
               className="delete-btn"
               isLoading={isDeleting}
+              disabled={false}
               title={deleteBtnFeedback || "Delete"}
               onClick={deleteCollection}
             />
             <Button
               secondary
+              disabled={false}
               title="Cancel"
               onClick={() => setCollectionTodelete(null)}
             />

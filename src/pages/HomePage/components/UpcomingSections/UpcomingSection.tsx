@@ -40,7 +40,7 @@ const UpcomingSection = () => {
       <SectionPadding>
         <div className="head">
           <BodyText className="section-title-text">Upcoming Launches</BodyText>
-          <Button title="See all" secondary onClick={() => { }} />
+          <Button title="See all" secondary onClick={() => { }} disabled={false} />
         </div>
         <div className="cards-container">
           {

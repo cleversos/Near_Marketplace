@@ -15,7 +15,7 @@ const AllCollectionsSection = () => {
         <div className="head">
           <BodyText className="section-title-text">All Collections</BodyText>
           <Link to="/collections">
-            <Button title="See All" onClick={() => { }} secondary />
+            <Button title="See All" onClick={() => { }} disabled={false} secondary />
           </Link>
         </div>
         <div className="cards-container">

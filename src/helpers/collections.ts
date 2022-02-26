@@ -1,3 +1,5 @@
+import { arrayBuffer } from "stream/consumers"
+
 export const getCollections = async (provider, contractAccountId) => {
   try {
     // get collections from contract
@@ -73,3 +75,76 @@ export const getAllSalesInCollection = async (
   const sales = JSON.parse(Buffer.from(rawResult.result).toString())
   return sales
 }
+
+export const getUserSalesInMarketplace = async (
+  provider,
+  contractAccountId,
+  accountId
+) => {
+  const rawResult: any = await provider.query({
+    request_type: "call_function",
+    account_id: contractAccountId,
+    method_name: "get_sales_by_owner_id",
+    args_base64: btoa(
+      `{"account_id": "${accountId}", "from_index": "0", "limit": 50}`
+    ),
+    finality: "optimistic",
+  })
+  const sales = JSON.parse(Buffer.from(rawResult.result).toString())
+
+  const sale_id_map = new Map<string, Array<string>>();
+  for (let sale of sales) {
+    let id_array = sale_id_map.get(sale.nft_contract_id);
+    if (id_array == undefined) {
+      id_array = [];
+    }
+    id_array.push(sale.token_id);
+    sale_id_map.set(sale.nft_contract_id, id_array);
+  }
+
+  let tokens = new Array();
+  let key = sale_id_map.keys();
+  for (let next = key.next(); next.value != null; next = key.next()) {
+    const value = sale_id_map.get(next.value);
+    const valueArray = value.map(element => {
+      return '"' + element + '"'
+    }).join();
+    console.log(valueArray);
+    const rawTokenResult: any = await provider.query({
+      request_type: "call_function",
+      account_id: next.value,
+      method_name: "nft_tokens_batch",
+      args_base64: btoa(
+        `{"token_ids": [` + valueArray + `]}`
+      ),
+      finality: "optimistic",
+    })
+    const tokensForCollection = JSON.parse(Buffer.from(rawTokenResult.result).toString())
+    for (let j = 0; j < tokensForCollection.length; j++) {
+      tokens[tokens.length] = tokensForCollection[j];
+    }
+  }
+
+  // merge sale listing with nft token data
+  for (let i = 0; i < sales.length; i++) {
+    const { token_id, nft_contract_id } = sales[i];
+    let token = tokens.find(({ token_id: t }) => t === token_id);
+    // don't have it in batch, go find token data
+    if (!token) {
+      const rawTokenResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: nft_contract_id,
+        method_name: "nft_token",
+        args_base64: btoa(
+          `{"token_id": "${token_id}", "from_index": "0", "limit": 50}`
+        ),
+        finality: "optimistic",
+      })
+      token = JSON.parse(Buffer.from(rawResult.result).toString())
+    }
+    sales[i] = Object.assign(sales[i], token);
+  }
+  console.log(sales);
+  return sales
+}
+

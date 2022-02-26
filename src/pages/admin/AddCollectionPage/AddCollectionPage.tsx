@@ -135,7 +135,7 @@ const AddCollectionPage = () => {
         finality: "optimistic",
       })
       const result = JSON.parse(Buffer.from(rawResult.result).toString())
-      
+
       const placeholderResult = {
         nft_contract_id: "asdlkf",
         token_type: "asdlkf",
@@ -310,6 +310,7 @@ const AddCollectionPage = () => {
 
           <Button
             isLoading={isLoading}
+            disabled={false}
             title={btnFeedbackMsg || "Save"}
             onClick={onSubmit}
           />

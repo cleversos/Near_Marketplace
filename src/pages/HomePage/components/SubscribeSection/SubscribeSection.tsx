@@ -5,7 +5,7 @@ import SectionPadding from '../../../../components/SectionPadding/SectionPadding
 import './SubscribeSection.scss';
 
 const SubscribeSection = () => {
-  return(
+  return (
     <div className="subscribe-section">
       <SectionPadding>
         <div className="content">
@@ -18,7 +18,7 @@ const SubscribeSection = () => {
             </BodyText>
             <div className="subscribe-form">
               <input type="text" placeholder='Email address' />
-              <Button title='Subscribe' onClick={ () => {} } />
+              <Button title='Subscribe' onClick={() => { }} disabled={false} />
             </div>
           </div>
         </div>

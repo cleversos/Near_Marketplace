@@ -15,7 +15,7 @@ const PopularSection = () => {
         <div className="head">
           <BodyText className="section-title-text">Popular</BodyText>
           <Link to="/collections">
-            <Button title="See All" onClick={() => { }} secondary />
+            <Button title="See All" onClick={() => { }} secondary disabled={false} />
           </Link>
         </div>
         <div className="cards-container">

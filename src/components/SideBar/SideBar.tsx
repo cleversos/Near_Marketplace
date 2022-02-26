@@ -98,6 +98,7 @@ const SideBar = (props: SideBarProps) => {
               <ExpandIcon />
             </div>
             <Button
+              disabled={false}
               icon="wallet"
               className="connect-wallet"
               title="Connect wallet"

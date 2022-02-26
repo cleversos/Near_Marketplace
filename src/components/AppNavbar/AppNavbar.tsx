@@ -101,6 +101,7 @@ const AppNavbar = (props: AppNavbarProps) => {
             <div className="wallet-options-container">
               <Button
                 secondary
+                disabled={false}
                 title={`
                 ${walletAddress.slice(0, 4)}...${walletAddress.slice(
                   walletAddress.length - 4,
@@ -126,6 +127,7 @@ const AppNavbar = (props: AppNavbarProps) => {
             <Button
               className="connect-wallet-btn"
               title="Connect wallet"
+              disabled={false}
               icon="wallet"
               onClick={signIn}
             />

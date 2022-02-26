@@ -10,18 +10,19 @@ interface ButtonProps {
   className?: string
   secondary?: boolean
   icon?: string
-  isLoading?: boolean
+  isLoading?: boolean,
+  disabled: boolean
 }
 
 const Button = (props: ButtonProps) => {
-  const { title, onClick, className, secondary, isLoading, icon } = props
+  const { title, onClick, className, secondary, isLoading, icon, disabled } = props
 
   return (
     <button
       onClick={() => onClick()}
-      className={`main-button${secondary ? " secondary" : ""} ${
-        className || ""
-      }`}
+      disabled={disabled}
+      className={`main-button${secondary ? " secondary" : ""} ${className || ""
+        }`}
     >
       {isLoading ? <LoadingCircle /> : icon && <IconLoader icon={icon} />}
       <BodyText light={secondary ? true : false}>{title}</BodyText>

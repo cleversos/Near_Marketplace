@@ -86,6 +86,7 @@
         }
       }
       .price-detail-container {
+        position: relative;
         min-height: 250px;
         display: flex;
         flex-direction: column;
@@ -144,6 +145,15 @@
       }
     }
   }
+}
+
+.required-filed {
+  font-size: 12px;
+  position: absolute;
+  left: 40px;
+  top: 10px;
+  z-index: 10;
+  color: #ff2222;
 }
 
 @media only screen and (max-width: 800px) {

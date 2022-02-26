@@ -62,7 +62,8 @@ const ItemPage = () => {
   const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [showBidModal, setShowBidModal] = useState(false)
-  const [listingPrice, setListingPrice] = useState()
+  const [listingPrice, setListingPrice] = useState("")
+  const [priceValidate, setPriceValidate] = useState(true)
 
   const [item, setItem] = useState<TItem | null>(null)
   const [saleDetails, setSaleDetails] = useState<TItemSalesDetails>(null)
@@ -83,6 +84,11 @@ const ItemPage = () => {
 
   const GAS = "200000000000000"
   const deposit = parseNearAmount("0.1")
+
+  const handlePrice = (e) => {
+    setListingPrice(e)
+    setPriceValidate(true)
+  }
 
   //TODO fetch item details from marketplace
   const fetchItemMarketplaceDetails = useCallback(async () => {
@@ -221,24 +227,56 @@ const ItemPage = () => {
 
   const listItem = async () => {
     const account: any = wallet.account()
-    try {
-      await account.functionCall(
-        item.collectionId,
-        "nft_approve",
-        {
-          token_id: item.id,
-          account_id: contractAccountId,
-          msg: JSON.stringify({
-            sale_conditions: {
-              near: parseNearAmount(listingPrice),
-            },
-          }),
-        },
-        GAS,
-        deposit
-      )
-    } catch (error) {
-      console.log(error)
+    if (!(listingPrice === "")) {
+      try {
+        await account.functionCall(
+          item.collectionId,
+          "nft_approve",
+          {
+            token_id: item.id,
+            account_id: contractAccountId,
+            msg: JSON.stringify({
+              sale_conditions: {
+                near: parseNearAmount(listingPrice)
+              },
+            }),
+          },
+          GAS,
+          deposit
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      setPriceValidate(false)
+    }
+
+  }
+  const auctionList = async () => {
+    const account: any = wallet.account()
+    if (!(listingPrice === "")) {
+      try {
+        await account.functionCall(
+          item.collectionId,
+          "nft_approve",
+          {
+            token_id: item.id,
+            account_id: contractAccountId,
+            msg: JSON.stringify({
+              sale_conditions: {
+                near: parseNearAmount(listingPrice),
+                is_auction: true
+              },
+            }),
+          },
+          GAS,
+          deposit
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      setPriceValidate(false)
     }
   }
 
@@ -281,7 +319,7 @@ const ItemPage = () => {
             </div>
             <div className="right-side">
               <div className="first-detail-set">
-                <div className="row-container">
+                {/* <div className="row-container">
                   <BodyText light>{item?.collectionTitle}</BodyText>
                   <div className="icons-container">
                     <div className="share-btn icon">
@@ -294,15 +332,15 @@ const ItemPage = () => {
                       <MoreOptionsIcon />
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <BodyText bold className="item-name">
                   {item?.name}
                 </BodyText>
                 <div className="owners-and-faves-container">
-                  <div className="owners-container">
+                  {/* <div className="owners-container">
                     <OwnersIcon />
                     <BodyText light>Owners</BodyText>
-                  </div>
+                  </div> */}
                   {itemMarketDetails?.favorites && (
                     <div className="faves-container">
                       <HeartIcon />
@@ -322,10 +360,16 @@ const ItemPage = () => {
                       placeholder="Enter price"
                       value={listingPrice}
                       onInputChange={(event) =>
-                        setListingPrice(event.target.value)
+                        handlePrice(event.target.value)
                       }
                     />
-                    <Button title="List" onClick={listItem} />
+                    {!priceValidate &&
+                      <p className="required-filed">Required field</p>
+                    }
+                    <Button title="List" onClick={listItem}
+                      disabled={false} />
+                    <Button title="Auction" onClick={auctionList}
+                      disabled={false} />
                   </div>
                 ) : (
                   <>
@@ -346,16 +390,22 @@ const ItemPage = () => {
                       <Button
                         icon="wallet"
                         title="Connect Wallet"
+                        disabled={false}
                         onClick={signIn}
                       />
                     ) : isOwner ? (
-                      <Button title="Cancel listing" onClick={cancelSale} />
+                      <Button title="Cancel listing" onClick={cancelSale}
+                        disabled={false} />
                     ) : (
                       <>
-                        <Button title="Buy Now" onClick={onBuy} />
+                        <Button
+                          title="Buy Now"
+                          disabled={false}
+                          onClick={onBuy} />
                         <Button
                           secondary
                           title="Bid"
+                          disabled={false}
                           onClick={() => setShowBidModal(true)}
                         />
                       </>
@@ -366,29 +416,45 @@ const ItemPage = () => {
               <ChoiceRenderer
                 changeHandler={(index) => setSelectedDetailsIndex(index)}
                 selected={selectedDetailsIndex}
-                components={[
-                  {
-                    title: "Attributes",
-                    component: (
-                      <div className="attributes-container">
-                        {/* {item?.attributes?.map((attribute, i) => (
+                components={
+                  isOwner && !saleDetails ?
+                    [
+                      {
+                        title: "Attributes",
+                        component: (
+                          <div className="attributes-container">
+                            {/* {item?.attributes?.map((attribute, i) => (
                           <AttributeCard
                             name={attribute.name}
                             value={attribute.value}
                           />
                         ))} */}
-                      </div>
-                    ),
-                  },
-                  {
-                    title: "Details",
-                    component: <div></div>,
-                  },
-                  {
-                    title: "Offers",
-                    component: <div></div>,
-                  },
-                ]}
+                          </div>
+                        ),
+                      }
+                    ]
+                    : [
+                      {
+                        title: "Attributes",
+                        component: (
+                          <div className="attributes-container">
+                            {/* {item?.attributes?.map((attribute, i) => (
+                          <AttributeCard
+                            name={attribute.name}
+                            value={attribute.value}
+                          />
+                        ))} */}
+                          </div>
+                        ),
+                      },
+                      {
+                        title: "Offers",
+                        component: <div className="attributes-container">
+
+                        </div>,
+                      },
+                    ]
+                }
               />
             </div>
           </div>

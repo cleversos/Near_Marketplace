@@ -35,7 +35,7 @@ const HeroSection = () => {
               <SectionPadding>
                 <div className="content">
                   <BodyText className="hero-text">{post.caption}</BodyText>
-                  <Button title="Explore more" onClick={() => { }} />
+                  <Button title="Explore more" onClick={() => { }} disabled={false} />
                 </div>
               </SectionPadding>
               <div className="bg-darkener" />

@@ -16,8 +16,6 @@ const BidModal = (props: {
   const [amount, setAmount] = useState(null)
   const { wallet } = useContext(ConnectionContext)
   const userNearBalance = 20
-  console.log({ wallet: wallet?.account() })
-
   const onInputChange = (event) => {
     setAmount(event.target.value)
     //check the amount
@@ -45,7 +43,7 @@ const BidModal = (props: {
           value={amount}
           type="number"
         />
-        <Button title="Make offer" onClick={() => onMakeBid(amount)} />
+        <Button title="Make offer" onClick={() => onMakeBid(amount)} disabled={false} />
       </div>
     </ModalContainer>
   )

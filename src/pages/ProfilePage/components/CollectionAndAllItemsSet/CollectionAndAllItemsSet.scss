@@ -1,0 +1,36 @@
+@import '../../../../sass/variables.scss';
+
+.collection-and-items-set {
+  margin-bottom: 30px;
+  .head {
+    padding: 10px 0;
+    border-bottom: 1px solid $separator;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+
+    & > * {
+      margin-right: 10px;
+    }
+
+    img {
+      width: 35px;
+      height: 35px;
+      border-radius: 5px;
+    }
+
+    .body-text {
+      &.light {
+        padding: 5px;
+        font-size: 13px;
+        background-color: $background2;
+      }
+    }
+  }
+
+  .nfts-container {
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}

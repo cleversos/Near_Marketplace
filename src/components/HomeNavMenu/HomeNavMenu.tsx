@@ -32,7 +32,8 @@ const HomeNavMenu = (props: HomeNavMenuProps) => {
         }
       </ul>
       <div className="wallet-btn-container">
-        <Button icon="wallet" title="Connect wallet" onClick={() => { }} />
+        <Button icon="wallet" title="Connect wallet"
+          disabled={false} onClick={() => { }} />
       </div>
     </div>
   )

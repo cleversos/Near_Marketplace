@@ -1,25 +1,10 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import ArrowBackIcon from "../../../../assets/icons/ArrowBackIcon"
 import ChevronDownIcon from "../../../../assets/icons/ChevronDownIcon"
-import DollarIcon from "../../../../assets/icons/DollarIcon"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
-import PriceSelect from "../../../../components/PriceSelect/PriceSelect"
 import FilterPriceInput from "../FitlerPriceInput/FilterPriceInput"
 import "./FilterSection.scss"
-
-const currencyOptions = [
-  {
-    currency: "US Dollar",
-    symbol: "USD",
-    icon: "usd",
-  },
-  {
-    currency: "NEAR Protocol",
-    symbol: "NEAR",
-    icon: "near",
-  },
-]
 
 interface FilterSectionProps {
   collapseFilterContainer: boolean
@@ -35,7 +20,6 @@ type PriceRange = {
 }
 
 const FilterSection = (props: FilterSectionProps) => {
-  const [selectedCurrency, setSelectedCurrency] = useState("usd")
   const [showPriceOptions, setShowPriceOptions] = useState(true)
   const { collapseFilterContainer, setCollapseFilterContainer } = props
 
@@ -89,13 +73,12 @@ const FilterSection = (props: FilterSectionProps) => {
         {showPriceOptions && (
           <div className="price-options-container">
             <span>Ⓝ NEAR Protocol</span>
-            {/* <PriceSelect options={currencyOptions} minValue={priceMin} maxValue={priceMax} setPriceRange={(e) => props.setPriceRange(e)} /> */}
             <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e) => setPriceMin(e)} />
             <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e) => setPriceMax(e)} />
           </div>
         )}
 
-        <Button title="Apply" onClick={() => handleApply()} />
+        <Button title="Apply" onClick={() => handleApply()} disabled={false} />
       </div>
     </div>
   )
