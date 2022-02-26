@@ -51,7 +51,6 @@ export type TCollectionContractDetails = {
 
 const CollectionPage = () => {
   const { collectionId, tokenType } = useParams()
-
   const { provider, wallet } = useContext(ConnectionContext)
   const { contractAccountId, contract } = useContext(ContractContext)
 

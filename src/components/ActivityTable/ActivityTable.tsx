@@ -1,6 +1,4 @@
 import moment from 'moment';
-import React from 'react';
-import { defaultCollections } from '../../pages/StatsPage/TopCollectionTable/TopCollectionTable';
 import BodyText from '../BodyText/BodyText';
 import './ActivityTable.scss';
 

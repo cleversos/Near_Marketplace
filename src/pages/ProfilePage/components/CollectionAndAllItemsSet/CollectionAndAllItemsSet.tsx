@@ -1,5 +1,4 @@
 import { formatNearAmount } from "near-api-js/lib/utils/format"
-import { useEffect } from "react"
 import BodyText from "../../../../components/BodyText/BodyText"
 import NFTItemCard from "../../../../components/NFTItemCard/NFTItemCard"
 import { TProfileCollection } from "../../ProfilePage"
@@ -7,9 +6,6 @@ import "./CollectionAndAllItemsSet.scss"
 
 const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, listedNfts: any }) => {
   const { collection } = props
-  useEffect(() => {
-    console.log(props.listedNfts, props.collection)
-  }, [])
   return (
     <div className="collection-and-items-set">
       <div className="head">
