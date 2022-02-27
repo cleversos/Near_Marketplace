@@ -157,7 +157,6 @@ const CollectionPage = () => {
           collectionId
         )
       )
-      console.log(items, "itmes")
       return items
     } catch (error) {
       console.log(error)

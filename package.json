@@ -15,6 +15,7 @@
     "near-api-js": "^0.44.2",
     "near-seed-phrase": "^0.2.0",
     "node-sass": "^7.0.1",
+    "pg": "^8.7.3",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
@@ -65,6 +66,7 @@
     "start_frontend": "cross-env PORT=3001 react-scripts start",
     "build_frontend": "react-scripts build",
     "test_frontend": "react-scripts test",
-    "eject_frontend": "react-scripts eject"
+    "eject_frontend": "react-scripts eject",
+    "server": "node ./api/server.js"
   }
 }

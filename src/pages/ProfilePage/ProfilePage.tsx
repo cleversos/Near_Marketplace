@@ -219,7 +219,6 @@ const ProfilePage = () => {
                         id={item.token_id}
                         collectionId={item.nft_contract_id}
                         image={item.metadata.media}
-                        // image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
                         name={item.metadata.title}
                         collectionTitle={item.metadata.title}
                         price={parseFloat(formatNearAmount(item.sale_conditions.near))}
@@ -239,7 +238,6 @@ const ProfilePage = () => {
                   id={item.token_id}
                   collectionId={item.nft_contract_id}
                   image={item.metadata.media}
-                  // image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
                   name={item.metadata.title}
                   collectionTitle={item.metadata.title}
                   price={parseFloat(formatNearAmount(item.sale_conditions.near))}
@@ -262,7 +260,6 @@ const ProfilePage = () => {
                   id={item.token_id}
                   collectionId={item.nft_contract_id}
                   image={item.metadata.media}
-                  // image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
                   name={item.metadata.title}
                   collectionTitle={item.metadata.title}
                   price={parseFloat(formatNearAmount(item.sale_conditions.near))}

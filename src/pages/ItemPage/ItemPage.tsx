@@ -21,7 +21,7 @@ import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } fr
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
-
+import { getTransactions } from '../../contexts/transaction'
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -47,7 +47,7 @@ export type TItemSalesDetails = {
   approvalId: number
   saleConditions: { near: string }
   ownerId: string
-  bids: {}
+  bids: []
   createdAt: string
   isAuction: boolean
 }
@@ -125,7 +125,7 @@ const ItemPage = () => {
         near: formatNearAmount(result.sale_conditions.near),
       },
       ownerId: result.owner_id,
-      bids: result.bids,
+      bids: result?.bids?.near ? result.bids.near : {},
       createdAt: result.created_at,
       isAuction: result.is_auction,
     })
@@ -164,15 +164,14 @@ const ItemPage = () => {
   }, [fetchAll])
 
   const cancelSale = async () => {
-    console.log({ collectionId, itemId })
+    console.log(formatNearAmount(deposit))
     try {
       await contract.remove_sale(
         {
           nft_contract_id: collectionId,
           token_id: itemId,
         },
-        GAS,
-        deposit
+        GAS
       )
     } catch (error) {
       console.log(error)
@@ -295,6 +294,13 @@ const ItemPage = () => {
     }
   }
 
+  const getAllTransaction = async () => {
+    const txs = await getTransactions(collectionId)
+    console.log(txs, "txs")
+  }
+  useEffect(() => {
+    getAllTransaction()
+  }, [])
   return (
     <div className="item-page">
       {isLoading ? (
@@ -450,7 +456,15 @@ const ItemPage = () => {
                       {
                         title: "Offers",
                         component: <div className="attributes-container">
-
+                          {/* <>
+                            {console.log(saleDetails.bids.length, "saleDetails.bids")}
+                          </> */}
+                          {saleDetails.bids.length !== undefined && saleDetails?.bids?.map((item: any, key) => (
+                            <div className="bid-item" key={key}>
+                              <span>{item.owner_id}</span>
+                              <span>{parseFloat(formatNearAmount(item.price)).toFixed(2)}</span>
+                            </div>
+                          ))}
                         </div>,
                       },
                     ]
@@ -474,8 +488,9 @@ const ItemPage = () => {
             ]}
           />
         </>
-      )}
-    </div>
+      )
+      }
+    </div >
   )
 }
 

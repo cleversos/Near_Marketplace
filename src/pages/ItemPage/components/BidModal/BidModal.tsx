@@ -13,7 +13,7 @@ const BidModal = (props: {
   onMakeBid: Function
 }) => {
   const { onClose, isVisible, price, onMakeBid } = props
-  const [amount, setAmount] = useState(null)
+  const [amount, setAmount] = useState(0)
   const { wallet } = useContext(ConnectionContext)
   const userNearBalance = 20
   const onInputChange = (event) => {

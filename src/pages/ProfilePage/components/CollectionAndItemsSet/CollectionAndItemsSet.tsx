@@ -26,8 +26,7 @@ const CollectionAndItemsSet = (props: { collection: TProfileCollection }) => {
             key={i}
             id={item.id}
             collectionId={collection.id}
-            // image={item.image}
-            image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
+            image={item.image}
             name={item.name}
             collectionTitle={collection.name}
             price={item.price}
@@ -38,8 +37,7 @@ const CollectionAndItemsSet = (props: { collection: TProfileCollection }) => {
             key={i}
             id={item.id}
             collectionId={collection.id}
-            // image={item.image}
-            image="https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://www.arweave.net/rU07DkAFatGgd5BIzoFt_nws0NE78iDKgcV8xArC9W4?ext=png"
+            image={item.image}
             name={item.name}
             collectionTitle={collection.name}
             price={item.price}
