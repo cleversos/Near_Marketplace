@@ -84,6 +84,7 @@ const ItemPage = () => {
 
   const GAS = "200000000000000"
   const deposit = parseNearAmount("0.1")
+  const oneYocto = "1"
 
   const handlePrice = (e) => {
     setListingPrice(e)
@@ -164,14 +165,14 @@ const ItemPage = () => {
   }, [fetchAll])
 
   const cancelSale = async () => {
-    console.log(formatNearAmount(deposit))
     try {
       await contract.remove_sale(
         {
           nft_contract_id: collectionId,
           token_id: itemId,
         },
-        GAS
+        GAS,
+        oneYocto
       )
     } catch (error) {
       console.log(error)
@@ -190,7 +191,7 @@ const ItemPage = () => {
           },
         },
         GAS,
-        deposit
+        oneYocto
       )
     } catch (error) { }
   }
@@ -219,7 +220,7 @@ const ItemPage = () => {
           },
         },
         GAS,
-        deposit
+        oneYocto
       )
     } catch (error) { }
   }
@@ -241,7 +242,7 @@ const ItemPage = () => {
             }),
           },
           GAS,
-          deposit
+          oneYocto
         )
       } catch (error) {
         console.log(error)
@@ -269,7 +270,7 @@ const ItemPage = () => {
             }),
           },
           GAS,
-          deposit
+          oneYocto
         )
       } catch (error) {
         console.log(error)
