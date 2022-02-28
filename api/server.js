@@ -1,9 +1,15 @@
 const express = require('express');
 const transaction = require('./transaction');
+const cors = require('cors');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+var corsOptions = {
+    origin: 'http://35.75.88.169:3001',
+    optionsSuccessStatus: 200 // For legacy browser support
+}
+app.use(cors(corsOptions));
 
 app.post('/transactions_for_item', async (req, res) => {
     const results = await transaction.getTransactionsForItem(req.body.marketplace_account_id, req.body.nft_contract_id, req.body.token_id);
