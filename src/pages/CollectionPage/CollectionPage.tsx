@@ -13,6 +13,8 @@ import GallerySection from "./components/GallerySection/GallerySection"
 import { convertTokenResultToItemStruct } from "../../helpers/utils"
 import { TItem } from "../ItemPage/ItemPage"
 import { getAllSalesInCollection } from "../../helpers/collections"
+import { getTransactionsForCollection } from "../../contexts/transaction"
+import { formatNearAmount } from "near-api-js/lib/utils/format"
 
 type TCollectionLinks = {
   discord?: string
@@ -50,6 +52,7 @@ export type TCollectionContractDetails = {
 
 const CollectionPage = () => {
   const { collectionId, tokenType } = useParams()
+
   const { provider, wallet } = useContext(ConnectionContext)
   const { contractAccountId, contract } = useContext(ContractContext)
 
@@ -184,8 +187,27 @@ const CollectionPage = () => {
     }
   }, [])
 
+  const [activities, setActivities] = useState<any>([])
+  const getActivities = async () => {
+    const data = await getTransactionsForCollection("marketplace_test_9.xuguangxia.testnet", collectionId)
+    const result = []
+    for (let item of data) {
+      result.push({
+        itemName: collectionMarketplaceDetails?.name,
+        itemImageUrl: collectionMarketplaceDetails?.profileImageUrl,
+        trxId: item.receipt_id,
+        time: item.time,
+        amount: formatNearAmount(item.args.args_json.price),
+        buyer: item.args.args_json.buyer_id,
+        seller: item.args.args_json.sale.owner_id,
+      })
+    }
+    setActivities(result)
+  }
+
   useEffect(() => {
     fetchAll()
+    getActivities()
   }, [fetchAll, priceRange])
 
   const switchToActivities = () => {
@@ -242,18 +264,7 @@ const CollectionPage = () => {
           </div>
         ) : (
           <ActivityTable
-            activities={[
-              {
-                itemName: "Stressed Coders #2352",
-                itemImageUrl:
-                  "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
-                trxType: "Listing",
-                trxId: "sadfasdfasuf",
-                time: 1644244154000,
-                amount: 15.8,
-                mintAddress: "sadfasdfasuf",
-              },
-            ]}
+            activities={activities}
           />
         )}
       </div>

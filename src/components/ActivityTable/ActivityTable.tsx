@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { useEffect } from 'react';
 import BodyText from '../BodyText/BodyText';
 import './ActivityTable.scss';
 
@@ -9,27 +10,24 @@ type TActivity = {
   trxId: string;
   time: number;
   amount: number;
-  mintAddress?: string;
   buyer?: string;
   seller?: string;
 }
 
 const ActivityTable = (props: { activities: TActivity[] }) => {
+  useEffect(() => {
+    console.log(props.activities, "dtail da")
+  }, [])
   return (
     <table className="top-collection-table">
       <thead>
         <tr>
           <th><BodyText light>Name</BodyText></th>
           <th><BodyText light>Transaction ID</BodyText></th>
-          <th><BodyText light>Transaction Type</BodyText></th>
           <th><BodyText light>Time</BodyText></th>
           <th><BodyText light>Total Amount</BodyText></th>
           {
-            props.activities[0].mintAddress &&
-            <th><BodyText light>Mint Address</BodyText></th>
-          }
-          {
-            props.activities[0].buyer &&
+            props.activities[0]?.buyer &&
             <th><BodyText light>Buyer</BodyText></th>
           }
           {
@@ -58,10 +56,6 @@ const ActivityTable = (props: { activities: TActivity[] }) => {
                 }</BodyText>
             </td>
             <td>
-              <BodyText className="mobile-title">Transaction Type</BodyText>
-              <BodyText light>{activity.trxType}</BodyText>
-            </td>
-            <td>
               <BodyText className="mobile-title">Time</BodyText>
               <BodyText light>{moment(activity.time).fromNow()}</BodyText>
             </td>
@@ -70,19 +64,7 @@ const ActivityTable = (props: { activities: TActivity[] }) => {
               <BodyText light>{activity.amount} Ⓝ</BodyText>
             </td>
             {
-              props.activities[0].mintAddress &&
-              <td>
-                <BodyText className="mobile-title">Mint Address</BodyText>
-                <BodyText light>{
-                  activity.mintAddress?.slice(0, 4)}...{activity.mintAddress?.slice(
-                    activity.mintAddress.length - 4,
-                    activity.mintAddress.length
-                  )
-                  }</BodyText>
-              </td>
-            }
-            {
-              props.activities[0].buyer &&
+              props.activities[0]?.buyer &&
               <td>
                 <BodyText className="mobile-title">Buyer</BodyText>
                 <BodyText light>{

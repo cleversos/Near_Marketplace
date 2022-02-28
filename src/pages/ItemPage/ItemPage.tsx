@@ -21,7 +21,8 @@ import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } fr
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
-import { getTransactionsForCollection } from '../../contexts/transaction'
+import { getTransactionsForCollection, getTransactionsForItem, getTransactionsForUser } from '../../contexts/transaction'
+import { TCollection } from "../CollectionPage/CollectionPage"
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -155,7 +156,7 @@ const ItemPage = () => {
     try {
       await fetchItemTokenDetails()
       await fetchItemSalesDetails()
-      // await fetchItemMarketplaceDetails()
+      await fetchItemMarketplaceDetails()
       setIsLoading(false)
     } catch (error) {
       console.log(error)
@@ -164,6 +165,7 @@ const ItemPage = () => {
 
   useEffect(() => {
     fetchAll()
+    getActivities()
   }, [fetchAll])
 
   const cancelSale = async () => {
@@ -297,14 +299,26 @@ const ItemPage = () => {
     }
   }
 
-  const getAllTransaction = async () => {
-    const txs = await getTransactionsForCollection("marketplace_test_9.xuguangxia.testnet", item.collectionId)
-    console.log(txs, "txs")
+  const [activities, setActivities] = useState<any>([])
+
+
+  const getActivities = async () => {
+    const data = await getTransactionsForItem("marketplace_test_9.xuguangxia.testnet", collectionId, itemId)
+    const txresult = []
+    for (let item of data) {
+      txresult.push({
+        itemName: "Stressed Coders #2352",
+        itemImageUrl: "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
+        trxId: item.receipt_id,
+        time: item.time,
+        amount: formatNearAmount(item.args.args_json.price),
+        buyer: item.args.args_json.buyer_id,
+        seller: item.args.args_json.sale.owner_id,
+      })
+    }
+    setActivities(txresult)
   }
-  useEffect(() => {
-    if(item && item.collectionId)
-      getAllTransaction()
-  }, [item])
+
   return (
     <div className="item-page">
       {isLoading ? (
@@ -501,19 +515,7 @@ const ItemPage = () => {
             </div>
           </div>
           <ActivityTable
-            activities={[
-              {
-                itemName: "Stressed Coders #2352",
-                itemImageUrl:
-                  "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
-                trxType: "Listing",
-                trxId: "sadfasdfasuf",
-                time: 1644130878,
-                amount: 15.8,
-                buyer: "jafasoiuqpwruwwqruqwlwerqwu",
-                seller: "jskafoieurwafsdjdaklsdfadf",
-              },
-            ]}
+            activities={activities}
           />
         </>
       )

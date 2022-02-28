@@ -14,6 +14,7 @@ import { TItem } from "../ItemPage/ItemPage"
 import CollectionAndAllItemsSet from "./components/CollectionAndAllItemsSet/CollectionAndAllItemsSet"
 import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
 import "./ProfilePage.scss"
+import { getTransactionsForUser } from "../../contexts/transaction"
 
 type TProfile = {
   imageUrl: string
@@ -42,7 +43,8 @@ const ProfilePage = () => {
   const { collections } = useContext(CollectionContext)
   const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
   const { contractAccountId, contract } = useContext(ContractContext)
-  const [listedNfts, setListedNfts] = useState<any>();
+  const [listedNfts, setListedNfts] = useState<any>()
+  const [activities, setActivities] = useState<any>()
 
   const getUserTokensInACollection = useCallback(
     async (collection: TCollection, provider, accountId) => {
@@ -73,6 +75,22 @@ const ProfilePage = () => {
     },
     []
   )
+  const getActivities = async () => {
+    const data = await getTransactionsForUser("marketplace_test_9.xuguangxia.testnet", walletAddress)
+    const result = []
+    for (let item of data) {
+      result.push({
+        itemName: "tenst data",
+        itemImageUrl: "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
+        trxId: item.receipt_id,
+        time: item.time,
+        amount: formatNearAmount(item.args.args_json.price),
+        buyer: item.args.args_json.buyer_id,
+        seller: item.args.args_json.sale.owner_id,
+      })
+    }
+    setActivities(result)
+  }
 
   const getUserSales = async () => {
     try {
@@ -89,6 +107,8 @@ const ProfilePage = () => {
 
   useEffect(() => {
     getUserSales()
+
+    getActivities()
   }, [])
 
   const getWalletNFTs = useCallback(async () => {
@@ -263,19 +283,7 @@ const ProfilePage = () => {
         }
         {mode === "activities" && (
           <ActivityTable
-            activities={[
-              {
-                itemName: "Stressed Coders #2352",
-                itemImageUrl:
-                  "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
-                trxType: "Listing",
-                trxId: "sadfasdfasuf",
-                time: 1644244154000,
-                amount: 15.8,
-                buyer: "FZXg6PdjCjoz54TTT5Tvq97Y9hnpWCLsCqPmfCHSSWYx",
-                seller: "ssde09£ssdfdfadfasuf",
-              },
-            ]}
+            activities={activities}
           />
         )}
       </div>
