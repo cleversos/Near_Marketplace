@@ -114,10 +114,6 @@ const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
           <BodyText light>Items</BodyText>
         </div>
         <div className="stat-set">
-          <BodyText bold>{collectionContractDetails?.owners}</BodyText>
-          <BodyText light>Owners</BodyText>
-        </div>
-        <div className="stat-set">
           <BodyText bold>
             {collectionContractDetails?.floorPrice}
             <span style={{ marginLeft: "5px" }}>Ⓝ</span>

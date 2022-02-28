@@ -44,7 +44,6 @@ export type TCollection = {
 
 export type TCollectionContractDetails = {
   numberOfItems?: number
-  owners?: number
   floorPrice?: number
   volTraded?: number
 }
@@ -93,16 +92,6 @@ const CollectionPage = () => {
       creator: "",
     }
     return collectionDetails
-  }, [])
-
-  const fetchCollectionContractDetails = useCallback(async () => {
-    const details: TCollectionContractDetails = {
-      numberOfItems: 1212,
-      owners: 10,
-      floorPrice: 2,
-      volTraded: 2391,
-    }
-    return details
   }, [])
 
   // fetch items on sale in this collection
@@ -168,13 +157,27 @@ const CollectionPage = () => {
     try {
       const values = await Promise.all([
         await fetchCollectionMarketDetails(),
-        await fetchCollectionContractDetails(),
         await fetchItems(),
       ])
 
       setCollectionMarketplaceDetails(values[0])
-      setCollectionContractDetails(values[1])
-      setItems(values[2])
+      console.log(values, "setValues")
+
+      setItems(values[1])
+
+      let newItems = values[1]
+      newItems.sort(function (a, b) {
+        return a?.price - b?.price
+      })
+      const min = newItems[0]?.price
+      const itemLength = newItems.length
+      const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
+      console.log(values[1])
+      setCollectionContractDetails({
+        numberOfItems: itemLength,
+        floorPrice: min,
+        volTraded: sum
+      })
       setIsLoading(false)
     } catch (error) {
       console.log(error)

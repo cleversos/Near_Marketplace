@@ -120,6 +120,7 @@ const ItemPage = () => {
       setSaleDetails(null)
       return
     }
+    console.log(result, "this is result")
     setSaleDetails({
       approvalId: result.approval_id,
       saleConditions: {
@@ -142,6 +143,7 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(rawResult.result).toString())
+    console.log(result, " : =>result")
     setItem(
       convertTokenResultToItemStructItem(result, "collection name", collectionId)
     )
@@ -373,9 +375,9 @@ const ItemPage = () => {
                     {!priceValidate &&
                       <p className="required-filed">Required field</p>
                     }
-                    <Button title="List" onClick={listItem}
+                    <Button title="List for Sale" onClick={listItem}
                       disabled={false} />
-                    <Button title="Auction" onClick={auctionList}
+                    <Button title="List for Bid" onClick={auctionList}
                       disabled={false} />
                   </div>
                 ) : (
@@ -405,16 +407,20 @@ const ItemPage = () => {
                         disabled={false} />
                     ) : (
                       <>
-                        <Button
-                          title="Buy Now"
-                          disabled={false}
-                          onClick={onBuy} />
-                        <Button
-                          secondary
-                          title="Bid"
-                          disabled={false}
-                          onClick={() => setShowBidModal(true)}
-                        />
+                        {!(saleDetails?.isAuction) &&
+                          <Button
+                            title="Buy Now"
+                            disabled={false}
+                            onClick={onBuy} />
+                        }
+                        {saleDetails?.isAuction &&
+                          <Button
+                            secondary
+                            title="Bid"
+                            disabled={false}
+                            onClick={() => setShowBidModal(true)}
+                          />
+                        }
                       </>
                     )}
                   </>
@@ -440,35 +446,55 @@ const ItemPage = () => {
                         ),
                       }
                     ]
-                    : [
-                      {
-                        title: "Attributes",
-                        component: (
-                          <div className="attributes-container">
-                            {/* {item?.attributes?.map((attribute, i) => (
-                          <AttributeCard
-                            name={attribute.name}
-                            value={attribute.value}
-                          />
-                        ))} */}
-                          </div>
-                        ),
-                      },
-                      {
-                        title: "Offers",
-                        component: <div className="attributes-container">
-                          {/* <>
-                            {console.log(saleDetails.bids.length, "saleDetails.bids")}
-                          </> */}
-                          {saleDetails.bids.length !== undefined && saleDetails?.bids?.map((item: any, key) => (
-                            <div className="bid-item" key={key}>
-                              <span>{item.owner_id}</span>
-                              <span>{parseFloat(formatNearAmount(item.price)).toFixed(2)}</span>
+                    :
+                    (
+                      saleDetails?.isAuction ? [
+                        {
+                          title: "Attributes",
+                          component: (
+                            <div className="attributes-container">
+                              {/* {item?.attributes?.map((attribute, i) => (
+                            <AttributeCard
+                              name={attribute.name}
+                              value={attribute.value}
+                            />
+                          ))} */}
                             </div>
-                          ))}
-                        </div>,
-                      },
-                    ]
+                          ),
+                        },
+                        {
+                          title: "Offers",
+                          component: <div className="attributes-container">
+                            {/* <>
+                              {console.log(saleDetails.bids.length, "saleDetails.bids")}
+                            </> */}
+                            {saleDetails.bids.length !== undefined && saleDetails?.bids?.map((item: any, key) => (
+                              <div className="bid-item" key={key}>
+                                <span>{item.owner_id}</span>
+                                <span>{parseFloat(formatNearAmount(item.price)).toFixed(2)}</span>
+                              </div>
+                            ))}
+                          </div>,
+                        },
+                      ]
+                        :
+                        [
+                          {
+                            title: "Attributes",
+                            component: (
+                              <div className="attributes-container">
+                                {/* {item?.attributes?.map((attribute, i) => (
+                            <AttributeCard
+                              name={attribute.name}
+                              value={attribute.value}
+                            />
+                          ))} */}
+                              </div>
+                            ),
+                          }
+                        ]
+                    )
+
                 }
               />
             </div>
