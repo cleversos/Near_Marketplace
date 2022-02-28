@@ -31,12 +31,7 @@ const links: TLinks[] = [
     link: "/stats",
     name: "Stats",
     icon: "stats",
-  },
-  {
-    link: "/me",
-    name: "Profile",
-    icon: "profile",
-  },
+  }
 ]
 
 const SideBar = (props: SideBarProps) => {
@@ -78,6 +73,17 @@ const SideBar = (props: SideBarProps) => {
             </Link>
           </li>
         ))}
+        {walletAddress &&
+          <li className={`${location.pathname === "/me" ? "selected" : ""}`}>
+            <Link to="/me">
+              <IconLoader
+                icon="profile"
+                isIconSelected={location.pathname === "/me"}
+              />
+              <BodyText light>profile</BodyText>
+            </Link>
+          </li>
+        }
       </ul>
       <div className="bottom-section">
         {walletAddress ? (
