@@ -93,19 +93,19 @@ const ItemPage = () => {
   }
 
   //TODO fetch item details from marketplace
-  const fetchItemMarketplaceDetails = useCallback(async () => {
-    try {
-      const salesDetail = await provider.query({
-        request_type: "call_function",
-        account_id: contractAccountId,
-        method_name: "nft_token",
-        args_base64: btoa(`{"token_id": "${itemId}"}`),
-        finality: "optimistic",
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }, [])
+  // const fetchItemMarketplaceDetails = useCallback(async () => {
+  //   try {
+  //     const salesDetail = await provider.query({
+  //       request_type: "call_function",
+  //       account_id: contractAccountId,
+  //       method_name: "nft_token",
+  //       args_base64: btoa(`{"token_id": "${itemId}"}`),
+  //       finality: "optimistic",
+  //     })
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }, [])
 
   //TODO fetch item sales details from marketplace
   const fetchItemSalesDetails = useCallback(async () => {
@@ -156,7 +156,7 @@ const ItemPage = () => {
     try {
       await fetchItemTokenDetails()
       await fetchItemSalesDetails()
-      await fetchItemMarketplaceDetails()
+      // await fetchItemMarketplaceDetails()
       setIsLoading(false)
     } catch (error) {
       console.log(error)
@@ -183,23 +183,6 @@ const ItemPage = () => {
     }
   }
 
-  const updatePrice = async () => {
-    try {
-      await contract.update_price(
-        {
-          arg_name: {
-            nft_contract_id: item.collectionId,
-            token_id: item.id,
-            ft_token_id: "near",
-            price: parseNearAmount("10"),
-          },
-        },
-        GAS,
-        oneYocto
-      )
-    } catch (error) { }
-  }
-
   const onBid = async (amount) => {
     try {
       await contract.offer(
@@ -217,11 +200,9 @@ const ItemPage = () => {
     try {
       await contract.accept_offer(
         {
-          arg_name: {
-            nft_contract_id: item.collectionId,
-            token_id: item.id,
-            ft_token_id: "near",
-          },
+          nft_contract_id: item.collectionId,
+          token_id: item.id,
+          ft_token_id: "near",
         },
         GAS,
         oneYocto
@@ -480,9 +461,9 @@ const ItemPage = () => {
                         {
                           title: "Offers",
                           component: <div className="attributes-container">
-                            {/* <>
-                              {console.log(saleDetails.bids.length, "saleDetails.bids")}
-                            </> */}
+                            {isOwner && (saleDetails.bids.length !== undefined && saleDetails?.bids?.length !== 0) &&
+                              <button className="main-button" style={{ color: "#fff", width: "100%", margin: "10px 0" }} onClick={() => acceptOffer()}>Accept Offer</button>
+                            }
                             {saleDetails.bids.length !== undefined && saleDetails?.bids?.map((item: any, key) => (
                               <div className="bid-item" key={key}>
                                 <span>{item.owner_id}</span>
