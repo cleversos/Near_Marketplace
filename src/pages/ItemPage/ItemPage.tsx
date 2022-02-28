@@ -21,7 +21,7 @@ import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } fr
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
-import { getTransactions } from '../../contexts/transaction'
+import { getTransactionsForItem } from '../../contexts/transaction'
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -242,7 +242,7 @@ const ItemPage = () => {
             }),
           },
           GAS,
-          oneYocto
+          deposit
         )
       } catch (error) {
         console.log(error)
@@ -270,7 +270,7 @@ const ItemPage = () => {
             }),
           },
           GAS,
-          oneYocto
+          deposit
         )
       } catch (error) {
         console.log(error)
@@ -296,12 +296,13 @@ const ItemPage = () => {
   }
 
   const getAllTransaction = async () => {
-    const txs = await getTransactions(collectionId)
+    const txs = await getTransactionsForItem("marketplace_test_9.xuguangxia.testnet", item.collectionId, item.id)
     console.log(txs, "txs")
   }
   useEffect(() => {
-    getAllTransaction()
-  }, [])
+    if(item && item.collectionId)
+      getAllTransaction()
+  }, [item])
   return (
     <div className="item-page">
       {isLoading ? (

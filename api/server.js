@@ -5,8 +5,8 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.post('/transactions', async (req, res) => {
-    const results = await transaction.getTransactions(req.body.accountId);
+app.post('/transactions_for_item', async (req, res) => {
+    const results = await transaction.getTransactionsForItem(req.body.marketplace_account_id, req.body.nft_contract_id, req.body.token_id);
     res.send(results);
 });
 

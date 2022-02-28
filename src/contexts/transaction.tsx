@@ -12,33 +12,24 @@ const config = {
     headers: {}
 };
 
-export async function getTransactions(accountId) {
+export async function getTransactionsForItem(marketplace_account_id, nft_contract_id, token_id) {
     const getAPI = async () => {
-        const API = 'http://localhost:3002/transactions';
+        const API = 'http://localhost:3002/transactions_for_item';
         const result = await fetch(API, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                accountId: accountId
+                marketplace_account_id: marketplace_account_id,
+                nft_contract_id: nft_contract_id,
+                token_id: token_id
             })
         });
         return (await result.json())
     };
     const result = await getAPI();
     console.log(result);
-    let transactions = [];
-    for (let i = 0; i < result.length; i++) {
-        const record = result[i];
-        for (let j = 0; j < record.hash_data.length; j++) {
-            if (record.hash_data[j].args.method_name == "offer") {
-                transactions.push(record);
-                break;
-            }
-        }
-    }
-    console.log(transactions);
     return result;
     // const near = await connect(config);
 
