@@ -112,7 +112,7 @@ export async function getTransactionsForCollection(marketplace_account_id, nft_c
 
 export async function getTransactionsForUser(marketplace_account_id, user_account_id) {
     const getAPI = async () => {
-        const API = 'http://localhost:3002/transactions_for_collection';
+        const API = 'http://localhost:3002/transactions_for_user';
         const result = await fetch(API, {
             method: 'POST',
             headers: {
