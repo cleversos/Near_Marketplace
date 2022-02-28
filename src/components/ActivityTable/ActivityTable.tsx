@@ -31,14 +31,14 @@ const ActivityTable = (props: { activities: TActivity[] }) => {
             <th><BodyText light>Buyer</BodyText></th>
           }
           {
-            props.activities[0].seller &&
+            props.activities[0]?.seller &&
             <th><BodyText light>Seller</BodyText></th>
           }
 
         </tr>
       </thead>
       <tbody>
-        {props.activities.map((activity, i) =>
+        {props.activities?.map((activity, i) =>
           <tr key={i}>
             <td>
               <div className="collection-name-and-img-column">
@@ -49,7 +49,7 @@ const ActivityTable = (props: { activities: TActivity[] }) => {
             <td>
               <BodyText className="mobile-title">Transaction ID</BodyText>
               <BodyText light>{
-                activity.trxId.slice(0, 4)}...{activity.trxId.slice(
+                activity?.trxId.slice(0, 4)}...{activity?.trxId.slice(
                   activity.trxId.length - 4,
                   activity.trxId.length
                 )
