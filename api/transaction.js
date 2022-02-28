@@ -33,5 +33,36 @@ module.exports = { getTransactionsForItem : async (marketplace_account_id, nft_c
         //     result.addRow(row);
             
         //     });
-    }
+    },
+
+    getTransactionsForCollection : async (marketplace_account_id, nft_contract_id) => {
+        var query = await pgClient.query("\
+        select \
+            date_trunc('minute', to_timestamp(receipt_included_in_block_timestamp/1000/1000/1000)) as time, \
+            * \
+        from \
+            action_receipt_actions \
+        where \
+            action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
+            and action_receipt_actions.args->'args_json'->'sale'->>'nft_contract_id' = '" + nft_contract_id + "' \
+            and action_receipt_actions.receipt_predecessor_account_id = '" + marketplace_account_id + "' \
+        ");
+        return query.rows;
+    },
+
+    getTransactionsForUser : async (marketplace_account_id, user_account_id) => {
+        var query = await pgClient.query("\
+        select \
+            date_trunc('minute', to_timestamp(receipt_included_in_block_timestamp/1000/1000/1000)) as time, \
+            * \
+        from \
+            action_receipt_actions \
+        where \
+            action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
+            and ( action_receipt_actions.args->'args_json'->'sale'->>'owner_id' = '" + user_account_id + "' \
+            or action_receipt_actions.args->'args_json'->>'buyer_id' = '" + user_account_id + "' ) \
+            and action_receipt_actions.receipt_predecessor_account_id = '" + marketplace_account_id + "' \
+        ");
+        return query.rows;
+    },
 }

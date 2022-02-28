@@ -90,6 +90,46 @@ export async function getTransactionsForItem(marketplace_account_id, nft_contrac
     // console.log("MATCHING TRANSACTIONS: ", transactions);
 }
 
+export async function getTransactionsForCollection(marketplace_account_id, nft_contract_id) {
+    const getAPI = async () => {
+        const API = 'http://localhost:3002/transactions_for_collection';
+        const result = await fetch(API, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                marketplace_account_id: marketplace_account_id,
+                nft_contract_id: nft_contract_id
+            })
+        });
+        return (await result.json())
+    };
+    const result = await getAPI();
+    console.log(result);
+    return result;
+}
+
+export async function getTransactionsForUser(marketplace_account_id, user_account_id) {
+    const getAPI = async () => {
+        const API = 'http://localhost:3002/transactions_for_collection';
+        const result = await fetch(API, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                marketplace_account_id: marketplace_account_id,
+                user_account_id: user_account_id
+            })
+        });
+        return (await result.json())
+    };
+    const result = await getAPI();
+    console.log(result);
+    return result;
+}
+
 async function getBlockByID(blockID) {
     const near = await connect(config);
     const blockInfoByHeight = await near.connection.provider.block({
