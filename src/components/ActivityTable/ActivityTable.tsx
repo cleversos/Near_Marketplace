@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { useEffect } from 'react';
 import BodyText from '../BodyText/BodyText';
 import './ActivityTable.scss';
 
@@ -15,9 +14,6 @@ type TActivity = {
 }
 
 const ActivityTable = (props: { activities: TActivity[] }) => {
-  useEffect(() => {
-    console.log(props.activities, "dtail da")
-  }, [])
   return (
     <table className="top-collection-table">
       <thead>

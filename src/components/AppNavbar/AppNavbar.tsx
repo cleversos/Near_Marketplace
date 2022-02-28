@@ -8,6 +8,7 @@ import CollectionSearchBox from "../CollectionSearchBox/CollectionSearchBox"
 import { IconLoader } from "../IconLoader"
 import "./AppNavbar.scss"
 import { ConnectionContext } from "../../contexts/connection"
+import copy from 'copy-to-clipboard'
 
 interface AppNavbarProps {
   setOpenSidebar: Function
@@ -115,7 +116,7 @@ const AppNavbar = (props: AppNavbarProps) => {
                 className={`dropdown-options ${hideWalletOptions ? "hidden" : "visible"
                   }`}
               >
-                <li onClick={() => signOut()}>
+                <li onClick={() => copy(walletAddress)}>
                   <BodyText light>Copy address</BodyText>
                 </li>
                 <li onClick={() => signOut()}>

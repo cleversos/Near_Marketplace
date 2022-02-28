@@ -23,6 +23,7 @@ import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
 import { getTransactionsForCollection, getTransactionsForItem, getTransactionsForUser } from '../../contexts/transaction'
 import { TCollection } from "../CollectionPage/CollectionPage"
+import { getCollections } from "../../helpers/collections"
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -92,21 +93,6 @@ const ItemPage = () => {
     setPriceValidate(true)
   }
 
-  //TODO fetch item details from marketplace
-  // const fetchItemMarketplaceDetails = useCallback(async () => {
-  //   try {
-  //     const salesDetail = await provider.query({
-  //       request_type: "call_function",
-  //       account_id: contractAccountId,
-  //       method_name: "nft_token",
-  //       args_base64: btoa(`{"token_id": "${itemId}"}`),
-  //       finality: "optimistic",
-  //     })
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }, [])
-
   //TODO fetch item sales details from marketplace
   const fetchItemSalesDetails = useCallback(async () => {
     const saleDetail: any = await provider.query({
@@ -121,7 +107,6 @@ const ItemPage = () => {
       setSaleDetails(null)
       return
     }
-    console.log(result, "this is result")
     setSaleDetails({
       approvalId: result.approval_id,
       saleConditions: {
@@ -133,7 +118,8 @@ const ItemPage = () => {
       isAuction: result.is_auction,
     })
   }, [])
-
+  const [name, setName] = useState("")
+  const [image, setImage] = useState("")
   // fetch item token details using itemId from the collection contract
   const fetchItemTokenDetails = useCallback(async () => {
     const rawResult: any = await provider.query({
@@ -144,7 +130,9 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(rawResult.result).toString())
-    console.log(result, " : =>result")
+    console.log(result, "this is garge")
+    setName(result.metadata.title)
+    setImage(result.metadata.media)
     setItem(
       convertTokenResultToItemStructItem(result, "collection name", collectionId)
     )
@@ -156,13 +144,12 @@ const ItemPage = () => {
     try {
       await fetchItemTokenDetails()
       await fetchItemSalesDetails()
-      // await fetchItemMarketplaceDetails()
+      // await getCollectionDetail() //get collection detail data
       setIsLoading(false)
     } catch (error) {
       console.log(error)
     }
   }, [])
-
   useEffect(() => {
     fetchAll()
     getActivities()
@@ -235,8 +222,18 @@ const ItemPage = () => {
     } else {
       setPriceValidate(false)
     }
-
   }
+
+  const getCollectionDetail = async () => {
+    try {
+      console.log(provider, collectionId, "(provider, collectionId)")
+      // const detail = await getCollections(provider, collectionId)
+      // console.log(detail)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const auctionList = async () => {
     const account: any = wallet.account()
     if (!(listingPrice === "")) {
@@ -282,14 +279,13 @@ const ItemPage = () => {
 
   const [activities, setActivities] = useState<any>([])
 
-
   const getActivities = async () => {
     const data = await getTransactionsForItem("marketplace_test_9.xuguangxia.testnet", collectionId, itemId)
     const txresult = []
     for (let item of data) {
       txresult.push({
-        itemName: "Stressed Coders #2352",
-        itemImageUrl: "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
+        itemName: name,
+        itemImageUrl: image,
         trxId: item.receipt_id,
         time: item.time,
         amount: formatNearAmount(item.args.args_json.price),
@@ -300,6 +296,9 @@ const ItemPage = () => {
     setActivities(txresult)
   }
 
+  useEffect(() => {
+    getActivities()
+  }, [name, image])
   return (
     <div className="item-page">
       {isLoading ? (

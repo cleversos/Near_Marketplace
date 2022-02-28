@@ -14,7 +14,7 @@ const config = {
 
 export async function getTransactionsForItem(marketplace_account_id, nft_contract_id, token_id) {
     const getAPI = async () => {
-        const API = 'http://35.75.88.169:3002/transactions_for_item';
+        const API = 'http://13.231.24.204:3002/transactions_for_item';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
@@ -93,7 +93,7 @@ export async function getTransactionsForItem(marketplace_account_id, nft_contrac
 
 export async function getTransactionsForCollection(marketplace_account_id, nft_contract_id) {
     const getAPI = async () => {
-        const API = 'http://35.75.88.169:3002/transactions_for_collection';
+        const API = 'http://13.231.24.204:3002/transactions_for_collection';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
@@ -114,7 +114,7 @@ export async function getTransactionsForCollection(marketplace_account_id, nft_c
 
 export async function getTransactionsForUser(marketplace_account_id, user_account_id) {
     const getAPI = async () => {
-        const API = 'http://35.75.88.169:3002/transactions_for_user';
+        const API = 'http://13.231.24.204:3002/transactions_for_user';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
