@@ -268,9 +268,9 @@ const ItemPage = () => {
             account_id: contractAccountId,
             msg: JSON.stringify({
               sale_conditions: {
-                near: parseNearAmount(listingPrice),
-                is_auction: true
+                near: parseNearAmount(listingPrice)
               },
+              is_auction: true
             }),
           },
           GAS,
