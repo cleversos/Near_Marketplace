@@ -21,7 +21,7 @@ import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } fr
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
-import { getTransactionsForItem } from '../../contexts/transaction'
+import { getTransactionsForCollection } from '../../contexts/transaction'
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -298,7 +298,7 @@ const ItemPage = () => {
   }
 
   const getAllTransaction = async () => {
-    const txs = await getTransactionsForItem("marketplace_test_9.xuguangxia.testnet", item.collectionId, item.id)
+    const txs = await getTransactionsForCollection("marketplace_test_9.xuguangxia.testnet", item.collectionId)
     console.log(txs, "txs")
   }
   useEffect(() => {
