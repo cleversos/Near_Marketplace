@@ -8,9 +8,12 @@ module.exports = { getTransactionsForItem : async (marketplace_account_id, nft_c
         var query = await pgClient.query("\
         select \
             date_trunc('minute', to_timestamp(receipt_included_in_block_timestamp/1000/1000/1000)) as time, \
-            * \
+            action_receipt_actions.*, \
+            receipts.* \
         from \
             action_receipt_actions \
+        join receipts \
+        on receipts.receipt_id = action_receipt_actions.receipt_id \
         where \
             action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
             and action_receipt_actions.args->'args_json'->'sale'->>'nft_contract_id' = '" + nft_contract_id + "' \
@@ -39,9 +42,12 @@ module.exports = { getTransactionsForItem : async (marketplace_account_id, nft_c
         var query = await pgClient.query("\
         select \
             date_trunc('minute', to_timestamp(receipt_included_in_block_timestamp/1000/1000/1000)) as time, \
-            * \
+            action_receipt_actions.*, \
+            receipts.* \
         from \
             action_receipt_actions \
+        join receipts \
+        on receipts.receipt_id = action_receipt_actions.receipt_id \
         where \
             action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
             and action_receipt_actions.args->'args_json'->'sale'->>'nft_contract_id' = '" + nft_contract_id + "' \
@@ -54,9 +60,12 @@ module.exports = { getTransactionsForItem : async (marketplace_account_id, nft_c
         var query = await pgClient.query("\
         select \
             date_trunc('minute', to_timestamp(receipt_included_in_block_timestamp/1000/1000/1000)) as time, \
-            * \
+            action_receipt_actions.*, \
+            receipts.* \
         from \
             action_receipt_actions \
+        join receipts \
+        on receipts.receipt_id = action_receipt_actions.receipt_id \
         where \
             action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
             and ( action_receipt_actions.args->'args_json'->'sale'->>'owner_id' = '" + user_account_id + "' \
