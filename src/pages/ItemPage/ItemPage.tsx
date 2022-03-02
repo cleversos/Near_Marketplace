@@ -192,7 +192,7 @@ const ItemPage = () => {
           ft_token_id: "near",
         },
         GAS,
-        oneYocto
+        "0"
       )
     } catch (error) { }
   }
