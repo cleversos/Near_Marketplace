@@ -1,7 +1,7 @@
 import { METHODS } from "http"
 import { parseNearAmount, formatNearAmount } from "near-api-js/lib/utils/format"
 import React, { useCallback, useContext, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useRoutes } from "react-router-dom"
 import HeartIcon from "../../assets/icons/HeartIcon"
 import MoreOptionsIcon from "../../assets/icons/MoreOptionsIcon"
 import OwnersIcon from "../../assets/icons/OwnersIcon"
@@ -182,7 +182,6 @@ const ItemPage = () => {
       )
     } catch (error) { }
   }
-
   const acceptOffer = async () => {
     try {
       await contract.accept_offer(
