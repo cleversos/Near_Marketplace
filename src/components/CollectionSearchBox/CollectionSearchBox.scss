@@ -1,5 +1,5 @@
-@import '../../sass/variables.scss';
-@import '../BodyText/BodyText.scss';
+@import "../../sass/variables.scss";
+@import "../BodyText/BodyText.scss";
 
 .collection-search-box {
   background: $body-background;
@@ -10,7 +10,7 @@
   align-items: center;
   padding: 0 15px;
   width: 100%;
-
+  margin-left: 15px;
   input {
     @include body-text();
     background: none;

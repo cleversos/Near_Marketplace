@@ -73,8 +73,8 @@ const FilterSection = (props: FilterSectionProps) => {
         {showPriceOptions && (
           <div className="price-options-container">
             <span>Ⓝ NEAR Protocol</span>
-            <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e) => setPriceMin(e)} />
-            <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e) => setPriceMax(e)} />
+            <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e: any) => setPriceMin(e)} />
+            <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e: any) => setPriceMax(e)} />
           </div>
         )}
 

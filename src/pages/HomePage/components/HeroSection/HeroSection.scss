@@ -18,7 +18,6 @@
     }
   }
 
-
   .bg-darkener,
   .bg-img-container {
     position: absolute;
@@ -43,6 +42,33 @@
       min-height: 100%;
       width: 100%;
     }
+  }
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  h2 {
+    font-size: 50px;
+    max-width: 400px;
+    font-weight: bold;
+  }
+  p {
+    font-size: 14px;
+    font-weight: 100;
+    max-width: 560px;
+    margin-bottom: 0;
+  }
+  a {
+    margin: 20px 0;
+    width: 180px;
+    color: #cf15ff;
+    &:hover {
+      color: #bc0ee7;
+    }
+  }
+  button {
+    width: 180px;
   }
 }
 

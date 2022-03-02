@@ -91,13 +91,13 @@ const AppNavbar = (props: AppNavbarProps) => {
           >
             <IconLoader icon="more" />
           </div>
-          <ul className="nav-links">
+          {/* <ul className="nav-links">
             {navLinks.map((link, i) => (
               <li key={link.name}>
                 <Link to={link.link} style={{ color: "#b3b9c4" }}>{link.name}</Link>
               </li>
             ))}
-          </ul>
+          </ul> */}
           {walletAddress ? (
             <div className="wallet-options-container">
               <Button

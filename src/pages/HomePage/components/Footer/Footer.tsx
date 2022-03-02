@@ -8,15 +8,19 @@ import SectionPadding from '../../../../components/SectionPadding/SectionPadding
 import './Footer.scss';
 
 const Footer = () => {
-  return(
+  return (
     <footer>
       <SectionPadding>
         <div className="brand">
-          <img
-            src={require('../../../../assets/images/desmarketLogo.png')}
-            alt="Brand"
-          />
-          <BodyText>Galacticway</BodyText>
+          <div className="brand-content">
+            <img
+              src={require('../../../../assets/images/desmarketLogo.png')}
+              alt="Brand"
+            />
+            <BodyText>Galacticway</BodyText>
+          </div>
+          <p>Galacticway, the first NEAR NFT Marketplace for Collections</p>
+          <p>© 2022 Galacticway. All Rights Reserved.</p>
         </div>
         <div className="links">
           <BodyText bold>Links</BodyText>

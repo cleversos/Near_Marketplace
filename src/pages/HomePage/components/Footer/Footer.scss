@@ -5,15 +5,31 @@ footer {
     justify-items: start;
     align-items: start;
     padding-bottom: 50px;
-    
-    .brand {
-      display: flex;
-      align-items: center;
 
-      img {
-        margin-right: 10px;
-        width: 30px;
-        height: auto;
+    .brand {
+      .brand-content {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        img {
+          margin-right: 10px;
+          width: 30px;
+          height: auto;
+        }
+        p {
+          margin: 0;
+          font-size: 20px;
+          color: #fff;
+          font-weight: bold;
+        }
+      }
+      p {
+        font-weight: 400;
+        font-size: 15px;
+        margin: 0;
+        color: #ffffff80;
+        max-width: 240px;
+        margin-top: 10px;
       }
     }
 
@@ -62,7 +78,7 @@ footer {
           margin-bottom: 20px;
         }
       }
-      
+
       .links,
       .top-collections {
         display: none;

@@ -1,8 +1,8 @@
-@import '../../../../sass/variables.scss';
+@import "../../../../sass/variables.scss";
 
 .collection-info-section {
   padding-bottom: 40px;
-  
+
   .banner-section {
     position: relative;
     height: 200px;
@@ -10,10 +10,10 @@
 
     .collection-links {
       position: absolute;
-      bottom: 20px;
+      bottom: 50%;
       right: 25px;
       display: flex;
-      background: rgba(255, 255, 255, 0.05);
+      background: #090619;
       border: 1px solid $separator;
       border-radius: 10px;
       z-index: 2;
@@ -36,7 +36,7 @@
 
     .image-container {
       height: 100%;
-      
+
       .darkener {
         position: absolute;
         top: 0;
@@ -49,9 +49,9 @@
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
     }
-
   }
 
   .details-container {

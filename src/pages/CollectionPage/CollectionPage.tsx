@@ -62,7 +62,7 @@ const CollectionPage = () => {
     useState<TCollectionContractDetails | null>(null)
   const [items, setItems] = useState<TItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [collapseFilterContainer, setCollapseFilterContainer] = useState(false)
+  const [collapseFilterContainer, setCollapseFilterContainer] = useState(true)
   const [mode, setMode] = useState<"items" | "activities">("items")
   const [priceRange, setPriceRange] = useState<PriceRange>({
     currency: "USD",

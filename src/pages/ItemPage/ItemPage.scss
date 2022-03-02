@@ -166,11 +166,14 @@
 
     .left-side,
     .right-side {
-      width: 100%;
+      width: 100% !important;
     }
 
     .right-side {
       margin-top: 20px;
+    }
+    .content {
+      flex-direction: column;
     }
   }
 }

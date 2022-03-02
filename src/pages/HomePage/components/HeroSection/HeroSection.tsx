@@ -3,38 +3,28 @@ import { Carousel, CarouselItem } from 'react-bootstrap';
 import BodyText from '../../../../components/BodyText/BodyText';
 import Button from '../../../../components/Button/Button';
 import SectionPadding from '../../../../components/SectionPadding/SectionPadding';
+import { FEATURED_POST } from '../../../../config';
 import './HeroSection.scss';
 
-type TFeaturedPost = {
+export type TFeaturedPost = {
   imageUrl: any;
-  caption: string;
+  name: string;
+  description: string;
+  link: string;
 }
-
-const featuredPost: TFeaturedPost[] = [
-  {
-    imageUrl: require("../../../../assets/images/heroBg.jpg"),
-    caption: "Discover, Collect & sell Various Nfts"
-  },
-  {
-    imageUrl: require("../../../../assets/images/heroBg.jpg"),
-    caption: "Discover, Collect & sell Various Nfts"
-  },
-  {
-    imageUrl: require("../../../../assets/images/heroBg.jpg"),
-    caption: "Discover, Collect & sell Various Nfts"
-  },
-]
 
 const HeroSection = () => {
   return (
     <Carousel controls={false}>
       {
-        featuredPost.map((post, i) => (
+        FEATURED_POST.map((post, i) => (
           <CarouselItem key={i}>
             <div className="hero-section">
               <SectionPadding>
-                <div className="content">
-                  <BodyText className="hero-text">{post.caption}</BodyText>
+                <div className="hero-content">
+                  <h2>{post.name}</h2>
+                  <p>{post.description}</p>
+                  <a href="#">Go to this collection</a>
                   <Button title="Explore more" onClick={() => { }} disabled={false} />
                 </div>
               </SectionPadding>

@@ -11,11 +11,11 @@ const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, liste
       <div className="head">
         <img src={collection.imageUrl} alt={collection.name} />
         <BodyText>{collection.name}</BodyText>
-        <BodyText light>FLOOR: {collection.floorPrice} Ⓝ</BodyText>
+        {/* <BodyText light>FLOOR: {collection.floorPrice} Ⓝ</BodyText>
         <BodyText light>
           TOTAL FLOOR VALUE: {collection.floorPrice * collection.items?.length}{" "}
           Ⓝ
-        </BodyText>
+        </BodyText> */}
       </div>
       <div className="nfts-container">
         {collection.items?.map((item, i) => (
