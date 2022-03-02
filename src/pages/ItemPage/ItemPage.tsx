@@ -280,7 +280,7 @@ const ItemPage = () => {
   const [activities, setActivities] = useState<any>([])
 
   const getActivities = async () => {
-    const data = await getTransactionsForItem("marketplace_test_9.xuguangxia.testnet", collectionId, itemId)
+    const data = await getTransactionsForItem("marketplace_test_10.xuguangxia.testnet", collectionId, itemId)
     const txresult = []
     for (let item of data) {
       txresult.push({

@@ -76,7 +76,7 @@ const ProfilePage = () => {
     []
   )
   const getActivities = async () => {
-    const data = await getTransactionsForUser("marketplace_test_9.xuguangxia.testnet", walletAddress)
+    const data = await getTransactionsForUser("marketplace_test_10.xuguangxia.testnet", walletAddress)
     const result = []
     for (let item of data) {
       result.push({
