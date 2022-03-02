@@ -17,6 +17,7 @@
     }
 
     .body {
+      position: relative;
       .input-box {
         margin-top: 40px;
         background-color: $body-background;
@@ -28,4 +29,12 @@
       }
     }
   }
+}
+
+.text-validation {
+  font-size: 12px;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  color: #fb1f1f;
 }

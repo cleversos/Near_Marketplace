@@ -197,43 +197,6 @@ const ItemPage = () => {
     } catch (error) { }
   }
 
-  const listItem = async () => {
-    const account: any = wallet.account()
-    if (!(listingPrice === "")) {
-      try {
-        await account.functionCall(
-          item.collectionId,
-          "nft_approve",
-          {
-            token_id: item.id,
-            account_id: contractAccountId,
-            msg: JSON.stringify({
-              sale_conditions: {
-                near: parseNearAmount(listingPrice)
-              },
-            }),
-          },
-          GAS,
-          deposit
-        )
-      } catch (error) {
-        console.log(error)
-      }
-    } else {
-      setPriceValidate(false)
-    }
-  }
-
-  const getCollectionDetail = async () => {
-    try {
-      console.log(provider, collectionId, "(provider, collectionId)")
-      // const detail = await getCollections(provider, collectionId)
-      // console.log(detail)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   const auctionList = async () => {
     const account: any = wallet.account()
     if (!(listingPrice === "")) {
@@ -310,7 +273,7 @@ const ItemPage = () => {
           <BidModal
             onClose={() => setShowBidModal(false)}
             isVisible={showBidModal}
-            price={item?.price}
+            price={parseFloat(saleDetails?.saleConditions.near)}
             onMakeBid={onBid}
           />
           <div className="content">
@@ -363,15 +326,15 @@ const ItemPage = () => {
                       type="number"
                       placeholder="Enter price"
                       value={listingPrice}
-                      onInputChange={(event) =>
+                      onInputChange={(event: any) =>
                         handlePrice(event.target.value)
                       }
                     />
                     {!priceValidate &&
                       <p className="required-filed">Required field</p>
                     }
-                    <Button title="List for Sale" onClick={listItem}
-                      disabled={false} />
+                    {/* <Button title="List for Sale" onClick={listItem}
+                      disabled={false} /> */}
                     <Button title="List for Bid" onClick={auctionList}
                       disabled={false} />
                   </div>
@@ -409,9 +372,10 @@ const ItemPage = () => {
                             onClick={onBuy} />
                         }
                         {saleDetails?.isAuction &&
-                          <Button
-                            secondary
-                            title="Bid"
+                          < Button
+                            // secondary
+                            title={saleDetails.bids.length !== undefined && (saleDetails?.bids?.map(function (e: any) { return e.owner_id; }).indexOf(wallet._authData.accountId) !== -1) ? "Update Bid" : "Bid"}
+                            // title="Bid"
                             disabled={false}
                             onClick={() => setShowBidModal(true)}
                           />

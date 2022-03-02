@@ -70,6 +70,11 @@ const CollectionPage = () => {
     max: "max"
   });
 
+  useEffect(() => {
+    const bodyWidth = document.body.clientWidth
+    setCollapseFilterContainer(bodyWidth < 800)
+  }, [])
+
   // fetch collection details using collectionId and tokenType
   const fetchCollectionMarketDetails = useCallback(async () => {
     const rawResult: any = await provider.query({
