@@ -21,7 +21,7 @@ import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } fr
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
-import { getTransactionsForCollection, getTransactionsForItem, getTransactionsForUser } from '../../contexts/transaction'
+import { getTransactionsForCollection, getTransactionsForItem, getTransactionsForUser, getTradingVolumeForCollection } from '../../contexts/transaction'
 import { TCollection } from "../CollectionPage/CollectionPage"
 import { getCollections } from "../../helpers/collections"
 //////////////////////////////////
@@ -243,6 +243,8 @@ const ItemPage = () => {
   const [activities, setActivities] = useState<any>([])
 
   const getActivities = async () => {
+    const temp = await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", collectionId)
+    console.log(temp);
     const data = await getTransactionsForItem("marketplace_test_10.xuguangxia.testnet", collectionId, itemId)
     const txresult = []
     for (let item of data) {

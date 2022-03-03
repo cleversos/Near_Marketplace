@@ -12,7 +12,7 @@ const config = {
     headers: {}
 };
 
-export async function getTransactionsForItem(marketplace_account_id, nft_contract_id, token_id) {
+export async function getTransactionsForItem(marketplace_account_id, nft_contract_id, token_id, offset = 0, count = 10) {
     const getAPI = async () => {
         const API = 'http://13.231.24.204:3002/transactions_for_item';
         const result = await fetch(API, {
@@ -24,7 +24,9 @@ export async function getTransactionsForItem(marketplace_account_id, nft_contrac
             body: JSON.stringify({
                 marketplace_account_id: marketplace_account_id,
                 nft_contract_id: nft_contract_id,
-                token_id: token_id
+                token_id: token_id,
+                offset: offset,
+                count: count
             })
         });
         return (await result.json())
@@ -91,7 +93,7 @@ export async function getTransactionsForItem(marketplace_account_id, nft_contrac
     // console.log("MATCHING TRANSACTIONS: ", transactions);
 }
 
-export async function getTransactionsForCollection(marketplace_account_id, nft_contract_id) {
+export async function getTransactionsForCollection(marketplace_account_id, nft_contract_id, offset = 0, count = 10) {
     const getAPI = async () => {
         const API = 'http://13.231.24.204:3002/transactions_for_collection';
         const result = await fetch(API, {
@@ -102,7 +104,9 @@ export async function getTransactionsForCollection(marketplace_account_id, nft_c
             },
             body: JSON.stringify({
                 marketplace_account_id: marketplace_account_id,
-                nft_contract_id: nft_contract_id
+                nft_contract_id: nft_contract_id,
+                offset: offset,
+                count: count
             })
         });
         return (await result.json())
@@ -112,7 +116,30 @@ export async function getTransactionsForCollection(marketplace_account_id, nft_c
     return result;
 }
 
-export async function getTransactionsForUser(marketplace_account_id, user_account_id) {
+export async function getTradingVolumeForCollection(marketplace_account_id, nft_contract_id, timestamp_start = "0", timestamp_end = Date.now() + "000000") {
+    const getAPI = async () => {
+        const API = 'http://13.231.24.204:3002/tradingvolume_for_collection';
+        const result = await fetch(API, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                marketplace_account_id: marketplace_account_id,
+                nft_contract_id: nft_contract_id,
+                timestamp_start: timestamp_start,
+                timestamp_end: timestamp_end
+            })
+        });
+        return (await result.json())
+    };
+    const result = await getAPI();
+    console.log(result);
+    return result;
+}
+
+export async function getTransactionsForUser(marketplace_account_id, user_account_id, offset = 0, count = 10) {
     const getAPI = async () => {
         const API = 'http://13.231.24.204:3002/transactions_for_user';
         const result = await fetch(API, {
@@ -123,7 +150,9 @@ export async function getTransactionsForUser(marketplace_account_id, user_accoun
             },
             body: JSON.stringify({
                 marketplace_account_id: marketplace_account_id,
-                user_account_id: user_account_id
+                user_account_id: user_account_id,
+                offset: offset,
+                count: count
             })
         });
         return (await result.json())

@@ -65,6 +65,7 @@ pub struct Contract {
     pub storage_deposits: LookupMap<AccountId, Balance>,
     pub collections: UnorderedMap<ContractAndTokenType, CollectionInfo>,
     pub bid_history_length: u8,
+    pub marketplace_charge: U128,
 }
 
 /// Helper structure to for keys of the persistent collections.
@@ -96,10 +97,11 @@ impl Contract {
             ft_token_ids: UnorderedSet::new(StorageKey::FTTokenIds),
             storage_deposits: LookupMap::new(StorageKey::StorageDeposits),
             bid_history_length: bid_history_length.unwrap_or(BID_HISTORY_LENGTH_DEFAULT),
+            marketplace_charge: U128(2),
         };
         // support NEAR by default
         this.ft_token_ids.insert(&"near".to_string());
-        
+
         if let Some(ft_token_ids) = ft_token_ids {
             for ft_token_id in ft_token_ids {
                 this.ft_token_ids.insert(ft_token_id.as_ref());
@@ -119,6 +121,12 @@ impl Contract {
         added
     }
 
+    /// only owner 
+    pub fn set_marketplace_charge(&mut self, charge_value: U128) {
+        self.assert_owner();
+        self.marketplace_charge = charge_value;
+    }
+    
     /// TODO remove token (should check if sales can complete even if owner stops supporting token type)
 
     #[payable]
