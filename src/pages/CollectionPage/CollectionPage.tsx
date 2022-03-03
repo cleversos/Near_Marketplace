@@ -169,7 +169,6 @@ const CollectionPage = () => {
       ])
 
       setCollectionMarketplaceDetails(values[0])
-      console.log(values, "setValues")
 
       setItems(values[1])
 
@@ -197,10 +196,18 @@ const CollectionPage = () => {
     const data = await getTransactionsForCollection("marketplace_test_10.xuguangxia.testnet", collectionId)
     const result = []
     for (let item of data) {
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: item.args.args_json.sale.nft_contract_id,
+        method_name: "nft_token",
+        args_base64: btoa(`{"token_id": "${item.args.args_json.sale.token_id}"}`),
+        finality: "optimistic",
+      })
+      const newRow = JSON.parse(Buffer.from(rawResult.result).toString())
       result.push({
-        itemName: collectionMarketplaceDetails?.name,
-        itemImageUrl: collectionMarketplaceDetails?.profileImageUrl,
-        trxId: item.receipt_id,
+        itemName: newRow.metadata.title,
+        itemImageUrl: newRow.metadata.media,
+        trxId: item.originated_from_transaction_hash,
         time: item.time,
         amount: formatNearAmount(item.args.args_json.price),
         buyer: item.args.args_json.buyer_id,

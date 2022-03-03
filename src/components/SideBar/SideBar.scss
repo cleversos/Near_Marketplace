@@ -1,7 +1,7 @@
 @import "../../sass/variables.scss";
 
 @mixin collapsed {
-  width: 80px;
+  width: 60px;
 
   .brand-container {
     .body-text {
@@ -62,16 +62,21 @@
     padding: 0;
 
     li {
-      margin-bottom: 10px;
+      margin: 10px;
+      border-radius: 6px;
 
       &:hover {
         .body-text {
           color: white;
         }
       }
+      svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
 
       &.selected {
-        background: $gradient;
+        background: linear-gradient(270deg, #2b1447 0%, #132045 102.96%);
 
         .body-text {
           color: white;
@@ -84,7 +89,7 @@
         display: flex;
         align-items: center;
         text-decoration: none;
-        padding: 15px 30px;
+        padding: 10px 10px;
       }
 
       .body-text {

@@ -1,12 +1,8 @@
-import { METHODS } from "http"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { parseNearAmount, formatNearAmount } from "near-api-js/lib/utils/format"
-import React, { useCallback, useContext, useEffect, useState } from "react"
-import { useParams, useRoutes } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
+import { createBrowserHistory } from "history"
 import HeartIcon from "../../assets/icons/HeartIcon"
-import MoreOptionsIcon from "../../assets/icons/MoreOptionsIcon"
-import OwnersIcon from "../../assets/icons/OwnersIcon"
-import RefreshIcon from "../../assets/icons/RefreshIcon"
-import ShareIcon from "../../assets/icons/ShareIcon"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
@@ -17,13 +13,10 @@ import LoadingCircle from "../../components/LoadingCircle/LoadingCircle"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
 import formatAmount from "../../helpers/formatAmount"
-import { convertTokenResultToItemStruct, convertTokenResultToItemStructItem } from "../../helpers/utils"
-import AttributeCard from "./components/AttributeCard/AttributeCard"
+import { convertTokenResultToItemStructItem } from "../../helpers/utils"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
-import { getTransactionsForCollection, getTransactionsForItem, getTransactionsForUser, getTradingVolumeForCollection } from '../../contexts/transaction'
-import { TCollection } from "../CollectionPage/CollectionPage"
-import { getCollections } from "../../helpers/collections"
+import { getTransactionsForItem } from '../../contexts/transaction'
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -60,7 +53,7 @@ export type TItemMarketPlaceDetails = {
 
 const ItemPage = () => {
   const { itemId, collectionId } = useParams()
-
+  const history = createBrowserHistory()
   const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [showBidModal, setShowBidModal] = useState(false)
@@ -84,6 +77,7 @@ const ItemPage = () => {
     Number(saleDetails?.saleConditions.near) * nearPriceInUSD
   ).toFixed(2)
 
+
   const GAS = "200000000000000"
   const depositSpace = parseNearAmount("0.01")
   const depositFee = parseNearAmount("0.001")
@@ -104,6 +98,7 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(saleDetail.result).toString())
+    console.log(result, "saile detail")
     if (!result) {
       setSaleDetails(null)
       return
@@ -194,6 +189,8 @@ const ItemPage = () => {
         GAS,
         "0"
       )
+      history.replace("/collections")
+      window.location.reload()
     } catch (error) { }
   }
 
@@ -243,15 +240,21 @@ const ItemPage = () => {
   const [activities, setActivities] = useState<any>([])
 
   const getActivities = async () => {
-    const temp = await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", collectionId)
-    console.log(temp);
     const data = await getTransactionsForItem("marketplace_test_10.xuguangxia.testnet", collectionId, itemId)
     const txresult = []
     for (let item of data) {
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: item.args.args_json.sale.nft_contract_id,
+        method_name: "nft_token",
+        args_base64: btoa(`{"token_id": "${item.args.args_json.sale.token_id}"}`),
+        finality: "optimistic",
+      })
+      const newRow = JSON.parse(Buffer.from(rawResult.result).toString())
       txresult.push({
-        itemName: name,
-        itemImageUrl: image,
-        trxId: item.receipt_id,
+        itemName: newRow.metadata.title,
+        itemImageUrl: newRow.metadata.media,
+        trxId: item.originated_from_transaction_hash,
         time: item.time,
         amount: formatNearAmount(item.args.args_json.price),
         buyer: item.args.args_json.buyer_id,
@@ -264,6 +267,11 @@ const ItemPage = () => {
   useEffect(() => {
     getActivities()
   }, [name, image])
+
+  // useEffect(() => {
+  //   if (saleDetails?.saleConditions.near === undefined)
+  //     history.replace("/collections")
+  // }, [])
   return (
     <div className="item-page">
       {isLoading ? (
@@ -429,9 +437,14 @@ const ItemPage = () => {
                             {isOwner && (saleDetails.bids.length !== undefined && saleDetails?.bids?.length !== 0) &&
                               <button className="main-button" style={{ color: "#fff", width: "100%", margin: "10px 0" }} onClick={() => acceptOffer()}>Accept Offer</button>
                             }
+                            {console.log(saleDetails?.bids, "saleDetails?.bids")}
                             {saleDetails.bids.length !== undefined && saleDetails?.bids?.map((item: any, key) => (
                               <div className="bid-item" key={key}>
-                                <span>{item.owner_id}</span>
+                                <span>
+                                  <Link to={`/profile/@${item.owner_id}`}>
+                                    {item.owner_id}
+                                  </Link>
+                                </span>
                                 <span>{parseFloat(formatNearAmount(item.price)).toFixed(2)}</span>
                               </div>
                             ))}

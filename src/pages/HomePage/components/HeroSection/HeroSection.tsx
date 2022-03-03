@@ -24,7 +24,7 @@ const HeroSection = () => {
                 <div className="hero-content">
                   <h2>{post.name}</h2>
                   <p>{post.description}</p>
-                  <a href="#">Go to this collection</a>
+                  {/* <a href="#">Go to this collection</a> */}
                   <Button title="Explore more" onClick={() => { }} disabled={false} />
                 </div>
               </SectionPadding>
