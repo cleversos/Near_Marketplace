@@ -85,7 +85,8 @@ const ItemPage = () => {
   ).toFixed(2)
 
   const GAS = "200000000000000"
-  const deposit = parseNearAmount("0.1")
+  const depositSpace = parseNearAmount("0.01")
+  const depositFee = parseNearAmount("0.001")
   const oneYocto = "1"
 
   const handlePrice = (e) => {
@@ -178,7 +179,7 @@ const ItemPage = () => {
           token_id: item.id,
         },
         GAS,
-        parseNearAmount(amount)
+        parseNearAmount(amount + depositFee)
       )
     } catch (error) { }
   }
@@ -214,7 +215,7 @@ const ItemPage = () => {
             }),
           },
           GAS,
-          deposit
+          depositSpace
         )
       } catch (error) {
         console.log(error)
