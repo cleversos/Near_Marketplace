@@ -9,6 +9,8 @@ import { IconLoader } from "../IconLoader"
 import "./AppNavbar.scss"
 import { ConnectionContext } from "../../contexts/connection"
 import copy from 'copy-to-clipboard'
+import CollectionAutoComplete from "../CollectionAutoComplete/CollectionAutoComplete"
+import { CollectionContext } from "../../contexts/collections"
 
 interface AppNavbarProps {
   setOpenSidebar: Function
@@ -18,6 +20,7 @@ interface AppNavbarProps {
 }
 const AppNavbar = (props: AppNavbarProps) => {
   const walletOptionsRef = useRef(null)
+  const { collections } = useContext(CollectionContext)
 
   const [expandSearchBox, setExpandSearchBox] = useState(false)
   const [showMobileNavMenu, setShowMobileNavMenu] = useState(false)
@@ -76,7 +79,9 @@ const AppNavbar = (props: AppNavbarProps) => {
           <div
             className={`search-bar-container ${expandSearchBox ? "show" : ""}`}
           >
-            <CollectionSearchBox />
+            {collections.length !== 0 &&
+              <CollectionAutoComplete collections={collections} />
+            }
           </div>
           <div
             onClick={() => setExpandSearchBox((current) => !current)}

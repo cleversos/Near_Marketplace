@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import ExpandIcon from "../../assets/icons/ExpandIcon"
 import { ConnectionContext } from "../../contexts/connection"
 import BodyText from "../BodyText/BodyText"
@@ -53,6 +53,7 @@ const SideBar = (props: SideBarProps) => {
   }, [sideBarRef, setOpenMobileSidebar])
 
   const location = useLocation()
+  console.log(location.pathname, "oatgban")
   const [isExpanded, setIsExpanded] = useState(false)
   return (
     <div

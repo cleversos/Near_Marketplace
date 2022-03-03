@@ -1,0 +1,29 @@
+@import "../../sass/variables.scss";
+@import "../BodyText/BodyText.scss";
+
+.autocomplete-search-box {
+    height: 35px;
+    padding: 0 15px;
+    width: 100%;
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    background: $body-background;
+    max-width: 400px;
+    border-radius: 20px;
+    position: relative;
+    input {
+        @include body-text();
+        background: none;
+        border: none;
+        margin-left: 10px;
+        color: white;
+        outline: none;
+        flex: 1;
+        height: 100%;
+    }
+    li {
+        color: #dbdbdba6 !important;
+        font-weight: 300;
+    }
+}
