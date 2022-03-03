@@ -36,7 +36,7 @@ const AppNavbar = (props: AppNavbarProps) => {
     },
     {
       name: "Sell",
-      link: "/me",
+      link: "/profile",
     },
   ]
 

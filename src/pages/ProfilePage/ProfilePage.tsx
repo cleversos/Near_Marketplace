@@ -1,11 +1,10 @@
 import { formatNearAmount } from "near-api-js/lib/utils/format"
-import React, { useCallback, useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
 import NFTItemCard from "../../components/NFTItemCard/NFTItemCard"
 import { CollectionContext } from "../../contexts/collections"
-import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
 import { getUserSalesInMarketplace } from "../../helpers/collections"
 import { convertTokenResultToItemStructItem } from "../../helpers/utils"
@@ -15,7 +14,20 @@ import CollectionAndAllItemsSet from "./components/CollectionAndAllItemsSet/Coll
 import CollectionAndItemsSet from "./components/CollectionAndItemsSet/CollectionAndItemsSet"
 import "./ProfilePage.scss"
 import { getTransactionsForUser } from "../../contexts/transaction"
+import { useParams } from "react-router-dom"
+import { ConnectConfig, keyStores, providers } from "near-api-js"
 
+const configs: ConnectConfig[] = [
+  {
+    networkId: "testnet",
+    keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+    nodeUrl: "https://rpc.testnet.near.org",
+    walletUrl: "https://wallet.testnet.near.org",
+    helperUrl: "https://helper.testnet.near.org",
+    // explorerUrl: "https://explorer.testnet.near.org",
+    headers: {},
+  },
+]
 type TProfile = {
   imageUrl: string
   description: string
@@ -36,9 +48,17 @@ export type TProfileCollection = {
 }
 
 const ProfilePage = () => {
+  const { userAccount } = useParams()
+  const profileUserAccount = userAccount.split("@")[1]
+
+  const config =
+    configs.find((config) => config.networkId === "testnet") || configs[0]
+  const provider = useMemo(
+    () => new providers.JsonRpcProvider(config.nodeUrl),
+    [config.nodeUrl]
+  )
+
   const [profile, setProfile] = useState<TProfile | null>(null)
-  const { wallet, provider } = useContext(ConnectionContext)
-  const walletAddress = wallet?.getAccountId()
   const [mode, setMode] = useState<TProfileMode>("myItems")
   const { collections } = useContext(CollectionContext)
   const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
@@ -53,7 +73,7 @@ const ProfilePage = () => {
         account_id: collection.collectionId,
         method_name: "nft_tokens_for_owner",
         args_base64: btoa(
-          `{"account_id": "${accountId}", "from_index": "0", "limit": 100}`
+          `{"account_id": "${profileUserAccount}", "from_index": "0", "limit": 100}`
         ),
         finality: "optimistic",
       })
@@ -76,13 +96,21 @@ const ProfilePage = () => {
     []
   )
   const getActivities = async () => {
-    const data = await getTransactionsForUser("marketplace_test_10.xuguangxia.testnet", walletAddress)
+    const data = await getTransactionsForUser("marketplace_test_10.xuguangxia.testnet", profileUserAccount)
     const result = []
     for (let item of data) {
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: item.args.args_json.sale.nft_contract_id,
+        method_name: "nft_token",
+        args_base64: btoa(`{"token_id": "${item.args.args_json.sale.token_id}"}`),
+        finality: "optimistic",
+      })
+      const newRow = JSON.parse(Buffer.from(rawResult.result).toString())
       result.push({
-        itemName: "tenst data",
-        itemImageUrl: "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
-        trxId: item.receipt_id,
+        itemName: newRow.metadata.title,
+        itemImageUrl: newRow.metadata.media,
+        trxId: item.originated_from_transaction_hash,
         time: item.time,
         amount: formatNearAmount(item.args.args_json.price),
         buyer: item.args.args_json.buyer_id,
@@ -97,7 +125,7 @@ const ProfilePage = () => {
       const sales = await getUserSalesInMarketplace(
         provider,
         contractAccountId,
-        walletAddress
+        profileUserAccount
       )
       setListedNfts(sales)
     } catch (error) {
@@ -118,14 +146,14 @@ const ProfilePage = () => {
           await getUserTokensInACollection(
             collection,
             provider,
-            wallet?.getAccountId()
+            profileUserAccount
           )
       )
 
       const sales = await getUserSalesInMarketplace(
         provider,
         contractAccountId,
-        walletAddress
+        profileUserAccount
       )
       setListedNfts(sales)
 
@@ -179,8 +207,8 @@ const ProfilePage = () => {
           />
         </div>
         <BodyText className="address" light>
-          {walletAddress?.slice(0, 6)}...
-          {walletAddress?.slice(walletAddress.length - 4, walletAddress.length)}
+          {profileUserAccount?.slice(0, 6)}...
+          {profileUserAccount?.slice(profileUserAccount.length - 4, profileUserAccount.length)}
         </BodyText>
       </div>
       <div className="items-container">

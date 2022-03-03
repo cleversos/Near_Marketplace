@@ -74,11 +74,11 @@ const SideBar = (props: SideBarProps) => {
           </li>
         ))}
         {walletAddress &&
-          <li className={`${location.pathname === "/me" ? "selected" : ""}`}>
-            <Link to="/me">
+          <li className={`${location.pathname === "/profile" ? "selected" : ""}`}>
+            <Link to={`/profile/@${walletAddress}`}>
               <IconLoader
                 icon="profile"
-                isIconSelected={location.pathname === "/me"}
+                isIconSelected={location.pathname === "/profile"}
               />
               <BodyText light>profile</BodyText>
             </Link>

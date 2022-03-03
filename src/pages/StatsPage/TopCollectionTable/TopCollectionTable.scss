@@ -12,7 +12,6 @@
     border: 1px solid $separator;
     background: $background2;
     tr {
-
       th {
         padding: 14px 20px;
 
@@ -76,6 +75,7 @@
     width: 30px;
     border-radius: 30px;
     margin-right: 10px;
+    object-fit: cover;
   }
 
   .collection-title {

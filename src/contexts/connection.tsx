@@ -11,7 +11,7 @@ import * as buffer from "buffer"
 
 const { connect, keyStores, WalletConnection } = nearAPI
 
-const configs: ConnectConfig[] = [
+export const configs: ConnectConfig[] = [
   {
     networkId: "testnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
