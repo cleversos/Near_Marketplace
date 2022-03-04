@@ -1,22 +1,21 @@
-@import '../../../../sass/variables.scss';
-@import '../../../../components/BodyText/BodyText.scss';
+@import "../../../../sass/variables.scss";
+@import "../../../../components/BodyText/BodyText.scss";
 
 .subscribe-section {
   .section-padding {
     position: relative;
-    background: linear-gradient(97.09deg, #1861F9 -0.53%, rgba(255, 255, 255, 0) 100%);   
-    border-radius: 50px;
+    background: linear-gradient(97.09deg, #1861f9 -0.53%, rgba(255, 255, 255, 0) 100%);
+    border-radius: 30px;
     overflow: hidden;
     padding: 2px;
     z-index: 0;
 
     .content {
-      z-index: 1; 
+      z-index: 1;
       padding: 70px 5%;
 
       .details {
         .body-text {
-
           &:nth-child(1) {
             font-size: 18px;
             line-height: 27px;
@@ -29,7 +28,7 @@
             margin: 25px 0 15px;
           }
 
-          &:nth-child(3){
+          &:nth-child(3) {
             max-width: 560px;
             line-height: 27px;
             color: $text-color-gray;
@@ -65,7 +64,6 @@
               color: white;
             }
           }
-          
         }
       }
     }
@@ -77,7 +75,7 @@
       right: 2px;
       left: 2px;
       z-index: -1;
-      border-radius: 50px;
+      border-radius: 30px;
       overflow: hidden;
       display: flex;
       align-items: center;

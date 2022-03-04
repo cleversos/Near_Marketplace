@@ -1,25 +1,25 @@
-@import '../../sass/variables.scss';
+@import "../../sass/variables.scss";
 
-@mixin body-text{
-  font-family: 'Lexend Deca', sans-serif;
+@mixin body-text {
+  font-family: "Lexend Deca", sans-serif;
   font-style: normal;
   color: rgb(255, 255, 255);
   margin: 0;
 }
 
-.body-text{
+.body-text {
   @include body-text();
   font-weight: 400;
-  font-size: 15px;
+  font-size: 12px;
 
   &.light {
     font-weight: 400;
-    color: $text-color-gray
+    color: $text-color-gray;
   }
 
   &.normal {
     font-weight: 500;
-    color: $text-color-gray
+    color: $text-color-gray;
   }
 
   &.bold {
@@ -28,14 +28,16 @@
   }
 
   &.red {
-    color: $text-color-red
+    color: $text-color-red;
   }
 
- &.green {
-   color: $text-color-green
- }
+  &.green {
+    color: $text-color-green;
+  }
 
- &.section-title-text {
-   font-size: 34px;
- }
+  &.section-title-text {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
 }

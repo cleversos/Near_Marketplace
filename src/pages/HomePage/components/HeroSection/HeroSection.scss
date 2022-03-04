@@ -41,6 +41,7 @@
     img {
       min-height: 100%;
       width: 100%;
+      object-fit: cover;
     }
   }
 }
@@ -48,16 +49,27 @@
 .hero-content {
   display: flex;
   flex-direction: column;
+  h3 {
+    font-size: 22.65px;
+    line-height: 33.97px;
+    color: #fff;
+  }
   h2 {
-    font-size: 50px;
-    max-width: 400px;
-    font-weight: bold;
+    font-size: 57px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 59px;
+    letter-spacing: 0em;
+    text-align: left;
   }
   p {
-    font-size: 14px;
-    font-weight: 100;
-    max-width: 560px;
-    margin-bottom: 0;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: left;
+    max-width: 500px;
   }
   a {
     margin: 20px 0;
@@ -68,7 +80,7 @@
     }
   }
   button {
-    margin-top: 20px;
+    background: linear-gradient(262.65deg, #a91cff 13.38%, #1e62f8 80.41%) !important;
     width: 180px;
   }
 }

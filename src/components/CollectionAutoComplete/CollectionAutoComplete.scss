@@ -2,28 +2,44 @@
 @import "../BodyText/BodyText.scss";
 
 .autocomplete-search-box {
-    height: 35px;
-    padding: 0 15px;
     width: 100%;
-    margin-left: 15px;
     display: flex;
     align-items: center;
-    background: $body-background;
-    max-width: 400px;
-    border-radius: 20px;
     position: relative;
     input {
         @include body-text();
         background: none;
+        padding: 7px 20px !important;
         border: none;
-        margin-left: 10px;
-        color: white;
+        border-radius: 20px !important;
+        color: #94959a !important;
+        padding-left: 28px !important;
         outline: none;
         flex: 1;
+        background: #090619 !important;
         height: 100%;
+        border-color: transparent !important;
+        &:focus {
+            border-color: #44a0fe !important;
+        }
+    }
+    .icon-loader {
+        display: flex;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 10px;
     }
     li {
         color: #dbdbdba6 !important;
         font-weight: 300;
     }
+}
+.MuiAutocomplete-paper {
+    background-color: #090619 !important;
+}
+.MuiAutocomplete-option {
+    font-size: 12px !important;
+    color: #dbdbdba6;
 }

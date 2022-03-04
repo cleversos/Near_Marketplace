@@ -39,8 +39,8 @@ export default function CollectionAutoComplete(props: { collections: any }) {
           }
         }}
         sx={{
-          display: 'inline-block',
           '& input': {
+            fontSize: 12,
             width: 400,
             color: "#dbdbdba6",
           },

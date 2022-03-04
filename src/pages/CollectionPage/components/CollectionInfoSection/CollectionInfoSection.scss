@@ -19,7 +19,7 @@
       z-index: 2;
 
       & > * {
-        padding: 15px;
+        padding: 12px;
         display: flex;
         border-right: 1px solid $separator;
 
@@ -28,7 +28,7 @@
         }
 
         svg {
-          width: 22px;
+          width: 16px;
           height: auto;
         }
       }
@@ -94,7 +94,7 @@
     }
 
     .creator-text {
-      font-size: 14px;
+      font-size: 10px;
       color: $text-color-gray;
 
       .green {

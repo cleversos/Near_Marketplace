@@ -22,6 +22,7 @@ const HeroSection = () => {
             <div className="hero-section">
               <SectionPadding>
                 <div className="hero-content">
+                  <h3>Galacticway</h3>
                   <h2>{post.name}</h2>
                   <p>{post.description}</p>
                   {/* <a href="#">Go to this collection</a> */}

@@ -68,7 +68,7 @@ const resolveIcon = (props: IconLoaderProps): React.ReactNode => {
     case "delete":
       return <DeleteIcon />
     case "profile":
-      return <ProfileIcon />
+      return <ProfileIcon isSelected={props.isIconSelected} />
 
     default:
       return <div />

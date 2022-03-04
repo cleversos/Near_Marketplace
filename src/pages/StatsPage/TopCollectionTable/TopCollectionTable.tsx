@@ -235,6 +235,9 @@ const TopCollectionTable = () => {
             <BodyText light>Collection</BodyText>
           </th>
           <th>
+            <BodyText light>Volume</BodyText>
+          </th>
+          <th>
             <BodyText light>NFT Floor Price</BodyText>
           </th>
           <th>

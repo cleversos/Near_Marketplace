@@ -53,7 +53,6 @@ const SideBar = (props: SideBarProps) => {
   }, [sideBarRef, setOpenMobileSidebar])
 
   const location = useLocation()
-  console.log(location.pathname, "oatgban")
   const [isExpanded, setIsExpanded] = useState(false)
   return (
     <div
