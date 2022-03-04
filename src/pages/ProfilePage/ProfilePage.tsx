@@ -145,12 +145,24 @@ const ProfilePage = () => {
     try {
       const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
       const promises = collections.map(
-        async (collection) =>
-          await getUserTokensInACollection(
-            collection,
-            provider,
-            profileUserAccount
-          )
+        async (collection) => {
+          try {
+            await getUserTokensInACollection(
+              collection,
+              provider,
+              profileUserAccount
+            );
+          } catch (error) {
+            console.log(error);
+            return {
+              id: collection.collectionId,
+              imageUrl: collection.profileImageUrl,
+              name: collection.name,
+              floorPrice: 10,
+              items: [],
+            }
+          }
+        }
       )
 
       const sales = await getUserSalesInMarketplace(
