@@ -6,6 +6,7 @@ import "./CollectionAndAllItemsSet.scss"
 
 const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, listedNfts: any }) => {
   const { collection } = props
+  console.log(collection.items)
   return (
     <div className="collection-and-items-set">
       <div className="head">
@@ -19,6 +20,7 @@ const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, liste
       </div>
       <div className="nfts-container">
         {collection.items?.map((item, i) => (
+          // https://ipfs.fleek.co/ipfs/bafkreiapfrxlqvay2eod5nog5dcp25hpb67ihhrctl4xg466j52ssiac6i
           <NFTItemCard
             key={i}
             id={item.id}

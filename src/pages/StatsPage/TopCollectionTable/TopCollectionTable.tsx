@@ -126,21 +126,24 @@ const TopCollectionTable = (props: { timeRange: number }) => {
         } else {
           volumePercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
         }
-        newItems.sort(function (a, b) {
-          return a.price - b.price
-        })
-        const min = newItems[0].price
-        const itemLength = newItems.length
-        const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
-        all.push({
-          bannerImageUrl: item.bannerImageUrl,
-          name: item.name,
-          floorPrice: min,
-          volume: values[2].volume,
-          volumePercent: volumePercent,
-          count: itemLength,
-          avgPrice: (sum / itemLength).toFixed(2)
-        })
+
+        if (newItems.length !== 0) {
+          newItems.sort(function (a, b) {
+            return a.price - b.price
+          })
+          const min = newItems[0].price
+          const itemLength = newItems.length
+          const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
+          all.push({
+            bannerImageUrl: item.bannerImageUrl,
+            name: item.name,
+            floorPrice: min,
+            volume: values[2].volume,
+            volumePercent: volumePercent,
+            count: itemLength,
+            avgPrice: (sum / itemLength).toFixed(2)
+          })
+        }
         setIsLoading(false)
       }
     } catch (error) {
@@ -157,27 +160,33 @@ const TopCollectionTable = (props: { timeRange: number }) => {
 
   // fetch collection details using collectionId and tokenType
   const fetchCollectionMarketDetails = useCallback(async (collectionId, tokenType) => {
-    const rawResult: any = await provider.query({
-      request_type: "call_function",
-      account_id: CONTRACT_ACCOUNT_ID,
-      method_name: "get_collection",
-      args_base64: btoa(
-        `{"nft_contract_id": "${collectionId}", "token_type": "${tokenType}"}`
-      ),
-      finality: "optimistic",
-    })
-    const result = JSON.parse(Buffer.from(rawResult.result).toString())
-    const collectionDetails: TCollections = {
-      collectionId: result.nft_contract_id,
-      tokenType: result.token_type,
-      name: result.name,
-      isVerified: result.isVerified,
-      bannerImageUrl: result.bannerImageUrl,
-      profileImageUrl: result.profileImageUrl,
-      description: result.description,
-      royalty: result.royalty,
-      links: result.links,
-      creator: "",
+    let collectionDetails: TCollections;
+    try {
+
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: CONTRACT_ACCOUNT_ID,
+        method_name: "get_collection",
+        args_base64: btoa(
+          `{"nft_contract_id": "${collectionId}", "token_type": "${tokenType}"}`
+        ),
+        finality: "optimistic",
+      })
+      const result = JSON.parse(Buffer.from(rawResult.result).toString())
+      collectionDetails = {
+        collectionId: result.nft_contract_id,
+        tokenType: result.token_type,
+        name: result.name,
+        isVerified: result.isVerified,
+        bannerImageUrl: result.bannerImageUrl,
+        profileImageUrl: result.profileImageUrl,
+        description: result.description,
+        royalty: result.royalty,
+        links: result.links,
+        creator: "",
+      }
+    } catch (error) {
+      return null
     }
     return collectionDetails
   }, [])
@@ -190,8 +199,6 @@ const TopCollectionTable = (props: { timeRange: number }) => {
         CONTRACT_ACCOUNT_ID,
         collectionId
       )
-
-      console.log(sales, " ===> SALES")
 
       const saleTokens = []
 
@@ -222,6 +229,7 @@ const TopCollectionTable = (props: { timeRange: number }) => {
       return items
     } catch (error) {
       console.log(error)
+      return []
     }
   }, [])
 

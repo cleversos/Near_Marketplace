@@ -1,11 +1,9 @@
 import { formatNearAmount } from "near-api-js/lib/utils/format"
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
 import NFTItemCard from "../../components/NFTItemCard/NFTItemCard"
-import { CollectionContext } from "../../contexts/collections"
-import { ContractContext } from "../../contexts/contract"
 import { getCollections, getUserSalesInMarketplace } from "../../helpers/collections"
 import { convertTokenResultToItemStructItem } from "../../helpers/utils"
 import { TCollection } from "../CollectionPage/CollectionPage"
@@ -131,7 +129,7 @@ const ProfilePage = () => {
       )
       setListedNfts(sales)
     } catch (error) {
-      console.log(error)
+      console.log(error, CONTRACT_ACCOUNT_ID, profileUserAccount);
     }
   }
 
@@ -147,36 +145,50 @@ const ProfilePage = () => {
       const promises = collections.map(
         async (collection) => {
           try {
-            await getUserTokensInACollection(
+            return (await getUserTokensInACollection(
               collection,
               provider,
               profileUserAccount
-            );
+            ));
           } catch (error) {
-            console.log(error);
-            return {
-              id: collection.collectionId,
-              imageUrl: collection.profileImageUrl,
-              name: collection.name,
-              floorPrice: 10,
-              items: [],
-            }
+            console.log(error, collection, profileUserAccount);
+            return null;
           }
         }
       )
 
-      const sales = await getUserSalesInMarketplace(
-        provider,
-        CONTRACT_ACCOUNT_ID,
-        profileUserAccount
-      )
-      setListedNfts(sales)
+      try {
+        for (let contract of collections) {
+          console.log(contract.collectionId, "contract.collectionId")
+          const rawResult: any = await provider.query({
+            request_type: "call_function",
+            account_id: CONTRACT_ACCOUNT_ID,
+            method_name: "get_sales_by_nft_contract_id",
+            args_base64: btoa(
+              `{"nft_contract_id": "${contract.collectionId}", "from_index": "0", "limit": 50}`
+            ),
+            finality: "optimistic",
+          })
+          const sales = JSON.parse(Buffer.from(rawResult.result).toString())
 
-      await Promise.all(promises).then((results) =>
+          console.log(sales, "sales")
+        }
+        const sales = await getUserSalesInMarketplace(
+          provider,
+          CONTRACT_ACCOUNT_ID,
+          profileUserAccount
+        )
+        setListedNfts(sales)
+      } catch (error) {
+        console.log(error, " : getWalletNFTs error")
+      }
+      await Promise.all(promises).then((results) => {
+        console.log(results, "sales resltues")
         setWalletNFTs(results.filter((result) => result))
+      }
       )
     } catch (error) {
-      console.log
+      console.log(error)
     }
   }, [])
 
@@ -288,7 +300,7 @@ const ProfilePage = () => {
         {mode === "listedItems" &&
           <div className="collection-and-items-set">
             <div className="nfts-container">
-              {listedNfts.map((item, i) => (
+              {listedNfts?.map((item, i) => (
                 <NFTItemCard
                   key={i}
                   id={item.token_id}

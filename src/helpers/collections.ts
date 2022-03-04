@@ -109,17 +109,37 @@ export const getUserSalesInMarketplace = async (
     const valueArray = value.map(element => {
       return '"' + element + '"'
     }).join();
-    console.log(valueArray);
-    const rawTokenResult: any = await provider.query({
-      request_type: "call_function",
-      account_id: next.value,
-      method_name: "nft_tokens_batch",
-      args_base64: btoa(
-        `{"token_ids": [` + valueArray + `]}`
-      ),
-      finality: "optimistic",
-    })
-    const tokensForCollection = JSON.parse(Buffer.from(rawTokenResult.result).toString())
+    let tokensForCollection = [];
+    try {
+      const rawTokenResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: next.value,
+        method_name: "nft_tokens_batch",
+        args_base64: btoa(
+          `{"token_ids": [` + valueArray + `]}`
+        ),
+        finality: "optimistic",
+      })
+      tokensForCollection = JSON.parse(Buffer.from(rawTokenResult.result).toString())
+    } catch (error) {
+      for (let tokenId of value) {
+        try {
+          const rawTokenResult: any = await provider.query({
+            request_type: "call_function",
+            account_id: next.value,
+            method_name: "nft_token",
+            args_base64: btoa(
+              `{"token_id": "` + tokenId + `"}`
+            ),
+            finality: "optimistic",
+          })
+          const tokenInfo = JSON.parse(Buffer.from(rawTokenResult.result).toString())
+          tokensForCollection.push(tokenInfo)
+        } catch (error) {
+          console.log(error, tokenId, "error on nft_token")
+        }
+      }
+    }
     for (let j = 0; j < tokensForCollection.length; j++) {
       tokens[tokens.length] = tokensForCollection[j];
     }
@@ -146,4 +166,3 @@ export const getUserSalesInMarketplace = async (
   }
   return sales
 }
-

@@ -19,7 +19,7 @@ interface CollectionContextProps {
 export const CollectionContext = createContext<CollectionContextProps>({
   collections: [],
   isFetchingCollections: true,
-  fetchCollections: () => {},
+  fetchCollections: () => { },
 })
 
 const CollectionProvider = (props: any) => {
@@ -32,7 +32,6 @@ const CollectionProvider = (props: any) => {
     try {
       setIsFetchingCollections(true)
       const results = await getCollections(provider, contractAccountId)
-      console.log({ results })
       setCollections(results)
       setIsFetchingCollections(false)
     } catch (error) {

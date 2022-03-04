@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import BodyText from "../../../../components/BodyText/BodyText"
 import NFTItemCard from "../../../../components/NFTItemCard/NFTItemCard"
 import { TProfileCollection } from "../../ProfilePage"
@@ -6,9 +5,6 @@ import "./CollectionAndItemsSet.scss"
 
 const CollectionAndItemsSet = (props: { collection: TProfileCollection }) => {
   const { collection } = props
-  useEffect(() => {
-    console.log(collection, "collection list")
-  }, [])
   return (
     <div className="collection-and-items-set">
       <div className="head">

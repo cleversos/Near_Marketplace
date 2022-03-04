@@ -17,6 +17,7 @@ import { convertTokenResultToItemStructItem } from "../../helpers/utils"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
 import { getTransactionsForItem } from '../../contexts/transaction'
+import { CONTRACT_ACCOUNT_ID } from '../../config'
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -242,7 +243,7 @@ const ItemPage = () => {
   const [activities, setActivities] = useState<any>([])
 
   const getActivities = async () => {
-    const data = await getTransactionsForItem("marketplace_test_10.xuguangxia.testnet", collectionId, itemId)
+    const data = await getTransactionsForItem(CONTRACT_ACCOUNT_ID, collectionId, itemId)
     const txresult = []
     for (let item of data) {
       const rawResult: any = await provider.query({
