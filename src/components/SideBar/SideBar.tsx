@@ -80,7 +80,7 @@ const SideBar = (props: SideBarProps) => {
                 icon="profile"
                 isIconSelected={location.pathname === "/profile"}
               />
-              <BodyText light>profile</BodyText>
+              <BodyText light>Profile</BodyText>
             </Link>
           </li>
         }

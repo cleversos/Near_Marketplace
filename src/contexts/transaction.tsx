@@ -32,7 +32,6 @@ export async function getTransactionsForItem(marketplace_account_id, nft_contrac
         return (await result.json())
     };
     const result = await getAPI();
-    console.log(result);
     return result;
     // const near = await connect(config);
 
@@ -135,7 +134,6 @@ export async function getTradingVolumeForCollection(marketplace_account_id, nft_
         return (await result.json())
     };
     const result = await getAPI();
-    console.log(result);
     return result;
 }
 
@@ -158,7 +156,6 @@ export async function getTransactionsForUser(marketplace_account_id, user_accoun
         return (await result.json())
     };
     const result = await getAPI();
-    console.log(result);
     return result;
 }
 

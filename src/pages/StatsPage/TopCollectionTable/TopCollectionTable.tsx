@@ -9,6 +9,7 @@ import { convertTokenResultToItemStruct } from "../../../helpers/utils"
 import { TItem } from "../../ItemPage/ItemPage"
 import moment from 'moment';
 import "./TopCollectionTable.scss"
+import { CONTRACT_ACCOUNT_ID } from "../../../config"
 
 type TCollection = {
   id: string
@@ -57,12 +58,6 @@ type TCollectionLinks = {
   medium?: string
 }
 
-type PriceRange = {
-  currency: string
-  min: string
-  max: string
-}
-
 export type TCollections = {
   collectionId: string
   tokenType: string
@@ -94,7 +89,6 @@ interface TableData {
 const TopCollectionTable = (props: { timeRange: number }) => {
 
   const { provider } = useContext(ConnectionContext)
-  const { contractAccountId } = useContext(ContractContext)
 
   const [tableData, setTableData] = useState<any>()
 
@@ -103,73 +97,69 @@ const TopCollectionTable = (props: { timeRange: number }) => {
 
   const [isLoading, setIsLoading] = useState(true)
 
-  const [priceRange, setPriceRange] = useState<PriceRange>({
-    currency: "USD",
-    min: "min",
-    max: "max"
-  });
-
   const getAllCollections = async () => {
+    setIsLoading(true)
     let all = []
     const now = new Date()
     const stepDate = (now.getTime() - props.timeRange * 24 * 60 * 60 * 1000).toString() + "000000"
     const prevDate = (now.getTime() - props.timeRange * 24 * 60 * 60 * 1000 * 2).toString() + "000000"
     const nowString = now.getTime().toString() + "000000"
-    const collections = await getCollections(provider, "marketplace_test_10.xuguangxia.testnet")
-    console.log(collections, "collections")
+    const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
+    console.log(collections, " : all collections")
     try {
       for (let item of collections) {
+        console.log(item, item.tokenType)
         const values = await Promise.all([
           await fetchCollectionMarketDetails(item.collectionId, item.tokenType),
           await fetchItems(item.collectionId),
-          await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", item.collectionId),
-          await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", item.collectionId, prevDate, stepDate),
-          await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", item.collectionId, stepDate, nowString)
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId),
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, prevDate, stepDate),
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, stepDate, nowString)
         ])
         let newItems = values[1]
+        console.log(values[0], "fetch items")
         let volumePercent = 0
-        console.log(values, "values")
-        if (parseFloat(values[4][0].volume) === 0.0) {
+        if (parseFloat(values[4].volume) === 0.0) {
           volumePercent = -100.0
-        } else if (parseFloat(values[3][0].volume) === 0.0) {
+        } else if (parseFloat(values[3].volume) === 0.0) {
           volumePercent = 100.0
         } else {
-          volumePercent = (parseFloat(values[4][0].volume) - parseFloat(values[3][0].volume)) / parseFloat(values[3][0].volume) * 100
+          volumePercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
         }
-        console.log(volumePercent, "volumePercent")
         newItems.sort(function (a, b) {
           return a.price - b.price
         })
         const min = newItems[0].price
         const itemLength = newItems.length
         const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
-        setIsLoading(false)
         all.push({
           bannerImageUrl: item.bannerImageUrl,
           name: item.name,
           floorPrice: min,
-          volume: values[2][0].volume,
+          volume: values[2].volume,
           volumePercent: volumePercent,
           count: itemLength,
           avgPrice: (sum / itemLength).toFixed(2)
         })
+        setIsLoading(false)
       }
     } catch (error) {
       console.log(error)
     }
     setTableData(all)
+    console.log(all, "all table")
     setIsLoading(false)
   }
 
   useEffect(() => {
     getAllCollections()
-  }, [])
+  }, [props.timeRange])
 
   // fetch collection details using collectionId and tokenType
   const fetchCollectionMarketDetails = useCallback(async (collectionId, tokenType) => {
     const rawResult: any = await provider.query({
       request_type: "call_function",
-      account_id: contractAccountId,
+      account_id: CONTRACT_ACCOUNT_ID,
       method_name: "get_collection",
       args_base64: btoa(
         `{"nft_contract_id": "${collectionId}", "token_type": "${tokenType}"}`
@@ -197,9 +187,11 @@ const TopCollectionTable = (props: { timeRange: number }) => {
       //get all listed sales in a collection from marketplace contract
       const sales = await getAllSalesInCollection(
         provider,
-        contractAccountId,
+        CONTRACT_ACCOUNT_ID,
         collectionId
       )
+
+      console.log(sales, " ===> SALES")
 
       const saleTokens = []
 
@@ -233,14 +225,6 @@ const TopCollectionTable = (props: { timeRange: number }) => {
     }
   }, [])
 
-  const fetchAll = useCallback(async () => {
-    setIsLoading(true)
-  }, [])
-
-  useEffect(() => {
-    fetchAll()
-  }, [fetchAll, priceRange])
-
   return (
     <table className="top-collection-table">
       <thead>
@@ -258,15 +242,15 @@ const TopCollectionTable = (props: { timeRange: number }) => {
             <BodyText light>Avg Price</BodyText>
           </th>
           <th>
-            <BodyText light>Volume</BodyText>
+            <BodyText light>Total Volume</BodyText>
           </th>
           <th>
-            <BodyText light>Volume %</BodyText>
+            <BodyText light>Volume % ({props.timeRange}d)</BodyText>
           </th>
         </tr>
       </thead>
       <tbody>
-        {isLoading &&
+        {isLoading ?
           <>
             <tr>
               <td>
@@ -309,38 +293,40 @@ const TopCollectionTable = (props: { timeRange: number }) => {
               </td>
             </tr>
           </>
-        }
-        {tableData && tableData?.map((collection, i) => (
-          <tr key={i}>
-            <td className="number">
-              <BodyText>{i + 1}</BodyText>
-            </td>
-            <td>
-              <div className="collection-name-and-img-column">
-                <img src={collection.bannerImageUrl} alt={collection.name} />
-                <BodyText className="collection-title">
-                  {collection.name}
-                </BodyText>
-              </div>
-            </td>
-            <td>
-              <BodyText className="mobile-title">NFT Floor Price</BodyText>
-              <BodyText light>{collection.floorPrice}</BodyText>
-            </td>
-            <td>
-              <BodyText className="mobile-title">Avg Price</BodyText>
-              <BodyText light>{parseFloat(collection.avgPrice).toLocaleString()}</BodyText>
-            </td>
-            <td>
-              <BodyText className="mobile-title">Volume</BodyText>
-              <BodyText light>{parseFloat(collection.volume).toLocaleString()}</BodyText>
-            </td>
-            <td>
-              <BodyText className="mobile-title">Volume %</BodyText>
-              <BodyText light>{parseFloat(collection.volumePercent).toLocaleString()}</BodyText>
-            </td>
-          </tr>
-        ))}
+          :
+          tableData && tableData?.map((collection, i) => (
+            <tr key={i}>
+              <td className="number">
+                <BodyText>{i + 1}</BodyText>
+              </td>
+              <td>
+                <div className="collection-name-and-img-column">
+                  <img src={collection.bannerImageUrl} alt={collection.name} />
+                  <BodyText className="collection-title">
+                    {collection.name}
+                  </BodyText>
+                </div>
+              </td>
+              <td>
+                <BodyText className="mobile-title">NFT Floor Price</BodyText>
+                <BodyText light>{collection.floorPrice}</BodyText>
+              </td>
+              <td>
+                <BodyText className="mobile-title">Avg Price</BodyText>
+                <BodyText light>{parseFloat(collection.avgPrice).toLocaleString()}</BodyText>
+              </td>
+              <td>
+                <BodyText className="mobile-title">Volume</BodyText>
+                <BodyText light>{parseFloat(collection.volume).toLocaleString()}</BodyText>
+              </td>
+              <td>
+                <BodyText className="mobile-title">Volume %</BodyText>
+                <BodyText light className={
+                  parseFloat(collection.volumePercent) > 0 ? "green" : "red"
+                }>{parseFloat(collection.volumePercent).toLocaleString()}</BodyText>
+              </td>
+            </tr>
+          ))}
       </tbody>
     </table>
   )

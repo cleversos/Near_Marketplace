@@ -51,7 +51,9 @@ export default function CollectionAutoComplete(props: { collections: any }) {
         options={props.collections}
         autoComplete={true}
         autoHighlight={true}
-        getOptionLabel={(option: CollectionType) => option.name}
+        getOptionLabel={(option: CollectionType) =>
+          option.name
+        }
         filterOptions={filterOptions}
         renderInput={(params) => (
           <div ref={params.InputProps.ref}>

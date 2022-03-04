@@ -6,7 +6,7 @@ import Button from "../../components/Button/Button"
 import NFTItemCard from "../../components/NFTItemCard/NFTItemCard"
 import { CollectionContext } from "../../contexts/collections"
 import { ContractContext } from "../../contexts/contract"
-import { getUserSalesInMarketplace } from "../../helpers/collections"
+import { getCollections, getUserSalesInMarketplace } from "../../helpers/collections"
 import { convertTokenResultToItemStructItem } from "../../helpers/utils"
 import { TCollection } from "../CollectionPage/CollectionPage"
 import { TItem } from "../ItemPage/ItemPage"
@@ -16,8 +16,9 @@ import "./ProfilePage.scss"
 import { getTransactionsForUser } from "../../contexts/transaction"
 import { useParams } from "react-router-dom"
 import { ConnectConfig, keyStores, providers } from "near-api-js"
+import { CONTRACT_ACCOUNT_ID } from "../../config"
 
-const configs: ConnectConfig[] = [
+export const configs: ConnectConfig[] = [
   {
     networkId: "testnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
@@ -28,6 +29,7 @@ const configs: ConnectConfig[] = [
     headers: {},
   },
 ]
+
 type TProfile = {
   imageUrl: string
   description: string
@@ -53,16 +55,16 @@ const ProfilePage = () => {
 
   const config =
     configs.find((config) => config.networkId === "testnet") || configs[0]
+
   const provider = useMemo(
     () => new providers.JsonRpcProvider(config.nodeUrl),
     [config.nodeUrl]
   )
 
+
   const [profile, setProfile] = useState<TProfile | null>(null)
   const [mode, setMode] = useState<TProfileMode>("myItems")
-  const { collections } = useContext(CollectionContext)
   const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
-  const { contractAccountId, contract } = useContext(ContractContext)
   const [listedNfts, setListedNfts] = useState<any>()
   const [activities, setActivities] = useState<any>()
 
@@ -96,7 +98,7 @@ const ProfilePage = () => {
     []
   )
   const getActivities = async () => {
-    const data = await getTransactionsForUser("marketplace_test_10.xuguangxia.testnet", profileUserAccount)
+    const data = await getTransactionsForUser(CONTRACT_ACCOUNT_ID, profileUserAccount)
     const result = []
     for (let item of data) {
       const rawResult: any = await provider.query({
@@ -124,7 +126,7 @@ const ProfilePage = () => {
     try {
       const sales = await getUserSalesInMarketplace(
         provider,
-        contractAccountId,
+        CONTRACT_ACCOUNT_ID,
         profileUserAccount
       )
       setListedNfts(sales)
@@ -141,6 +143,7 @@ const ProfilePage = () => {
 
   const getWalletNFTs = useCallback(async () => {
     try {
+      const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
       const promises = collections.map(
         async (collection) =>
           await getUserTokensInACollection(
@@ -152,7 +155,7 @@ const ProfilePage = () => {
 
       const sales = await getUserSalesInMarketplace(
         provider,
-        contractAccountId,
+        CONTRACT_ACCOUNT_ID,
         profileUserAccount
       )
       setListedNfts(sales)
@@ -294,7 +297,7 @@ const ProfilePage = () => {
         {mode === "offersRecieved" &&
           <div className="collection-and-items-set">
             <div className="nfts-container">
-              {listedNfts.map((item, i) => (
+              {/* {listedNfts.map((item, i) => (
                 item.bids.near &&
                 <NFTItemCard
                   key={i}
@@ -305,7 +308,7 @@ const ProfilePage = () => {
                   collectionTitle={item.metadata.title}
                   price={parseFloat(formatNearAmount(item.sale_conditions.near))}
                 />
-              ))}
+              ))} */}
             </div>
           </div>
         }

@@ -76,7 +76,9 @@ module.exports = { getTransactionsForItem : async (marketplace_account_id, nft_c
             and receipt_included_in_block_timestamp >= " + timestamp_start + " \
             and receipt_included_in_block_timestamp <= " + timestamp_end + " \
         ");
-        return query.rows;
+        if(query.rows[0].volume == null)
+            return {volume: 0.0};
+        return {volume: query.rows[0].volume};
     },
 
     getTransactionsForUser : async (marketplace_account_id, user_account_id, offset, count) => {

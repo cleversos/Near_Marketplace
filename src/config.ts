@@ -20,3 +20,5 @@ export const FEATURED_POST: TFeaturedPost[] = [
         link: "#"
     },
 ]
+
+export const CONTRACT_ACCOUNT_ID = "marketplace_test_10.xuguangxia.testnet"

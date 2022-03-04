@@ -178,6 +178,22 @@ const ItemPage = () => {
       )
     } catch (error) { }
   }
+
+  const onBuy = async () => {
+    try {
+      await contract.offer(
+        {
+          nft_contract_id: item.collectionId,
+          token_id: item.id,
+        },
+        GAS,
+        parseNearAmount(saleDetails?.saleConditions.near)
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const acceptOffer = async () => {
     try {
       await contract.accept_offer(
@@ -222,20 +238,6 @@ const ItemPage = () => {
     }
   }
 
-  const onBuy = async () => {
-    try {
-      await contract.offer(
-        {
-          nft_contract_id: item.collectionId,
-          token_id: item.id,
-        },
-        GAS,
-        parseNearAmount(saleDetails?.saleConditions.near)
-      )
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   const [activities, setActivities] = useState<any>([])
 
@@ -375,7 +377,7 @@ const ItemPage = () => {
                         disabled={false} />
                     ) : (
                       <>
-                        {!(saleDetails?.isAuction) &&
+                        {(saleDetails?.isAuction) &&
                           <Button
                             title="Buy Now"
                             disabled={false}
