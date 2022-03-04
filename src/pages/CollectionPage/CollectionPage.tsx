@@ -167,9 +167,7 @@ const CollectionPage = () => {
         await fetchCollectionMarketDetails(),
         await fetchItems(),
       ])
-
       setCollectionMarketplaceDetails(values[0])
-
       setItems(values[1])
 
       let newItems = values[1]

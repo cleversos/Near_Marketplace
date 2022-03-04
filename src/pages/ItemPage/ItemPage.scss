@@ -98,6 +98,7 @@
         padding: 30px 35px;
 
         .list-item-container {
+          position: relative;
           .input-box {
             background-color: $body-background;
             margin-bottom: 30px;
@@ -140,7 +141,9 @@
       .attributes-container {
         grid-template-columns: 1fr 1fr;
         padding: 25px 0;
-        grid-gap: 25px;
+        grid-gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
       }
     }
   }
@@ -149,8 +152,8 @@
 .required-filed {
   font-size: 12px;
   position: absolute;
-  left: 40px;
-  top: 10px;
+  left: 0px;
+  top: -20px;
   z-index: 10;
   color: #ff2222;
 }

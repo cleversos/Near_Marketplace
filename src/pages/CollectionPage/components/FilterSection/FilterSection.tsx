@@ -21,6 +21,7 @@ type PriceRange = {
 
 const FilterSection = (props: FilterSectionProps) => {
   const [showPriceOptions, setShowPriceOptions] = useState(true)
+  const [showAttd, setShowAttd] = useState(true)
   const { collapseFilterContainer, setCollapseFilterContainer } = props
 
   const [priceMin, setPriceMin] = useState("")
@@ -59,10 +60,6 @@ const FilterSection = (props: FilterSectionProps) => {
         </div>
       </div>
       <div className="section-body">
-        <div className="row-container">
-          <BodyText light>Status</BodyText>
-          <ChevronDownIcon />
-        </div>
         <div
           onClick={togglePriceOptions}
           className={`row-container ${!showPriceOptions ? "up" : ""}`}
@@ -70,15 +67,21 @@ const FilterSection = (props: FilterSectionProps) => {
           <BodyText light>Price</BodyText>
           <ChevronDownIcon />
         </div>
-        {showPriceOptions && (
-          <div className="price-options-container">
-            <span>Ⓝ NEAR Protocol</span>
-            <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e: any) => setPriceMin(e)} />
-            <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e: any) => setPriceMax(e)} />
-          </div>
-        )}
+        {showPriceOptions &&
+          <>
+            <div className="price-options-container">
+              <span>Ⓝ NEAR Protocol</span>
+              <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e: any) => setPriceMin(e)} />
+              <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e: any) => setPriceMax(e)} />
+            </div>
+            <Button title="Apply" onClick={() => handleApply()} disabled={false} />
+          </>
+        }
 
-        <Button title="Apply" onClick={() => handleApply()} disabled={false} />
+      </div>
+      <div className={`row-container ${!showAttd ? "up" : ""}`} onClick={() => setShowAttd(!showAttd)} style={{ borderTop: showPriceOptions ? "1px solid #20252C" : "1px solid transparent" }}>
+        <BodyText light>Attributes</BodyText>
+        <ChevronDownIcon />
       </div>
     </div>
   )
