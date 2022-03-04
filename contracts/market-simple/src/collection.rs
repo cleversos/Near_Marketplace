@@ -48,10 +48,8 @@ impl Contract {
         instagram: String,
         medium: String,
     ) {
-        let sender_id = env::predecessor_account_id();
-        let signer_id = env::signer_account_id();
+        self.assert_manager();
         let nft_contract: AccountId = nft_contract_id.clone();
-        assert_eq!(sender_id, signer_id, "Must be admin");
         let newCollection = CollectionInfo {
             name: name,
             isVerified: isVerified,
@@ -93,10 +91,8 @@ impl Contract {
         instagram: String,
         medium: String,
     ) {
-        let sender_id = env::predecessor_account_id();
-        let signer_id = env::signer_account_id();
+        self.assert_manager();
         let nft_contract: AccountId = nft_contract_id.clone();
-        assert_eq!(sender_id, signer_id, "Must be admin");
         let newCollection = CollectionInfo {
             name: name,
             isVerified: isVerified,
@@ -142,10 +138,8 @@ impl Contract {
         nft_contract_id: AccountId,
         token_type: String
     ) {
-        let sender_id = env::predecessor_account_id();
-        let signer_id = env::signer_account_id();
+        self.assert_manager();
         let nft_contract: AccountId = nft_contract_id.clone();
-        assert_eq!(sender_id, signer_id, "Must be admin");
         let contract_and_token_type = format!("{}{}{}", nft_contract, DELIMETER, token_type);
         self.collections.remove(&contract_and_token_type);
     }

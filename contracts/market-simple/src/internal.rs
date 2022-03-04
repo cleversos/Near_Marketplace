@@ -15,6 +15,15 @@ impl Contract {
         );
     }
 
+    pub(crate) fn assert_manager(&self) {
+        let contains = self.admin_ids.contains(&env::predecessor_account_id());
+        assert_eq!(
+            &contains,
+            &true,
+            "Admin's method"
+        );
+    }
+
     /// refund the last bid of each token type, don't update sale because it's already been removed
 
     pub(crate) fn refund_all_bids(
