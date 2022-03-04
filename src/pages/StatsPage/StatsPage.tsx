@@ -16,13 +16,13 @@ const StatsPage = () => {
         </BodyText>
       </div>
       <div className="table-container" style={{ marginTop: 20 }}>
-        {/* <div className="table-filters-container">
-          <div className="sort-select-container">
+        <div className="table-filters-container">
+          {/* <div className="sort-select-container">
             <select className="sort-select">
               <option>Highest Listed</option>
               <option>Highest Listed</option>
             </select>
-          </div>
+          </div> */}
           <ToggleButton
             buttons={[
               {
@@ -39,8 +39,8 @@ const StatsPage = () => {
               },
             ]}
           />
-        </div> */}
-        <TopCollectionTable />
+        </div>
+        <TopCollectionTable timeRange={timeRange} />
       </div>
     </div>
   )

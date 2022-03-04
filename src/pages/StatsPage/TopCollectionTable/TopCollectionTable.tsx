@@ -1,13 +1,13 @@
 import { Skeleton } from "@mui/material"
-import React, { useCallback, useContext, useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useCallback, useContext, useEffect, useState } from "react"
 import BodyText from "../../../components/BodyText/BodyText"
-import { CollectionContext } from "../../../contexts/collections"
 import { ConnectionContext } from "../../../contexts/connection"
 import { ContractContext } from "../../../contexts/contract"
-import { getAllSalesInCollection } from "../../../helpers/collections"
+import { getTradingVolumeForCollection } from "../../../contexts/transaction"
+import { getAllSalesInCollection, getCollections } from "../../../helpers/collections"
 import { convertTokenResultToItemStruct } from "../../../helpers/utils"
 import { TItem } from "../../ItemPage/ItemPage"
+import moment from 'moment';
 import "./TopCollectionTable.scss"
 
 type TCollection = {
@@ -91,9 +91,8 @@ interface TableData {
   avgPrice: number
 }
 
-const TopCollectionTable = () => {
+const TopCollectionTable = (props: { timeRange: number }) => {
 
-  const { collections } = useContext(CollectionContext)
   const { provider } = useContext(ConnectionContext)
   const { contractAccountId } = useContext(ContractContext)
 
@@ -101,11 +100,9 @@ const TopCollectionTable = () => {
 
   const [collectionMarketplaceDetails, setCollectionMarketplaceDetails] =
     useState<TCollections | null>(null)
-  const [collectionContractDetails, setCollectionContractDetails] =
-    useState<TCollectionContractDetails | null>(null)
-  const [items, setItems] = useState<TItem[]>([])
+
   const [isLoading, setIsLoading] = useState(true)
-  const [mode, setMode] = useState<"items" | "activities">("items")
+
   const [priceRange, setPriceRange] = useState<PriceRange>({
     currency: "USD",
     min: "min",
@@ -114,25 +111,45 @@ const TopCollectionTable = () => {
 
   const getAllCollections = async () => {
     let all = []
+    const now = new Date()
+    const stepDate = (now.getTime() - props.timeRange * 24 * 60 * 60 * 1000).toString() + "000000"
+    const prevDate = (now.getTime() - props.timeRange * 24 * 60 * 60 * 1000 * 2).toString() + "000000"
+    const nowString = now.getTime().toString() + "000000"
+    const collections = await getCollections(provider, "marketplace_test_10.xuguangxia.testnet")
+    console.log(collections, "collections")
     try {
       for (let item of collections) {
         const values = await Promise.all([
           await fetchCollectionMarketDetails(item.collectionId, item.tokenType),
           await fetchItems(item.collectionId),
+          await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", item.collectionId),
+          await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", item.collectionId, prevDate, stepDate),
+          await getTradingVolumeForCollection("marketplace_test_10.xuguangxia.testnet", item.collectionId, stepDate, nowString)
         ])
         let newItems = values[1]
+        let volumePercent = 0
+        console.log(values, "values")
+        if (parseFloat(values[4][0].volume) === 0.0) {
+          volumePercent = -100.0
+        } else if (parseFloat(values[3][0].volume) === 0.0) {
+          volumePercent = 100.0
+        } else {
+          volumePercent = (parseFloat(values[4][0].volume) - parseFloat(values[3][0].volume)) / parseFloat(values[3][0].volume) * 100
+        }
+        console.log(volumePercent, "volumePercent")
         newItems.sort(function (a, b) {
           return a.price - b.price
         })
         const min = newItems[0].price
         const itemLength = newItems.length
-        const sum = newItems.map(item => item.price).reduce((prev, curr) => prev + curr, 0)
-        console.log(sum, "sumbddd")
+        const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
         setIsLoading(false)
         all.push({
           bannerImageUrl: item.bannerImageUrl,
           name: item.name,
           floorPrice: min,
+          volume: values[2][0].volume,
+          volumePercent: volumePercent,
           count: itemLength,
           avgPrice: (sum / itemLength).toFixed(2)
         })
@@ -235,13 +252,16 @@ const TopCollectionTable = () => {
             <BodyText light>Collection</BodyText>
           </th>
           <th>
-            <BodyText light>Volume</BodyText>
-          </th>
-          <th>
             <BodyText light>NFT Floor Price</BodyText>
           </th>
           <th>
             <BodyText light>Avg Price</BodyText>
+          </th>
+          <th>
+            <BodyText light>Volume</BodyText>
+          </th>
+          <th>
+            <BodyText light>Volume %</BodyText>
           </th>
         </tr>
       </thead>
@@ -261,8 +281,20 @@ const TopCollectionTable = () => {
               <td>
                 <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
               </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
             </tr>
             <tr>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
               <td>
                 <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
               </td>
@@ -297,7 +329,15 @@ const TopCollectionTable = () => {
             </td>
             <td>
               <BodyText className="mobile-title">Avg Price</BodyText>
-              <BodyText light>{collection.avgPrice}</BodyText>
+              <BodyText light>{parseFloat(collection.avgPrice).toLocaleString()}</BodyText>
+            </td>
+            <td>
+              <BodyText className="mobile-title">Volume</BodyText>
+              <BodyText light>{parseFloat(collection.volume).toLocaleString()}</BodyText>
+            </td>
+            <td>
+              <BodyText className="mobile-title">Volume %</BodyText>
+              <BodyText light>{parseFloat(collection.volumePercent).toLocaleString()}</BodyText>
             </td>
           </tr>
         ))}

@@ -23,9 +23,9 @@
   .table-container {
     .table-filters-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      margin: 40px 0 30px;
+      margin: 40px 0 0;
 
       .sort-select-container {
         border-radius: 15px;
