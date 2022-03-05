@@ -13,6 +13,7 @@ interface FilterSectionProps {
   priceRange: PriceRange
   setPriceRange: Function
   attributesFilterOptions: any
+  setAttdFilterData: Function
 }
 
 type PriceRange = {
@@ -47,7 +48,6 @@ const FilterSection = (props: FilterSectionProps) => {
       min: priceMin,
       max: priceMax
     })
-    console.log(priceMin, priceMax)
   }
   useEffect(() => {
     handleApply()
@@ -90,7 +90,12 @@ const FilterSection = (props: FilterSectionProps) => {
         <ChevronDownIcon />
       </div>
       {attdArray !== undefined && attdArray.map((item: any, key) => (
-        <AttributeAutocomplete options={item} key={key} />
+        <AttributeAutocomplete
+          key={key}
+          options={item}
+          setAttdFilterData={props.setAttdFilterData}
+          originData={attdArray}
+        />
       ))}
 
     </div>
