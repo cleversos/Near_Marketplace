@@ -342,7 +342,7 @@ const ItemPage = () => {
                         handlePrice(event.target.value)
                       }
                     />
-                    <Button title="List for Bid" onClick={auctionList}
+                    <Button title="List for Sale" onClick={auctionList}
                       disabled={false} />
                   </div>
                 ) : (
