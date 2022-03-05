@@ -23,6 +23,7 @@ pub struct CollectionInfo {
     pub profileImageUrl: String,
     pub description: String,
     pub royalty: u64,
+    pub updated_at: U64,
     pub links: CollectionLinks,
 }
 
@@ -59,6 +60,7 @@ impl Contract {
             royalty: royalty,
             nft_contract_id: nft_contract.clone(),
             token_type: token_type.clone(),
+            updated_at: U64(env::block_timestamp()/1000000),
             links: CollectionLinks {
                 discord: discord,
                 twitter: twitter,
@@ -102,6 +104,7 @@ impl Contract {
             royalty: royalty,
             nft_contract_id: nft_contract.clone(),
             token_type: token_type.clone(),
+            updated_at: U64(env::block_timestamp()/1000000),
             links: CollectionLinks {
                 discord: discord,
                 twitter: twitter,
