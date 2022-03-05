@@ -1,4 +1,4 @@
-const StatsIcon = (props: { isSelected?: boolean }) => (
+const ApplyIcon = (props: { isSelected?: boolean }) => (
 
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M6.37145 9.20166V16.0618" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -8,4 +8,4 @@ const StatsIcon = (props: { isSelected?: boolean }) => (
   </svg>
 )
 
-export default StatsIcon;
+export default ApplyIcon;
