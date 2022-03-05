@@ -122,6 +122,11 @@ const AppNavbar = (props: AppNavbarProps) => {
                   }`}
               >
                 <li onClick={() => copy(walletAddress)}>
+                  <Link to={"/profile"} style={{ color: "#b3b9c4" }}>
+                    <BodyText light>Profile</BodyText>
+                  </Link>
+                </li>
+                <li onClick={() => copy(walletAddress)}>
                   <BodyText light>Copy address</BodyText>
                 </li>
                 <li onClick={() => signOut()}>
