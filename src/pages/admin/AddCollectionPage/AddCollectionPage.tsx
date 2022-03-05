@@ -130,30 +130,12 @@ const AddCollectionPage = () => {
         account_id: contractAccountId,
         method_name: "get_collection",
         args_base64: btoa(
-          `{nft_contract_id: ${collectionId}, token_type: ${collectionTokenType}}`
+          `{"nft_contract_id": "${collectionId}", "token_type": "${collectionTokenType}"}`
         ),
         finality: "optimistic",
       })
       const result = JSON.parse(Buffer.from(rawResult.result).toString())
 
-      const placeholderResult = {
-        nft_contract_id: "asdlkf",
-        token_type: "asdlkf",
-        name: "asdlkf",
-        isVerified: false,
-        bannerImageUrl: "asdlkf",
-        profileImageUrl: "asdlkf",
-        description: "asdlkf",
-        royalty: "asdlkf",
-        links: {
-          discord: "discord",
-          twitter: "twitter",
-          website: "website",
-          telegram: "telegra",
-          instagram: "instagr",
-          medium: "medium",
-        },
-      }
       const {
         nft_contract_id,
         token_type,
@@ -164,7 +146,7 @@ const AddCollectionPage = () => {
         description,
         royalty,
         links,
-      } = placeholderResult
+      } = result
 
       setInput({
         name,
