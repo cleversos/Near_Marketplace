@@ -11,7 +11,7 @@ const StatsPage = () => {
       <div className="head">
         <BodyText bold>Top Collections</BodyText>
         <BodyText light>
-          The top NFTs on OpenSea, ranked by volume, floor price and other
+          The top NFTs on Galacticway, ranked by volume, floor price and other
           statistics.
         </BodyText>
       </div>
