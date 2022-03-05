@@ -193,7 +193,7 @@ const ItemPage = () => {
           token_id: item.id,
         },
         GAS,
-        parseNearAmount(amount + depositFee)
+        parseNearAmount(amount)
       )
     } catch (error) { }
   }
