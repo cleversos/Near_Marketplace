@@ -31,6 +31,31 @@ const links: TLinks[] = [
     link: "/stats",
     name: "Stats",
     icon: "stats",
+  },
+  {
+    link: "/#",
+    name: "Job",
+    icon: "job",
+  },
+  {
+    link: "/#",
+    name: "Apply listing",
+    icon: "apply",
+  },
+  {
+    link: "/#",
+    name: "Community",
+    icon: "community",
+  },
+  {
+    link: "/#",
+    name: "Auctions",
+    icon: "auctions"
+  },
+  {
+    link: "/#",
+    name: "Lanchpad",
+    icon: "lanchpad"
   }
 ]
 

@@ -1,12 +1,11 @@
 const CollectionIcon = (props: { isSelected?: boolean }) => (
 
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fillRule="evenodd" clipRule="evenodd" d="M7.42245 19.8203C7.84445 19.8203 8.18745 20.1633 8.18745 20.5853C8.18745 21.0073 7.84445 21.3493 7.42245 21.3493C7.00045 21.3493 6.65845 21.0073 6.65845 20.5853C6.65845 20.1633 7.00045 19.8203 7.42245 19.8203Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path fillRule="evenodd" clipRule="evenodd" d="M18.6749 19.8203C19.0969 19.8203 19.4399 20.1633 19.4399 20.5853C19.4399 21.0073 19.0969 21.3493 18.6749 21.3493C18.2529 21.3493 17.9099 21.0073 17.9099 20.5853C17.9099 20.1633 18.2529 19.8203 18.6749 19.8203Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M2.75 3.25L4.83 3.61L5.793 15.083C5.871 16.018 6.652 16.736 7.59 16.736H18.502C19.398 16.736 20.158 16.078 20.287 15.19L21.236 8.632C21.353 7.823 20.726 7.099 19.909 7.099H5.164" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M14.1255 10.795H16.8985" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M5.42245 17.8203C5.84445 17.8203 6.18745 18.1633 6.18745 18.5853C6.18745 19.0073 5.84445 19.3493 5.42245 19.3493C5.00045 19.3493 4.65845 19.0073 4.65845 18.5853C4.65845 18.1633 5.00045 17.8203 5.42245 17.8203Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path fillRule="evenodd" clipRule="evenodd" d="M16.6749 17.8203C17.0969 17.8203 17.4399 18.1633 17.4399 18.5853C17.4399 19.0073 17.0969 19.3493 16.6749 19.3493C16.2529 19.3493 15.9099 19.0073 15.9099 18.5853C15.9099 18.1633 16.2529 17.8203 16.6749 17.8203Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M0.75 1.25L2.83 1.61L3.793 13.083C3.871 14.018 4.652 14.736 5.59 14.736H16.502C17.398 14.736 18.158 14.078 18.287 13.19L19.236 6.632C19.353 5.823 18.726 5.099 17.909 5.099H3.164" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M12.1255 8.79504H14.8985" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
-
 )
 
 export default CollectionIcon;

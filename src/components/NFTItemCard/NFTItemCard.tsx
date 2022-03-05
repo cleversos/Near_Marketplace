@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import HeartIcon from "../../assets/icons/HeartIcon"
+// import HeartIcon from "../../assets/icons/HeartIcon"
 import BodyText from "../BodyText/BodyText"
 import ImageWithLoadBg from "../ImageWithLoadBg/ImageWithLoadBg"
 import "./NFTItemCard.scss"
@@ -18,9 +18,9 @@ const NFTItemCard = (props: NFTItemCardProps) => {
   return (
     <Link to={`/${collectionId}/item/${props.id}`} className="nft-item-card">
       <ImageWithLoadBg aspectRatio={1.386} src={image.indexOf("http") !== -1 ? image : "https://ipfs.fleek.co/ipfs/" + image} alt={name} />
-      <div className="like-btn">
+      {/* <div className="like-btn">
         <HeartIcon />
-      </div>
+      </div> */}
       <div className="details-container">
         <div className="collection-and-price-container">
           <BodyText className="collection-name" light>

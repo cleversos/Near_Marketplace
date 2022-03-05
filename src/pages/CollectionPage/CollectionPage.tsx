@@ -15,6 +15,7 @@ import { TItem } from "../ItemPage/ItemPage"
 import { getAllSalesInCollection } from "../../helpers/collections"
 import { getTransactionsForCollection } from "../../contexts/transaction"
 import { formatNearAmount } from "near-api-js/lib/utils/format"
+import { CONTRACT_ACCOUNT_ID } from "../../config"
 
 type TCollectionLinks = {
   discord?: string
@@ -49,6 +50,8 @@ export type TCollectionContractDetails = {
   floorPrice?: number
   volTraded?: number
 }
+
+var _ = require('lodash');
 
 const CollectionPage = () => {
   const { collectionId, tokenType } = useParams()
@@ -112,28 +115,13 @@ const CollectionPage = () => {
         collectionId
       )
 
-      // //get the token object for all the sales using nft_tokens_batch
-      // const salesTokensResults: any = await provider.query({
-      //   request_type: "call_function",
-      //   account_id: collectionId,
-      //   method_name: "nft_tokens_batch",
-      //   args_base64: btoa(
-      //     `{"token_ids": ${sales
-      //       .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
-      //       .map(({ token_id }) => token_id)}}`
-      //   ),
-      //   finality: "optimistic",
-      // })
-      // const saleTokens = JSON.parse(
-      //   Buffer.from(salesTokensResults.result).toString()
-      // )
-
       const saleTokens = []
-
+      const attds = []
       //get token obj for the tokens not gotten by batch fetch (if any)
-      for (let i = 0; i < sales.length; i++) {
-        const { token_id } = sales[i]
+      for (let item of sales) {
+        const { token_id } = item
         let token = saleTokens.find(({ token_id: t }) => t === token_id)
+
         if (!token) {
           const tokenRawResult: any = await provider.query({
             request_type: "call_function",
@@ -144,8 +132,40 @@ const CollectionPage = () => {
           })
           token = JSON.parse(Buffer.from(tokenRawResult.result).toString())
         }
-        sales[i] = Object.assign(sales[i], token)
+        item = Object.assign(item, token)
+        if (item.metadata.reference !== null) {
+          const fetchUri = `https://ipfs.io/ipfs/${item.metadata.reference}`
+          let metadata: any = [];
+          try {
+            await fetch(fetchUri)
+              .then(resp =>
+                resp.json()
+              ).catch((e) => {
+                console.log(e);
+              }).then((json) => {
+                metadata = json
+              })
+          } catch (error) {
+            console.log(error)
+          }
+          attds.push(...metadata.attributes)
+        }
       }
+
+      let mapFilterData = new Map();
+      for (let i = 0; i < attds.length; i++) {
+        let content = attds[i];
+        let contentData = [];
+        if (mapFilterData.has(content.trait_type)) {
+          contentData = mapFilterData.get(content.trait_type);
+        }
+        if (!contentData.includes(content.value)) {
+          contentData.push(content.value);
+        }
+        mapFilterData.set(content.trait_type, contentData);
+      }
+
+      console.log(mapFilterData, "mapFilterData")
 
       const items: TItem[] = sales?.map((result) =>
         convertTokenResultToItemStruct(
@@ -154,11 +174,13 @@ const CollectionPage = () => {
           collectionId
         )
       )
-      return items
+      return { items, mapFilterData }
     } catch (error) {
       console.log(error)
     }
   }, [])
+
+  const [attributesFilterOptions, setAttributesFilterOptions] = useState<any>()
 
   const fetchAll = useCallback(async () => {
     setIsLoading(true)
@@ -168,16 +190,16 @@ const CollectionPage = () => {
         await fetchItems(),
       ])
       setCollectionMarketplaceDetails(values[0])
-      setItems(values[1])
+      setItems(values[1].items)
+      setAttributesFilterOptions(values[1].mapFilterData)
 
-      let newItems = values[1]
+      let newItems = values[1].items
       newItems.sort(function (a, b) {
         return a?.price - b?.price
       })
       const min = newItems[0]?.price
       const itemLength = newItems.length
       const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
-      console.log(values[1])
       setCollectionContractDetails({
         numberOfItems: itemLength,
         floorPrice: min,
@@ -191,7 +213,7 @@ const CollectionPage = () => {
 
   const [activities, setActivities] = useState<any>([])
   const getActivities = async () => {
-    const data = await getTransactionsForCollection("marketplace_test_10.xuguangxia.testnet", collectionId)
+    const data = await getTransactionsForCollection(CONTRACT_ACCOUNT_ID, collectionId)
     const result = []
     for (let item of data) {
       const rawResult: any = await provider.query({
@@ -260,6 +282,7 @@ const CollectionPage = () => {
             setCollapseFilterContainer={setCollapseFilterContainer}
             priceRange={priceRange}
             setPriceRange={(e) => setPriceRange(e)}
+            attributesFilterOptions={attributesFilterOptions}
           />
         </div>
         {mode === "items" ? (

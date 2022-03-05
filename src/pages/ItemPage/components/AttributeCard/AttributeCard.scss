@@ -1,5 +1,5 @@
 .attribute-card {
-  padding: 5px;
+  padding: 10px;
   border: 1px solid #ffffff1f;
   border-radius: 5px;
   position: relative;
@@ -14,12 +14,12 @@
 
   .body-text {
     &.light {
-      font-size: 10px;
+      font-size: 11px;
       margin-bottom: 0px;
     }
 
     &.bold {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 300;
     }
 

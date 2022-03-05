@@ -1,7 +1,6 @@
-@import '../../sass/variables.scss';
+@import "../../sass/variables.scss";
 
 .collection-page {
-
   .mode-switch {
     display: flex;
     align-items: center;
@@ -14,18 +13,17 @@
       align-items: center;
       margin-right: 20px;
       padding: 10px 5px;
-      
+
       &:last-child {
         margin-right: 0;
       }
 
       .body-text {
         margin-left: 10px;
-        
       }
 
       &.selected {
-        border-bottom: 2px solid #1A59F8;
+        border-bottom: 2px solid #1a59f8;
 
         .body-text {
           color: white;
@@ -43,9 +41,8 @@
     .filter-container {
       position: sticky;
       top: 145px;
-      height: calc(100vh - 175px);
+      // height: calc(100vh - 175px);
       z-index: 8;
-
     }
 
     .gallery-section-container {

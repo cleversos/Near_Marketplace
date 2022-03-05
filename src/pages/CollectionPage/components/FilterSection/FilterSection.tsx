@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import ArrowBackIcon from "../../../../assets/icons/ArrowBackIcon"
 import ChevronDownIcon from "../../../../assets/icons/ChevronDownIcon"
+import AttributeAutocomplete from "../../../../components/AttributeAutocomplete/AttributeAutocomplete"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
 import FilterPriceInput from "../FitlerPriceInput/FilterPriceInput"
@@ -11,6 +12,7 @@ interface FilterSectionProps {
   setCollapseFilterContainer: Function
   priceRange: PriceRange
   setPriceRange: Function
+  attributesFilterOptions: any
 }
 
 type PriceRange = {
@@ -23,6 +25,10 @@ const FilterSection = (props: FilterSectionProps) => {
   const [showPriceOptions, setShowPriceOptions] = useState(true)
   const [showAttd, setShowAttd] = useState(true)
   const { collapseFilterContainer, setCollapseFilterContainer } = props
+  let attdArray: any;
+  if (props.attributesFilterOptions !== undefined) {
+    attdArray = Array.from(props.attributesFilterOptions, ([name, value]) => ({ name, value }));
+  }
 
   const [priceMin, setPriceMin] = useState("")
   const [priceMax, setPriceMax] = useState("")
@@ -83,6 +89,10 @@ const FilterSection = (props: FilterSectionProps) => {
         <BodyText light>Attributes</BodyText>
         <ChevronDownIcon />
       </div>
+      {attdArray !== undefined && attdArray.map((item: any, key) => (
+        <AttributeAutocomplete options={item} key={key} />
+      ))}
+
     </div>
   )
 }
