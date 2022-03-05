@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FilterIcon from "../../../../assets/icons/FilterIcon"
 import GalleryIcon1 from "../../../../assets/icons/GalleryIcon1"
 import GalleryIcon2 from "../../../../assets/icons/GalleyIcon2"
@@ -15,6 +15,7 @@ interface GallerySectionProps {
   setCollapseFilterContainer: Function
   collectionId: string
   priceRange: PriceRange
+  attdFilterData: any
 }
 
 interface PriceRange {
@@ -25,6 +26,10 @@ interface PriceRange {
 const GallerySection = (props: GallerySectionProps) => {
   const [showMore, setShowMore] = useState(false)
   const [searchString, setSearchString] = useState<string>("")
+
+  useEffect(() => {
+    console.log(props.attdFilterData, "attdFilterdata")
+  }, [props.attdFilterData])
 
   return (
     <div className="gallery-section">

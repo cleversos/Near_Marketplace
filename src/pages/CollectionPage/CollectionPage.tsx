@@ -73,6 +73,7 @@ const CollectionPage = () => {
     min: "min",
     max: "max"
   });
+  const [attdFilterData, setAttdFilterData] = useState()
 
   useEffect(() => {
     const bodyWidth = document.body.clientWidth
@@ -146,12 +147,15 @@ const CollectionPage = () => {
                 console.log(e);
               }).then((json) => {
                 metadata = json
+                console.log(json, "fetch json")
+                item = Object.assign(item, { "attribute": json.attributes })
               })
           } catch (error) {
             console.log(error)
           }
           attds.push(...metadata.attributes)
         }
+        console.log(item)
       }
 
       let mapFilterData = new Map();
@@ -166,8 +170,6 @@ const CollectionPage = () => {
         }
         mapFilterData.set(content.trait_type, contentData);
       }
-
-      console.log(mapFilterData, "mapFilterData")
 
       const items: TItem[] = sales?.map((result) =>
         convertTokenResultToItemStruct(
@@ -285,6 +287,7 @@ const CollectionPage = () => {
             priceRange={priceRange}
             setPriceRange={(e) => setPriceRange(e)}
             attributesFilterOptions={attributesFilterOptions}
+            setAttdFilterData={(e: any) => setAttdFilterData(e)}
           />
         </div>
         {mode === "items" ? (
@@ -294,6 +297,7 @@ const CollectionPage = () => {
               isLoading={isLoading}
               items={items || null}
               collectionId={collectionId}
+              attdFilterData={attdFilterData}
               setCollapseFilterContainer={setCollapseFilterContainer}
             />
           </div>
