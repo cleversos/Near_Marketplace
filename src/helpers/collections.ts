@@ -23,6 +23,7 @@ export const getCollections = async (provider, contractAccountId) => {
         profileImageUrl,
         royalty,
         description,
+        updated_at,
       } = result[1]
       return {
         collectionId: nft_contract_id,
@@ -34,6 +35,7 @@ export const getCollections = async (provider, contractAccountId) => {
         profileImageUrl,
         royalty,
         description,
+        updated_at
       }
     })
   } catch (error) {

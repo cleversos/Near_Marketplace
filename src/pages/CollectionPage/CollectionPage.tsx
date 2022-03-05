@@ -43,6 +43,7 @@ export type TCollection = {
   creator: string
   royalty: number
   description: string
+  updated_at: number
 }
 
 export type TCollectionContractDetails = {
@@ -101,6 +102,7 @@ const CollectionPage = () => {
       royalty: result.royalty,
       links: result.links,
       creator: "",
+      updated_at: result.updated_at,
     }
     return collectionDetails
   }, [])
