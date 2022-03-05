@@ -1,24 +1,26 @@
 .attribute-card {
-  padding: 20px;
-  border: 1px solid #1a59f8;
+  padding: 5px;
+  border: 1px solid #ffffff1f;
   border-radius: 5px;
   position: relative;
+  width: calc(50% - 5px);
 
   .copy-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 0px;
+    right: 5px;
     cursor: pointer;
   }
 
   .body-text {
     &.light {
-      font-size: 13px;
-      margin-bottom: 10px;
+      font-size: 10px;
+      margin-bottom: 0px;
     }
 
     &.bold {
-      font-size: 22px;
+      font-size: 13px;
+      font-weight: 300;
     }
 
     &.name {

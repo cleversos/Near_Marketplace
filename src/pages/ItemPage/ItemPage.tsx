@@ -18,6 +18,7 @@ import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
 import { getTransactionsForItem } from '../../contexts/transaction'
 import { CONTRACT_ACCOUNT_ID } from '../../config'
+import AttributeCard from "./components/AttributeCard/AttributeCard"
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -89,6 +90,8 @@ const ItemPage = () => {
     setPriceValidate(true)
   }
 
+  const [attributes, setAttributes] = useState<any>([]);
+
   //TODO fetch item sales details from marketplace
   const fetchItemSalesDetails = useCallback(async () => {
     const saleDetail: any = await provider.query({
@@ -99,7 +102,6 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(saleDetail.result).toString())
-    console.log(result, "saile detail")
     if (!result) {
       setSaleDetails(null)
       return
@@ -127,7 +129,23 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(rawResult.result).toString())
-    console.log(result, "this is garge")
+    console.log(result, "result")
+    if (result.metadata.reference !== null) {
+      let metadata: any = [];
+      try {
+        await fetch(`https://ipfs.io/ipfs/${result.metadata.reference}`)
+          .then(resp =>
+            resp.json()
+          ).catch((e) => {
+            console.log(e);
+          }).then((json) => {
+            metadata = json
+          })
+      } catch (error) {
+        console.log(error)
+      }
+      setAttributes(metadata.attributes);
+    }
     setName(result.metadata.title)
     setImage(result.metadata.media)
     setItem(
@@ -271,10 +289,6 @@ const ItemPage = () => {
     getActivities()
   }, [name, image])
 
-  // useEffect(() => {
-  //   if (saleDetails?.saleConditions.near === undefined)
-  //     history.replace("/collections")
-  // }, [])
   return (
     <div className="item-page">
       {isLoading ? (
@@ -299,28 +313,10 @@ const ItemPage = () => {
             </div>
             <div className="right-side">
               <div className="first-detail-set">
-                {/* <div className="row-container">
-                  <BodyText light>{item?.collectionTitle}</BodyText>
-                  <div className="icons-container">
-                    <div className="share-btn icon">
-                      <ShareIcon />
-                    </div>
-                    <div className="refresh-btn icon">
-                      <RefreshIcon />
-                    </div>
-                    <div className="more-options-btn icon">
-                      <MoreOptionsIcon />
-                    </div>
-                  </div>
-                </div> */}
                 <BodyText bold className="item-name">
                   {item?.name}
                 </BodyText>
                 <div className="owners-and-faves-container">
-                  {/* <div className="owners-container">
-                    <OwnersIcon />
-                    <BodyText light>Owners</BodyText>
-                  </div> */}
                   {itemMarketDetails?.favorites && (
                     <div className="faves-container">
                       <HeartIcon />
@@ -334,6 +330,9 @@ const ItemPage = () => {
               <div className="price-detail-container">
                 {isOwner && !saleDetails ? (
                   <div className="list-item-container">
+                    {!priceValidate &&
+                      <p className="required-filed">Required field</p>
+                    }
                     <InputBox
                       name="listingPrice"
                       type="number"
@@ -343,11 +342,6 @@ const ItemPage = () => {
                         handlePrice(event.target.value)
                       }
                     />
-                    {!priceValidate &&
-                      <p className="required-filed">Required field</p>
-                    }
-                    {/* <Button title="List for Sale" onClick={listItem}
-                      disabled={false} /> */}
                     <Button title="List for Bid" onClick={auctionList}
                       disabled={false} />
                   </div>
@@ -408,12 +402,13 @@ const ItemPage = () => {
                         title: "Attributes",
                         component: (
                           <div className="attributes-container">
-                            {/* {item?.attributes?.map((attribute, i) => (
-                          <AttributeCard
-                            name={attribute.name}
-                            value={attribute.value}
-                          />
-                        ))} */}
+                            {attributes?.map((attribute, i) => (
+                              <AttributeCard
+                                key={i}
+                                name={(Object.values(attribute))[0]}
+                                value={(Object.values(attribute))[1]}
+                              />
+                            ))}
                           </div>
                         ),
                       }
@@ -425,12 +420,13 @@ const ItemPage = () => {
                           title: "Attributes",
                           component: (
                             <div className="attributes-container">
-                              {/* {item?.attributes?.map((attribute, i) => (
-                            <AttributeCard
-                              name={attribute.name}
-                              value={attribute.value}
-                            />
-                          ))} */}
+                              {attributes?.map((attribute, i) => (
+                                <AttributeCard
+                                  key={i}
+                                  name={(Object.values(attribute))[0]}
+                                  value={(Object.values(attribute))[1]}
+                                />
+                              ))}
                             </div>
                           ),
                         },
@@ -440,7 +436,6 @@ const ItemPage = () => {
                             {isOwner && (saleDetails.bids.length !== undefined && saleDetails?.bids?.length !== 0) &&
                               <button className="main-button" style={{ color: "#fff", width: "100%", margin: "10px 0" }} onClick={() => acceptOffer()}>Accept Offer</button>
                             }
-                            {console.log(saleDetails?.bids, "saleDetails?.bids")}
                             {saleDetails.bids.length !== undefined && saleDetails?.bids?.map((item: any, key) => (
                               <div className="bid-item" key={key}>
                                 <span>
@@ -460,12 +455,13 @@ const ItemPage = () => {
                             title: "Attributes",
                             component: (
                               <div className="attributes-container">
-                                {/* {item?.attributes?.map((attribute, i) => (
-                            <AttributeCard
-                              name={attribute.name}
-                              value={attribute.value}
-                            />
-                          ))} */}
+                                {attributes?.map((attribute, i) => (
+                                  <AttributeCard
+                                    key={i}
+                                    name={(Object.values(attribute))[0]}
+                                    value={(Object.values(attribute))[1]}
+                                  />
+                                ))}
                               </div>
                             ),
                           }
