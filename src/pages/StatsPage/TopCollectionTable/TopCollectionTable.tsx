@@ -23,32 +23,6 @@ type TCollection = {
   avgPrice: number
 }
 
-export const defaultCollections: TCollection[] = [
-  {
-    id: "adfasdf",
-    imageUrl: "https://i.imgur.com/D2cmOnL.gif",
-    name: "basis.markets",
-    prevFloorPrice: 11,
-    floorPrice: 12,
-    volume: 271.9,
-    prevVolume: 300,
-    prevAvgPrice: 10.5,
-    avgPrice: 11.3,
-  },
-  {
-    id: "adfasdf",
-    imageUrl:
-      "https://dl.airtable.com/.attachmentThumbnails/d087bfe9edf2f6499176ff022fb89df4/d35ec815",
-    name: "basis.markets",
-    prevFloorPrice: 11,
-    floorPrice: 12,
-    volume: 271.9,
-    prevVolume: 300,
-    prevAvgPrice: 10.5,
-    avgPrice: 11.3,
-  },
-]
-
 type TCollectionLinks = {
   discord?: string
   twitter?: string
