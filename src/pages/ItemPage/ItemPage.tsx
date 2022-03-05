@@ -305,6 +305,7 @@ const ItemPage = () => {
           />
           <div className="content">
             <div className="left-side">
+              {console.log(item.image)}
               <ImageWithLoadBg
                 aspectRatio={1}
                 src={item.image}
