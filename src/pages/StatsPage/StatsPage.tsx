@@ -5,7 +5,7 @@ import "./StatsPage.scss"
 import TopCollectionTable from "./TopCollectionTable/TopCollectionTable"
 
 const StatsPage = () => {
-  const [timeRange, setTimeRange] = useState<1 | 7 | 30>(1)
+  // const [timeRange, setTimeRange] = useState<1 | 7 | 30>(1)
   return (
     <div className="stats-page">
       <div className="head">
@@ -23,7 +23,7 @@ const StatsPage = () => {
               <option>Highest Listed</option>
             </select>
           </div> */}
-          <ToggleButton
+          {/* <ToggleButton
             buttons={[
               {
                 title: "1 Day",
@@ -38,9 +38,9 @@ const StatsPage = () => {
                 onClick: () => setTimeRange(30),
               },
             ]}
-          />
+          /> */}
         </div>
-        <TopCollectionTable timeRange={timeRange} />
+        <TopCollectionTable/>
       </div>
     </div>
   )

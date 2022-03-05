@@ -60,7 +60,7 @@ interface TableData {
   avgPrice: number
 }
 
-const TopCollectionTable = (props: { timeRange: number }) => {
+const TopCollectionTable = (props: {}) => {
 
   const { provider } = useContext(ConnectionContext)
 
@@ -75,11 +75,13 @@ const TopCollectionTable = (props: { timeRange: number }) => {
     setIsLoading(true)
     let all = []
     const now = new Date()
-    const stepDate = (now.getTime() - props.timeRange * 24 * 60 * 60 * 1000).toString() + "000000"
-    const prevDate = (now.getTime() - props.timeRange * 24 * 60 * 60 * 1000 * 2).toString() + "000000"
+    const oneDayDate = (now.getTime() - 1 * 24 * 60 * 60 * 1000).toString() + "000000"
+    const twoDaysDate = (now.getTime() - 2 * 24 * 60 * 60 * 1000).toString() + "000000"
+    const oneWeekDate = (now.getTime() - 7 * 24 * 60 * 60 * 1000).toString() + "000000"
+    const twoWeeksDate = (now.getTime() - 14 * 24 * 60 * 60 * 1000).toString() + "000000"
     const nowString = now.getTime().toString() + "000000"
     const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
-    console.log(collections, " : all collections")
+    console.log(oneDayDate, twoDaysDate, oneWeekDate, twoWeeksDate, "timestamps")
     try {
       for (let item of collections) {
         console.log(item, item.tokenType)
@@ -87,38 +89,61 @@ const TopCollectionTable = (props: { timeRange: number }) => {
           await fetchCollectionMarketDetails(item.collectionId, item.tokenType),
           await fetchItems(item.collectionId),
           await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, prevDate, stepDate),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, stepDate, nowString)
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, twoDaysDate, oneDayDate),
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, oneDayDate, nowString),
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, twoWeeksDate, oneWeekDate),
+          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, oneWeekDate, nowString),
         ])
         let newItems = values[1]
         console.log(values[0], "fetch items")
-        let volumePercent = 0
+
+        let volumeDayPercent = 0
         if (parseFloat(values[4].volume) === 0.0) {
-          volumePercent = -100.0
+          volumeDayPercent = -100.0
         } else if (parseFloat(values[3].volume) === 0.0) {
-          volumePercent = 100.0
+          volumeDayPercent = 100.0
         } else {
-          volumePercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
+          volumeDayPercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
         }
+
+        let volumeWeekPercent = 0
+        if (parseFloat(values[6].volume) === 0.0) {
+          volumeWeekPercent = -100.0
+        } else if (parseFloat(values[5].volume) === 0.0) {
+          volumeWeekPercent = 100.0
+        } else {
+          volumeWeekPercent = (parseFloat(values[6].volume) - parseFloat(values[5].volume)) / parseFloat(values[5].volume) * 100
+        }
+
+        let min = 0
+        let itemLength = 0
+        let sum = 0
+        let avgPrice = "0"
 
         if (newItems.length !== 0) {
           newItems.sort(function (a, b) {
             return a.price - b.price
           })
-          const min = newItems[0].price
-          const itemLength = newItems.length
-          const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
-          all.push({
-            bannerImageUrl: item.bannerImageUrl,
-            name: item.name,
-            floorPrice: min,
-            volume: values[2].volume,
-            volumePercent: volumePercent,
-            count: itemLength,
-            avgPrice: (sum / itemLength).toFixed(2)
-          })
+          min = newItems[0].price
+          itemLength = newItems.length
+          sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
+          avgPrice = (sum / itemLength).toFixed(2) 
         }
-        setIsLoading(false)
+
+        all.push({
+          bannerImageUrl: item.bannerImageUrl,
+          name: item.name,
+          floorPrice: min,
+          volumeTotal: values[2].volume,
+          dailyVolume: values[4].volume,
+          dailyChange: volumeDayPercent,
+          weeklyVolume: values[6].volume,
+          weeklyChange: volumeWeekPercent,
+          count: itemLength,
+          avgPrice: avgPrice
+        })
+
+        console.log(all, "=====================================================");
       }
     } catch (error) {
       console.log(error)
@@ -130,10 +155,11 @@ const TopCollectionTable = (props: { timeRange: number }) => {
 
   useEffect(() => {
     getAllCollections()
-  }, [props.timeRange])
+  }, [])
 
   // fetch collection details using collectionId and tokenType
   const fetchCollectionMarketDetails = useCallback(async (collectionId, tokenType) => {
+    console.log("fetchCollectionMarketDetails");
     let collectionDetails: TCollections;
     try {
 
@@ -160,12 +186,15 @@ const TopCollectionTable = (props: { timeRange: number }) => {
         creator: "",
       }
     } catch (error) {
+      console.log("fetchCollectionMarketDetails error");
       return null
     }
+    console.log("fetchCollectionMarketDetails return");
     return collectionDetails
   }, [])
   // fetch items on sale in this collection
   const fetchItems = useCallback(async (collectionId) => {
+    console.log("fetchItems in")
     try {
       //get all listed sales in a collection from marketplace contract
       const sales = await getAllSalesInCollection(
@@ -200,6 +229,7 @@ const TopCollectionTable = (props: { timeRange: number }) => {
           collectionId
         )
       )
+      console.log("fetchItems return")
       return items
     } catch (error) {
       console.log(error)
@@ -221,13 +251,25 @@ const TopCollectionTable = (props: { timeRange: number }) => {
             <BodyText light>NFT Floor Price</BodyText>
           </th>
           <th>
-            <BodyText light>Avg Price</BodyText>
+            <BodyText light>Daily Volume</BodyText>
+          </th>
+          <th>
+            <BodyText light>Daily Volume %</BodyText>
+          </th>
+          <th>
+            <BodyText light>Average Price</BodyText>
+          </th>
+          {/* <th>
+            <BodyText light>Average Price %</BodyText>
+          </th> */}
+          <th>
+            <BodyText light>Weekly Volume</BodyText>
+          </th>
+          <th>
+            <BodyText light>Weekly Volume %</BodyText>
           </th>
           <th>
             <BodyText light>Total Volume</BodyText>
-          </th>
-          <th>
-            <BodyText light>Volume % ({props.timeRange}d)</BodyText>
           </th>
         </tr>
       </thead>
@@ -253,6 +295,18 @@ const TopCollectionTable = (props: { timeRange: number }) => {
               <td>
                 <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
               </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              {/* <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td> */}
             </tr>
             <tr>
               <td>
@@ -273,6 +327,18 @@ const TopCollectionTable = (props: { timeRange: number }) => {
               <td>
                 <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
               </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td>
+              {/* <td>
+                <Skeleton animation="wave" style={{ width: "100%", height: 20, backgroundColor: "#ffffff3b" }} />
+              </td> */}
             </tr>
           </>
           :
@@ -294,18 +360,38 @@ const TopCollectionTable = (props: { timeRange: number }) => {
                 <BodyText light>{collection.floorPrice}</BodyText>
               </td>
               <td>
-                <BodyText className="mobile-title">Avg Price</BodyText>
+                <BodyText className="mobile-title">Daily Volume</BodyText>
+                <BodyText light>{collection.dailyVolume}</BodyText>
+              </td>
+              <td>
+                <BodyText className="mobile-title">Daily Volume %</BodyText>
+                <BodyText light className={
+                  parseFloat(collection.dailyChange) > 0 ? "green" : "red"
+                }>{collection.dailyChange}</BodyText>
+              </td>
+              <td>
+                <BodyText className="mobile-title">Average Price</BodyText>
                 <BodyText light>{parseFloat(collection.avgPrice).toLocaleString()}</BodyText>
               </td>
+              {/* <td>
+                <BodyText className="mobile-title">Average Price %</BodyText>
+                <BodyText light className={
+                  parseFloat(collection.avgPrice) > 0 ? "green" : "red"
+                }>{parseFloat(collection.avgPrice).toLocaleString()}</BodyText>
+              </td> */}
               <td>
-                <BodyText className="mobile-title">Volume</BodyText>
-                <BodyText light>{parseFloat(collection.volume).toLocaleString()}</BodyText>
+                <BodyText className="mobile-title">Weekly Volume</BodyText>
+                <BodyText light>{parseFloat(collection.weeklyVolume).toLocaleString()}</BodyText>
               </td>
               <td>
-                <BodyText className="mobile-title">Volume %</BodyText>
+                <BodyText className="mobile-title">Weekly Volume %</BodyText>
                 <BodyText light className={
-                  parseFloat(collection.volumePercent) > 0 ? "green" : "red"
-                }>{parseFloat(collection.volumePercent).toLocaleString()}</BodyText>
+                  parseFloat(collection.weeklyChange) > 0 ? "green" : "red"
+                }>{parseFloat(collection.weeklyChange).toLocaleString()}</BodyText>
+              </td>
+              <td>
+                <BodyText className="mobile-title">Total Volume</BodyText>
+                <BodyText light>{parseFloat(collection.volumeTotal).toLocaleString()}</BodyText>
               </td>
             </tr>
           ))}
