@@ -27,9 +27,28 @@ const GallerySection = (props: GallerySectionProps) => {
   const [showMore, setShowMore] = useState(false)
   const [searchString, setSearchString] = useState<string>("")
 
-  useEffect(() => {
-    console.log(props.attdFilterData, "attdFilterdata")
-  }, [props.attdFilterData])
+  const getShowAble = (item: any) => {
+
+    const priceAndSearchState = ((props.priceRange.max === "" && props.priceRange.min === "") ||
+      (props.priceRange.max === "" && item.price >= parseFloat(props.priceRange.min)) ||
+      (props.priceRange.min === "" && item.price <= parseFloat(props.priceRange.max)) ||
+      (item.price >= parseFloat(props.priceRange.min) && item.price < parseFloat(props.priceRange.max))) &&
+      ((item.name + item.image + item.price).toLowerCase().indexOf(searchString) !== -1 || searchString === "")
+    let attdState = true
+
+    let newArray: any = []
+    for (let item of props.attdFilterData) {
+      newArray.push(...item.value)
+    }
+    if (props.attdFilterData !== undefined) {
+      for (let subItem of item.attribute) {
+        if ((newArray).indexOf(subItem.value) === -1) {
+          attdState = false
+        }
+      }
+    }
+    return attdState && priceAndSearchState
+  }
 
   return (
     <div className="gallery-section">
@@ -57,12 +76,8 @@ const GallerySection = (props: GallerySectionProps) => {
         {props.isLoading || !props.items
           ? [1, 2, 3, 4, 5, 6, 7, 8, 8, 9].map((item, key) => <NFTItemLoadingCard key={key} />)
           : props.items?.map((item, i) => (
-
-            ((props.priceRange.max === "" && props.priceRange.min === "") ||
-              (props.priceRange.max === "" && item.price >= parseFloat(props.priceRange.min)) ||
-              (props.priceRange.min === "" && item.price <= parseFloat(props.priceRange.max)) ||
-              (item.price >= parseFloat(props.priceRange.min) && item.price < parseFloat(props.priceRange.max))) &&
-            ((item.name + item.image + item.price).toLowerCase().indexOf(searchString) !== -1 || searchString === "") &&
+            getShowAble(item)
+            &&
             <NFTItemCard
               key={i}
               name={item.name}
