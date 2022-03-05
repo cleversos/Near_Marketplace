@@ -22,34 +22,31 @@ const Footer = () => {
           <p>Galacticway, the first NEAR NFT Marketplace for Collections</p>
           <p>© 2022 Galacticway. All Rights Reserved.</p>
         </div>
-        <div className="links">
-          <BodyText bold>Links</BodyText>
+        <div className="marketplace">
+          <BodyText bold>Marketplace</BodyText>
           <ul>
             <li><BodyText>Collections</BodyText></li>
-            <li><BodyText>Launchpad</BodyText></li>
-            <li><BodyText>FAQs</BodyText></li>
-            <li><BodyText>Sell/Your Wallet</BodyText></li>
+            <li><BodyText>All NFTs</BodyText></li>
+            <li><BodyText>Explore</BodyText></li>
           </ul>
         </div>
-        <div className="top-collections">
-          <BodyText bold>Top Collections</BodyText>
+        <div className="company">
+          <BodyText bold>Company</BodyText>
           <ul>
-            <li><BodyText>Soi Squiggle</BodyText></li>
-            <li><BodyText>TrashyPandas</BodyText></li>
-            <li><BodyText>Psychobats</BodyText></li>
-            <li><BodyText>Kolsana</BodyText></li>
-            <li><BodyText>Mighty Pangolins NFT</BodyText></li>
-            <li><BodyText>Block Buddies</BodyText></li>
+            <li><BodyText>Privacy Policy</BodyText></li>
+            <li><BodyText>Terms of Service</BodyText></li>
+            <li><BodyText>Copyright</BodyText></li>
+            <li><BodyText>Careers</BodyText></li>
           </ul>
         </div>
         <div className="community">
-          <BodyText bold>Join The Community</BodyText>
-          <div className="socials">
-            <DiscordIcon />
-            <TelegramIcon />
-            <TwitterIcon />
-            <InstagramIcon />
-          </div>
+          <BodyText bold>Community</BodyText>
+          <ul>
+            <li><BodyText>Twitter</BodyText></li>
+            <li><BodyText>Discord</BodyText></li>
+            <li><BodyText>Help Desk</BodyText></li>
+            <li><BodyText>Blog</BodyText></li>
+          </ul>
         </div>
       </SectionPadding>
     </footer>
