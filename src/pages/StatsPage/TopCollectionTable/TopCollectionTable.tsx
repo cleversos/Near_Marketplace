@@ -98,19 +98,19 @@ const TopCollectionTable = (props: {}) => {
         console.log(values[0], "fetch items")
 
         let volumeDayPercent = 0
-        if (parseFloat(values[4].volume) === 0.0) {
-          volumeDayPercent = -100.0
-        } else if (parseFloat(values[3].volume) === 0.0) {
+        if (parseFloat(values[3].volume) === 0.0) {
           volumeDayPercent = 100.0
-        } else {
+        } else if (parseFloat(values[4].volume) === 0.0) {
+          volumeDayPercent = -100.0
+        } else  {
           volumeDayPercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
         }
 
         let volumeWeekPercent = 0
-        if (parseFloat(values[6].volume) === 0.0) {
-          volumeWeekPercent = -100.0
-        } else if (parseFloat(values[5].volume) === 0.0) {
+        if (parseFloat(values[5].volume) === 0.0) {
           volumeWeekPercent = 100.0
+        } else if (parseFloat(values[6].volume) === 0.0) {
+          volumeWeekPercent = -100.0
         } else {
           volumeWeekPercent = (parseFloat(values[6].volume) - parseFloat(values[5].volume)) / parseFloat(values[5].volume) * 100
         }
@@ -254,7 +254,7 @@ const TopCollectionTable = (props: {}) => {
             <BodyText light>Daily Volume</BodyText>
           </th>
           <th>
-            <BodyText light>Daily Volume %</BodyText>
+            <BodyText light>Daily Volume Change</BodyText>
           </th>
           <th>
             <BodyText light>Average Price</BodyText>
@@ -266,7 +266,7 @@ const TopCollectionTable = (props: {}) => {
             <BodyText light>Weekly Volume</BodyText>
           </th>
           <th>
-            <BodyText light>Weekly Volume %</BodyText>
+            <BodyText light>Weekly Volume Change</BodyText>
           </th>
           <th>
             <BodyText light>Total Volume</BodyText>
@@ -364,10 +364,10 @@ const TopCollectionTable = (props: {}) => {
                 <BodyText light>{collection.dailyVolume}</BodyText>
               </td>
               <td>
-                <BodyText className="mobile-title">Daily Volume %</BodyText>
+                <BodyText className="mobile-title">Daily Volume Change</BodyText>
                 <BodyText light className={
                   parseFloat(collection.dailyChange) > 0 ? "green" : "red"
-                }>{collection.dailyChange}</BodyText>
+                }>{collection.dailyChange}%</BodyText>
               </td>
               <td>
                 <BodyText className="mobile-title">Average Price</BodyText>
@@ -384,10 +384,10 @@ const TopCollectionTable = (props: {}) => {
                 <BodyText light>{parseFloat(collection.weeklyVolume).toLocaleString()}</BodyText>
               </td>
               <td>
-                <BodyText className="mobile-title">Weekly Volume %</BodyText>
+                <BodyText className="mobile-title">Weekly Volume Change</BodyText>
                 <BodyText light className={
                   parseFloat(collection.weeklyChange) > 0 ? "green" : "red"
-                }>{parseFloat(collection.weeklyChange).toLocaleString()}</BodyText>
+                }>{parseFloat(collection.weeklyChange).toLocaleString()}%</BodyText>
               </td>
               <td>
                 <BodyText className="mobile-title">Total Volume</BodyText>
