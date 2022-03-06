@@ -20,6 +20,7 @@ import { getTransactionsForItem } from '../../contexts/transaction'
 import { CONTRACT_ACCOUNT_ID } from '../../config'
 import AttributeCard from "./components/AttributeCard/AttributeCard"
 import { getCollections } from "../../helpers/collections"
+import TransferModal from "./components/TransferModal/TransferModal"
 
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
@@ -72,6 +73,7 @@ const ItemPage = () => {
   const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [showBidModal, setShowBidModal] = useState(false)
+  const [showTransferModal, setTransferModal] = useState(false)
   const [listingPrice, setListingPrice] = useState("")
   const [priceValidate, setPriceValidate] = useState(true)
 
@@ -218,6 +220,32 @@ const ItemPage = () => {
     } catch (error) { }
   }
 
+  const onTransfer = async (receiverId: string) => {
+    const account: any = wallet.account()
+    try {
+      await account.functionCall(
+        item.collectionId,
+        "nft_transfer",
+        {
+          receiver_id: receiverId,
+          token_id: item.id,
+          approval_id: 0,
+          memo: `${item.name} : Transfer to ${receiverId}`
+        },
+        GAS,
+        oneYocto
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const location = useLocation()
+  useEffect(() => {
+    if (location.search.indexOf("transactionHashes") !== -1) {
+      history.replace("/")
+      window.location.reload()
+    }
+  }, [location.pathname])
   const onBuy = async () => {
     try {
       await contract.offer(
@@ -244,8 +272,7 @@ const ItemPage = () => {
         GAS,
         "0"
       )
-      history.replace("/collections")
-      window.location.reload()
+      window.location.replace("/")
     } catch (error) { }
   }
 
@@ -276,7 +303,6 @@ const ItemPage = () => {
       setPriceValidate(false)
     }
   }
-
 
   const [activities, setActivities] = useState<any>([])
 
@@ -323,6 +349,14 @@ const ItemPage = () => {
             price={parseFloat(saleDetails?.saleConditions.near)}
             onMakeBid={onBid}
           />
+
+          <TransferModal
+            onClose={() => setTransferModal(false)}
+            isVisible={showTransferModal}
+            price={parseFloat(saleDetails?.saleConditions.near)}
+            tokenName={item?.name}
+            onTransfer={onTransfer}
+          />
           <div className="content">
             <div className="left-side">
               <ImageWithLoadBg
@@ -365,8 +399,17 @@ const ItemPage = () => {
                         handlePrice(event.target.value)
                       }
                     />
-                    <Button title="List for Sale" onClick={auctionList}
-                      disabled={false} />
+                    <Button
+                      title="List for Sale"
+                      onClick={auctionList}
+                      disabled={false}
+                    />
+                    <Button
+                      secondary
+                      title="Transfer"
+                      onClick={() => setTransferModal(true)}
+                      disabled={false}
+                    />
                   </div>
                 ) : (
                   <>

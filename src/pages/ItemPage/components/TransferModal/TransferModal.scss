@@ -1,0 +1,54 @@
+@import "../../../../sass/variables.scss";
+
+.transfer-modal {
+  .modal-content {
+    max-width: 400px;
+    min-height: 300px;
+    text-align: center;
+    padding: 30px;
+    justify-content: flex-start;
+
+    .head {
+      padding-bottom: 10px;
+      border-bottom: 1px solid $separator;
+      p {
+        font-size: 13px;
+        color: #94959a;
+        margin: 0;
+        padding: 5px 0;
+        span {
+          color: #fff;
+        }
+      }
+      .title {
+        font-size: 18px;
+      }
+    }
+
+    .body {
+      position: relative;
+      .input-box {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        background-color: $body-background;
+      }
+      p.description {
+        color: #94959a;
+        font-size: 12px;
+      }
+
+      .main-button {
+        margin-top: 10px;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.text-validation {
+  font-size: 12px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #fb1f1f;
+}
