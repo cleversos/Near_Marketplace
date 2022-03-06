@@ -139,7 +139,11 @@ const ProfilePage = () => {
     getActivities()
   }, [])
 
+  const [offerMadeList, setOfferMadeList] = useState<any>([]);
+
   const getWalletNFTs = useCallback(async () => {
+
+    let madeList: any = []
     try {
       const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
       const promises = collections.map(
@@ -151,15 +155,12 @@ const ProfilePage = () => {
               profileUserAccount
             ));
           } catch (error) {
-            console.log(error, collection, profileUserAccount);
             return null;
           }
         }
       )
-
       try {
         for (let contract of collections) {
-          console.log(contract.collectionId, "contract.collectionId")
           const rawResult: any = await provider.query({
             request_type: "call_function",
             account_id: CONTRACT_ACCOUNT_ID,
@@ -170,26 +171,55 @@ const ProfilePage = () => {
             finality: "optimistic",
           })
           const sales = JSON.parse(Buffer.from(rawResult.result).toString())
-
-          console.log(sales, "sales")
+          // find offer made state
+          for (let item of sales) {
+            if (item.bids.near && item.bids.near.length !== 0) {
+              for (let offer of item.bids.near) {
+                if (offer.owner_id === profileUserAccount) {
+                  const nftDetail = await fetchItemTokenDetails(item.nft_contract_id, item.token_id)
+                  madeList.push(nftDetail)
+                }
+              }
+            }
+          }
         }
+        setOfferMadeList(madeList)
         const sales = await getUserSalesInMarketplace(
           provider,
           CONTRACT_ACCOUNT_ID,
           profileUserAccount
         )
+
         setListedNfts(sales)
       } catch (error) {
         console.log(error, " : getWalletNFTs error")
       }
       await Promise.all(promises).then((results) => {
-        console.log(results, "sales resltues")
         setWalletNFTs(results.filter((result) => result))
       }
       )
     } catch (error) {
       console.log(error)
     }
+  }, [])
+  const fetchItemTokenDetails = useCallback(async (collectionId, itemId) => {
+    const rawResult: any = await provider.query({
+      request_type: "call_function",
+      account_id: collectionId,
+      method_name: "nft_token",
+      args_base64: btoa(`{"token_id": "${itemId}"}`),
+      finality: "optimistic",
+    })
+    const result = JSON.parse(Buffer.from(rawResult.result).toString())
+    const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID);
+    let collectionName = "";
+    for (let i = 0; i < collections.length; i++) {
+      if (collections[i].collectionId == collectionId) {
+        collectionName = collections[i].name
+      }
+    }
+    const data = convertTokenResultToItemStructItem(result, collectionName, collectionId)
+    return data
   }, [])
 
   useEffect(() => {
@@ -315,9 +345,22 @@ const ProfilePage = () => {
           </div>
         }
         {mode === "offersMade" &&
-          offersMade.map((collection, i) => (
-            <CollectionAndItemsSet collection={collection} key={i} />
-          ))}
+          <div className="collection-and-items-set">
+            <div className="nfts-container">
+              {offerMadeList?.map((item, i) => (
+                <NFTItemCard
+                  key={i}
+                  id={item.id}
+                  collectionId={item.collectionId}
+                  image={item.image}
+                  name={item.name}
+                  collectionTitle={item.collectionTitle}
+                  price={parseFloat(formatNearAmount(item.price))}
+                />
+              ))}
+            </div>
+          </div>
+        }
         {mode === "offersRecieved" &&
           <div className="collection-and-items-set">
             <div className="nfts-container">

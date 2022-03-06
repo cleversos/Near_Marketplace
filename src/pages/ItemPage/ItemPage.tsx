@@ -163,8 +163,8 @@ const ItemPage = () => {
     setImage(result.metadata.media)
     const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID);
     let collectionName = "";
-    for( let i=0; i<collections.length; i++) {
-      if(collections[i].collectionId ==  collectionId){
+    for (let i = 0; i < collections.length; i++) {
+      if (collections[i].collectionId == collectionId) {
         collectionName = collections[i].name
       }
     }
@@ -325,7 +325,6 @@ const ItemPage = () => {
           />
           <div className="content">
             <div className="left-side">
-              {console.log(item.image)}
               <ImageWithLoadBg
                 aspectRatio={1}
                 src={item.image}

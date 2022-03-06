@@ -102,7 +102,7 @@ const TopCollectionTable = (props: {}) => {
           volumeDayPercent = 100.0
         } else if (parseFloat(values[4].volume) === 0.0) {
           volumeDayPercent = -100.0
-        } else  {
+        } else {
           volumeDayPercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
         }
 
@@ -127,7 +127,7 @@ const TopCollectionTable = (props: {}) => {
           min = newItems[0].price
           itemLength = newItems.length
           sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
-          avgPrice = (sum / itemLength).toFixed(2) 
+          avgPrice = (sum / itemLength).toFixed(2)
         }
 
         all.push({
@@ -367,7 +367,7 @@ const TopCollectionTable = (props: {}) => {
                 <BodyText className="mobile-title">Daily Volume Change</BodyText>
                 <BodyText light className={
                   parseFloat(collection.dailyChange) > 0 ? "green" : "red"
-                }>{collection.dailyChange}%</BodyText>
+                }>{parseFloat(collection.dailyChange).toLocaleString()}%</BodyText>
               </td>
               <td>
                 <BodyText className="mobile-title">Average Price</BodyText>
