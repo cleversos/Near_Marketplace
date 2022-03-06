@@ -1,13 +1,12 @@
 const CommunityIcon = (props: { isSelected?: boolean }) => (
 
-  <svg width="23" height="18" viewBox="0 0 23 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.595 7.93189C19.1973 7.93189 20.4971 6.63298 20.4971 5.03064C20.4971 3.42831 19.1973 2.12939 17.595 2.12939" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M18.9292 11.0847C19.4077 11.1177 19.8834 11.1856 20.3519 11.291C21.0027 11.4184 21.7855 11.6851 22.0642 12.2691C22.242 12.6431 22.242 13.0785 22.0642 13.4534C21.7864 14.0373 21.0027 14.3031 20.3519 14.437" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M6.29011 7.93189C4.68777 7.93189 3.38794 6.63298 3.38794 5.03064C3.38794 3.42831 4.68777 2.12939 6.29011 2.12939" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M4.95589 11.0847C4.47739 11.1177 4.00164 11.1856 3.53322 11.291C2.88239 11.4184 2.09956 11.6851 1.82181 12.2691C1.64306 12.6431 1.64306 13.0785 1.82181 13.4534C2.09864 14.0373 2.88239 14.3031 3.53322 14.437" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path fillRule="evenodd" clipRule="evenodd" d="M11.9379 11.7096C15.1847 11.7096 17.9586 12.2009 17.9586 14.1672C17.9586 16.1325 15.2031 16.6422 11.9379 16.6422C8.69015 16.6422 5.91724 16.1508 5.91724 14.1846C5.91724 12.2183 8.67274 11.7096 11.9379 11.7096Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path fillRule="evenodd" clipRule="evenodd" d="M11.9378 8.90492C9.79651 8.90492 8.07959 7.188 8.07959 5.04575C8.07959 2.90442 9.79651 1.1875 11.9378 1.1875C14.0792 1.1875 15.7961 2.90442 15.7961 5.04575C15.7961 7.188 14.0792 8.90492 11.9378 8.90492Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 19V17C17 15.9391 16.5786 14.9217 15.8284 14.1716C15.0783 13.4214 14.0609 13 13 13H5C3.93913 13 2.92172 13.4214 2.17157 14.1716C1.42143 14.9217 1 15.9391 1 17L1 19" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9 9C11.2091 9 13 7.20914 13 5C13 2.79086 11.2091 1 9 1C6.79086 1 5 2.79086 5 5C5 7.20914 6.79086 9 9 9Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M23 18.9999V16.9999C22.9993 16.1136 22.7044 15.2527 22.1614 14.5522C21.6184 13.8517 20.8581 13.3515 20 13.1299" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M16 1.12988C16.8604 1.35015 17.6231 1.85054 18.1677 2.55215C18.7124 3.25377 19.008 4.11669 19.008 5.00488C19.008 5.89307 18.7124 6.756 18.1677 7.45761C17.6231 8.15922 16.8604 8.65961 16 8.87988" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
 export default CommunityIcon;
+

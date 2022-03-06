@@ -1,10 +1,10 @@
 const LanchpadIcon = (props: { isSelected?: boolean }) => (
 
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M22 13V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H13" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M7.32996 14.49L9.70996 11.4C10.05 10.96 10.68 10.88 11.12 11.22L12.95 12.66C13.39 13 14.02 12.92 14.36 12.49L16.67 9.51001" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M19.48 15.82L19.76 16.39C19.9 16.67 20.25 16.93 20.56 16.99L20.94 17.05C22.08 17.24 22.35 18.08 21.53 18.91L21.18 19.26C20.95 19.5 20.82 19.96 20.89 20.28L20.94 20.49C21.25 21.87 20.52 22.4 19.32 21.68L19.06 21.53C18.75 21.35 18.25 21.35 17.94 21.53L17.68 21.68C16.47 22.41 15.74 21.87 16.06 20.49L16.1099 20.28C16.1799 19.96 16.05 19.5 15.82 19.26L15.47 18.91C14.65 18.08 14.92 17.24 16.06 17.05L16.44 16.99C16.74 16.94 17.1 16.67 17.24 16.39L17.52 15.82C18.06 14.73 18.94 14.73 19.48 15.82Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 15H3C2.46957 15 1.96086 14.7893 1.58579 14.4142C1.21071 14.0391 1 13.5304 1 13V3C1 2.46957 1.21071 1.96086 1.58579 1.58579C1.96086 1.21071 2.46957 1 3 1H19C19.5304 1 20.0391 1.21071 20.4142 1.58579C20.7893 1.96086 21 2.46957 21 3V13C21 13.5304 20.7893 14.0391 20.4142 14.4142C20.0391 14.7893 19.5304 15 19 15H18" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M11 13L16 19H6L11 13Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+
 )
 
 export default LanchpadIcon;
