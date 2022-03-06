@@ -53,7 +53,7 @@ const TransferModal = (props: {
           max={price}
         />
         <p className="description">You will be redirected to NEAR Web Wallet to confirm your transaction.</p>
-        <Button title="Make offer" onClick={() => handleTransfer()} disabled={false} />
+        <Button title="Tranfer" onClick={() => handleTransfer()} disabled={false} />
       </div>
     </ModalContainer>
   )
