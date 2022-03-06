@@ -73,7 +73,12 @@ const CollectionPage = () => {
     min: "min",
     max: "max"
   });
+  const [forceRender, setForceRender] = useState(false)
   const [attdFilterData, setAttdFilterData] = useState()
+  const fixFilterData = (e) => {
+    setForceRender(!forceRender)
+    setAttdFilterData(e)
+  }
 
   useEffect(() => {
     const bodyWidth = document.body.clientWidth
@@ -147,15 +152,15 @@ const CollectionPage = () => {
                 console.log(e);
               }).then((json) => {
                 metadata = json
-                console.log(json, "fetch json")
                 item = Object.assign(item, { "attribute": json.attributes })
               })
           } catch (error) {
             console.log(error)
           }
           attds.push(...metadata.attributes)
+        } else {
+          item = Object.assign(item, { "attribute": [] })
         }
-        console.log(item)
       }
 
       let mapFilterData = new Map();
@@ -178,6 +183,12 @@ const CollectionPage = () => {
           collectionId
         )
       )
+
+      let attdArray: any;
+      if (mapFilterData !== undefined) {
+        attdArray = Array.from(mapFilterData, ([name, value]) => ({ name, value }));
+      }
+      fixFilterData(attdArray)
       return { items, mapFilterData }
     } catch (error) {
       console.log(error)
@@ -287,7 +298,8 @@ const CollectionPage = () => {
             priceRange={priceRange}
             setPriceRange={(e) => setPriceRange(e)}
             attributesFilterOptions={attributesFilterOptions}
-            setAttdFilterData={(e: any) => setAttdFilterData(e)}
+            attdFilterData={attdFilterData}
+            fixFilterData={(e: any) => fixFilterData(e)}
           />
         </div>
         {mode === "items" ? (

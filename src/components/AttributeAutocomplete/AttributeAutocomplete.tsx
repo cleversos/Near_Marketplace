@@ -5,17 +5,20 @@ let _ = require("lodash")
 export default function AttributeAutocomplete(props: {
   options: any,
   originData: any,
-  setAttdFilterData: Function
+  fixFilterData: Function,
+  attdFilterData: any
 }) {
   const { options, originData } = props;
   const handleChange = (attr: any) => {
     let index = _.findIndex(originData, { name: options.name })
+    let tmpArry = props.attdFilterData
     if (attr.length !== 0) {
-      originData.splice(index, 1, { name: options.name, value: attr });
+      tmpArry.splice(index, 1, { name: options.name, value: attr });
     } else {
-      originData.splice(index, 1, { name: options.name, value: options.value });
+      tmpArry.splice(index, 1, { name: options.name, value: options.value });
     }
-    props.setAttdFilterData(originData)
+    console.log(props.attdFilterData)
+    props.fixFilterData(tmpArry)
   }
   return (
     <div className="attribute-autocomplete">

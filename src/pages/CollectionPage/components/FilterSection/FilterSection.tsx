@@ -13,7 +13,8 @@ interface FilterSectionProps {
   priceRange: PriceRange
   setPriceRange: Function
   attributesFilterOptions: any
-  setAttdFilterData: Function
+  fixFilterData: Function
+  attdFilterData: any
 }
 
 type PriceRange = {
@@ -93,7 +94,8 @@ const FilterSection = (props: FilterSectionProps) => {
         <AttributeAutocomplete
           key={key}
           options={item}
-          setAttdFilterData={props.setAttdFilterData}
+          fixFilterData={props.fixFilterData}
+          attdFilterData={props.attdFilterData}
           originData={attdArray}
         />
       ))}

@@ -33,6 +33,17 @@ type TAttributes = {
 export type TItem = {
   image: any
   name: string
+  attribute: any
+  collectionTitle: string
+  collectionId: string
+  price: number
+  id: string
+  ownerId: string
+}
+
+export type TItem1 = {
+  image: any
+  name: string
   collectionTitle: string
   collectionId: string
   price: number
@@ -62,7 +73,7 @@ const ItemPage = () => {
   const [listingPrice, setListingPrice] = useState("")
   const [priceValidate, setPriceValidate] = useState(true)
 
-  const [item, setItem] = useState<TItem | null>(null)
+  const [item, setItem] = useState<TItem1 | null>(null)
   const [saleDetails, setSaleDetails] = useState<TItemSalesDetails>(null)
   const [itemMarketDetails, setItemMarketDetails] =
     useState<TItemMarketPlaceDetails>(null)
