@@ -1,7 +1,7 @@
 import React from 'react';
 import BodyText from '../../../../components/BodyText/BodyText';
 import Button from '../../../../components/Button/Button';
-import ImageWithLoadBg from '../../../../components/ImageWithLoadBg/ImageWithLoadBg';
+import ImageWithLoadBgHome from '../../../../components/ImageWithLoadBg/ImageWithLoadBgHome';
 import SectionPadding from '../../../../components/SectionPadding/SectionPadding';
 import './UpcomingSection.scss';
 
@@ -46,7 +46,7 @@ const UpcomingSection = () => {
           {
             defaultUpcomingLaunches.map((launch, i) => (
               <a href={launch.link} target="_blank" rel="noreferrer" className="upcoming-launch-card" key={i}>
-                <ImageWithLoadBg aspectRatio={0.9375} src={launch.image} alt={launch.name} />
+                <ImageWithLoadBgHome aspectRatio={0.9375} src={launch.image} alt={launch.name} />
                 <div className="img-darkener" />
                 <div className="details">
                   <BodyText bold className="name">{launch.name}</BodyText>

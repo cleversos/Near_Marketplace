@@ -86,20 +86,24 @@ const FilterSection = (props: FilterSectionProps) => {
         }
 
       </div>
-      <div className={`row-container ${!showAttd ? "up" : ""}`} onClick={() => setShowAttd(!showAttd)} style={{ borderTop: showPriceOptions ? "1px solid #20252C" : "1px solid transparent" }}>
-        <BodyText light>Attributes</BodyText>
-        <ChevronDownIcon />
-      </div>
-      {attdArray !== undefined && attdArray.map((item: any, key) => (
-        <AttributeAutocomplete
-          key={key}
-          options={item}
-          fixFilterData={props.fixFilterData}
-          attdFilterData={props.attdFilterData}
-          originData={attdArray}
-        />
-      ))}
-
+      {!collapseFilterContainer &&
+        <>
+          <div className={`row-container ${!showAttd ? "up" : ""}`} onClick={() => setShowAttd(!showAttd)} style={{ borderTop: showPriceOptions ? "1px solid #20252C" : "1px solid transparent" }}>
+            <BodyText light>Attributes</BodyText>
+            <ChevronDownIcon />
+          </div>
+          {showAttd &&
+            attdArray !== undefined && attdArray.map((item: any, key) => (
+              <AttributeAutocomplete
+                key={key}
+                options={item}
+                fixFilterData={props.fixFilterData}
+                attdFilterData={props.attdFilterData}
+                originData={attdArray}
+              />
+            ))}
+        </>
+      }
     </div>
   )
 }

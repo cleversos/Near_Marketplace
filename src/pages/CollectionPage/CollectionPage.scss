@@ -41,7 +41,7 @@
     .filter-container {
       position: sticky;
       top: 145px;
-      // height: calc(100vh - 175px);
+      min-height: calc(100vh - 175px);
       z-index: 8;
     }
 
