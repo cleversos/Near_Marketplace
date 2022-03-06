@@ -19,6 +19,8 @@ import "./ItemPage.scss"
 import { getTransactionsForItem } from '../../contexts/transaction'
 import { CONTRACT_ACCOUNT_ID } from '../../config'
 import AttributeCard from "./components/AttributeCard/AttributeCard"
+import { getCollections } from "../../helpers/collections"
+
 //////////////////////////////////
 //please add gas and required deposit in all transaction METHODS.
 //collection/nft_contract_id/token_type page does not shows listed items
@@ -159,8 +161,15 @@ const ItemPage = () => {
     }
     setName(result.metadata.title)
     setImage(result.metadata.media)
+    const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID);
+    let collectionName = "";
+    for( let i=0; i<collections.length; i++) {
+      if(collections[i].collectionId ==  collectionId){
+        collectionName = collections[i].name
+      }
+    }
     setItem(
-      convertTokenResultToItemStructItem(result, "collection name", collectionId)
+      convertTokenResultToItemStructItem(result, collectionName, collectionId)
     )
   }, [])
 
@@ -328,6 +337,9 @@ const ItemPage = () => {
                 <BodyText bold className="item-name">
                   {item?.name}
                 </BodyText>
+                <BodyText className="collection-name">
+                  {item?.collectionTitle}
+                </BodyText>
                 <div className="owners-and-faves-container">
                   {itemMarketDetails?.favorites && (
                     <div className="faves-container">
@@ -366,11 +378,11 @@ const ItemPage = () => {
                       <BodyText
                         bold
                       >{`${saleDetails?.saleConditions.near} Ⓝ`}</BodyText>
-                      <BodyText light>{`( $${formatAmount(
+                      {/* <BodyText light>{`( $${formatAmount(
                         Number(itemPriceInUSD),
                         3,
                         ","
-                      )} )`}</BodyText>
+                      )} )`}</BodyText> */}
                     </div>
                     {!wallet?.isSignedIn() ? (
                       <Button
