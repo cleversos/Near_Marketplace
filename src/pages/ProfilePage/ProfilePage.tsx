@@ -321,7 +321,7 @@ const ProfilePage = () => {
         {mode === "offersRecieved" &&
           <div className="collection-and-items-set">
             <div className="nfts-container">
-              {/* {listedNfts.map((item, i) => (
+              {listedNfts.map((item, i) => (
                 item.bids.near &&
                 <NFTItemCard
                   key={i}
@@ -332,7 +332,7 @@ const ProfilePage = () => {
                   collectionTitle={item.metadata.title}
                   price={parseFloat(formatNearAmount(item.sale_conditions.near))}
                 />
-              ))} */}
+              ))}
             </div>
           </div>
         }
