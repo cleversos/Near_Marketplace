@@ -32,31 +32,6 @@ const links: TLinks[] = [
     name: "Stats",
     icon: "stats",
   },
-  {
-    link: "/#",
-    name: "Job",
-    icon: "job",
-  },
-  {
-    link: "/#",
-    name: "Apply listing",
-    icon: "apply",
-  },
-  {
-    link: "/#",
-    name: "Community",
-    icon: "community",
-  },
-  {
-    link: "/#",
-    name: "Auctions",
-    icon: "auctions"
-  },
-  {
-    link: "/#",
-    name: "Lanchpad",
-    icon: "lanchpad"
-  }
 ]
 
 const SideBar = (props: SideBarProps) => {
@@ -86,9 +61,7 @@ const SideBar = (props: SideBarProps) => {
     >
       <ul className="items-container">
         {links.map((link, i) => (
-          <li
-            className={`${link.link === location.pathname ? "selected" : ""}`} key={i}
-          >
+          <li key={i}>
             <Link to={link.link}>
               <IconLoader
                 icon={link.icon}
@@ -98,6 +71,53 @@ const SideBar = (props: SideBarProps) => {
             </Link>
           </li>
         ))}
+
+        <li>
+          <a href="https://galacticway.freshteam.com/jobs">
+            <IconLoader
+              icon="job"
+              isIconSelected={false}
+            />
+            <BodyText light>Job</BodyText>
+          </a>
+        </li>
+
+        <li>
+          <a href="https://airtable.com/shrlLTChvWVKH8M99">
+            <IconLoader
+              icon="apply"
+              isIconSelected={false}
+            />
+            <BodyText light>Apply listing</BodyText>
+          </a>
+        </li>
+        <li>
+          <Link to="/#">
+            <IconLoader
+              icon="community"
+              isIconSelected={location.pathname === "community"}
+            />
+            <BodyText light>Community</BodyText>
+          </Link>
+        </li>
+        <li>
+          <Link to="/#">
+            <IconLoader
+              icon="auctions"
+              isIconSelected={location.pathname === "auctions"}
+            />
+            <BodyText light>Auctions</BodyText>
+          </Link>
+        </li>
+        <li>
+          <Link to="/#">
+            <IconLoader
+              icon="lanchpad"
+              isIconSelected={location.pathname === "lanchpad"}
+            />
+            <BodyText light>Lanchpad</BodyText>
+          </Link>
+        </li>
         {walletAddress &&
           <li className={`${location.pathname === "/profile" ? "selected" : ""}`}>
             <Link to={`/profile/@${walletAddress}`}>

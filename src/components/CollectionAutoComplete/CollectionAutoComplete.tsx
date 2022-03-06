@@ -40,7 +40,7 @@ export default function CollectionAutoComplete(props: { collections: any }) {
         }}
         sx={{
           '& input': {
-            fontSize: 12,
+            fontSize: 14,
             width: 400,
             color: "#dbdbdba6",
           },
@@ -54,6 +54,25 @@ export default function CollectionAutoComplete(props: { collections: any }) {
         getOptionLabel={(option: CollectionType) =>
           option.name
         }
+        renderOption={(props, option) => {
+          return (
+            <li {...props} key={option.name} onClick={() => {
+              history.replace(`/collection/${option.collectionId}/${option.tokenType}`)
+              window.location.reload()
+            }
+            }>
+              <div className="collection-auto-li">
+                <img
+                  src={option.profileImageUrl}
+                  alt=""
+                />
+                <span>
+                  {option.name}
+                </span>
+              </div>
+            </li>
+          );
+        }}
         filterOptions={filterOptions}
         renderInput={(params) => (
           <div ref={params.InputProps.ref}>

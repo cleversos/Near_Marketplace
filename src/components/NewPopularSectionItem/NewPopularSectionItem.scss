@@ -19,7 +19,7 @@
   }
   .number {
     width: 20px;
-    font-size: 12px;
+    font-size: 13px;
     color: #fff;
     margin-right: 10px;
     align-items: center;
@@ -47,12 +47,12 @@
         align-items: center;
         p {
           color: #fff;
-          font-size: 14px;
+          font-size: 18px;
           margin: 0;
           padding: 5px 0;
         }
         span {
-          font-size: 12px;
+          font-size: 13px;
           &.red {
             color: $text-color-red;
           }
@@ -68,13 +68,13 @@
         align-items: center;
         p {
           color: #c2c7d0;
-          font-size: 14px;
+          font-size: 15px;
           margin: 0;
           padding: 5px 0;
           font-weight: 300;
         }
         span {
-          font-size: 12px;
+          font-size: 13px;
           &.red {
             color: $text-color-red;
           }

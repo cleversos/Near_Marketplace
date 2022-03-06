@@ -40,6 +40,16 @@
     background-color: #090619 !important;
 }
 .MuiAutocomplete-option {
-    font-size: 12px !important;
+    font-size: 13px !important;
     color: #dbdbdba6;
+}
+
+.collection-auto-li {
+    img {
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        object-fit: cover;
+        margin-right: 10px;
+    }
 }

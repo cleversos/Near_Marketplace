@@ -42,8 +42,10 @@ const GallerySection = (props: GallerySectionProps) => {
     }
     if (props.attdFilterData !== undefined) {
       for (let subItem of item.attribute) {
-        if ((newArray).indexOf(subItem.value) === -1) {
-          attdState = false
+        for (let attdItem of props.attdFilterData) {
+          if (attdItem.name === subItem.trait_type && attdItem.value.indexOf(subItem.value) === -1) {
+            attdState = false
+          }
         }
       }
     }
