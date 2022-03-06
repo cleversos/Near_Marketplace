@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react"
+// import { useContext, useEffect, useState } from "react"
 import BodyText from "../../components/BodyText/BodyText"
-import ToggleButton from "../../components/ToggleButton/ToggleButton"
+// import ToggleButton from "../../components/ToggleButton/ToggleButton"
 import "./StatsPage.scss"
 import TopCollectionTable from "./TopCollectionTable/TopCollectionTable"
 
@@ -40,7 +40,7 @@ const StatsPage = () => {
             ]}
           /> */}
         </div>
-        <TopCollectionTable/>
+        <TopCollectionTable />
       </div>
     </div>
   )

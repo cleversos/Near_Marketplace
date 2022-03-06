@@ -57,7 +57,8 @@ export default function CollectionAutoComplete(props: { collections: any }) {
         filterOptions={filterOptions}
         renderInput={(params) => (
           <div ref={params.InputProps.ref}>
-            <input type="text" {...params.inputProps} />
+            <input type="text" {...params.inputProps}
+              placeholder="Search Collections and Creators" />
           </div>
         )}
       />

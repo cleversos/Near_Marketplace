@@ -1,4 +1,5 @@
 import React from 'react';
+import NewPopularSection from '../../components/NewPopularSection/NewPopularSection';
 import AllCollectionsSection from './components/AllCollections/AllCollectionsSection';
 import Footer from './components/Footer/Footer';
 import HeroSection from './components/HeroSection/HeroSection';
@@ -9,10 +10,11 @@ import UpcomingSection from './components/UpcomingSections/UpcomingSection';
 import './HomePage.scss';
 
 const HomePage = () => {
-    return(
+    return (
         <div className="home-page">
             <HeroSection />
             <UpcomingSection />
+            <NewPopularSection />
             <PopularSection />
             <NewSection />
             <AllCollectionsSection />
