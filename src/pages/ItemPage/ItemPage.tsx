@@ -376,9 +376,11 @@ const ItemPage = () => {
                 <BodyText bold className="item-name">
                   {item?.name}
                 </BodyText>
-                <BodyText className="collection-name">
-                  {item?.collectionTitle}
-                </BodyText>
+                <Link to={`/collection/${collectionId}/${tokenType}`}>
+                  <BodyText className="collection-name">
+                    {item?.collectionTitle}
+                  </BodyText>
+                </Link>
                 <div className="owners-and-faves-container">
                   {itemMarketDetails?.favorites && (
                     <div className="faves-container">
