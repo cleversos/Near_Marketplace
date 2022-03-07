@@ -112,7 +112,8 @@ const SideBar = (props: SideBarProps) => {
                 </button>
               }
             </div>
-            {communityShow &&
+            {isExpanded &&
+              communityShow &&
               <div className="sidebar-dropdown-content">
                 <a href="https://twitter.com/GalacticwayNFT" target="_blank" rel="noreferrer" >Twitter</a>
                 <a href="https://discord.com/invite/yuBjY6QdR6" target="_blank" rel="noreferrer" >Discord</a>
@@ -128,7 +129,12 @@ const SideBar = (props: SideBarProps) => {
               icon="auctions"
               isIconSelected={location.pathname === "auctions"}
             />
-            <BodyText light>Auctions</BodyText>
+            {isExpanded &&
+              <div className="comming-soon">
+                <BodyText light>Auctions</BodyText>
+                <span className="alert-text">Comming soon</span>
+              </div>
+            }
           </Link>
         </li>
         <li>
@@ -137,7 +143,12 @@ const SideBar = (props: SideBarProps) => {
               icon="lanchpad"
               isIconSelected={location.pathname === "lanchpad"}
             />
-            <BodyText light>Lanchpad</BodyText>
+            {isExpanded &&
+              <div className="comming-soon">
+                <BodyText light>Lanchpad</BodyText>
+                <span className="alert-text">Comming soon</span>
+              </div>
+            }
           </Link>
         </li>
         {walletAddress &&
