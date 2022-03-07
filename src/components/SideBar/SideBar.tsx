@@ -156,7 +156,7 @@ const SideBar = (props: SideBarProps) => {
             <Link to={`/profile/@${walletAddress}`}>
               <IconLoader
                 icon="profile"
-                isIconSelected={location.pathname === "/profile"}
+                isIconSelected={location.pathname.indexOf(walletAddress) !== -1}
               />
               <BodyText light>Profile</BodyText>
             </Link>
