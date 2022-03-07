@@ -18,12 +18,12 @@ import { CONTRACT_ACCOUNT_ID } from "../../config"
 
 export const configs: ConnectConfig[] = [
   {
-    networkId: "testnet",
+    networkId: "mainnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-    nodeUrl: "https://rpc.testnet.near.org",
-    walletUrl: "https://wallet.testnet.near.org",
-    helperUrl: "https://helper.testnet.near.org",
-    // explorerUrl: "https://explorer.testnet.near.org",
+    nodeUrl: "https://rpc.mainnet.near.org",
+    walletUrl: "https://wallet.mainnet.near.org",
+    helperUrl: "https://helper.mainnet.near.org",
+    // explorerUrl: "https://explorer.mainnet.near.org",
     headers: {},
   },
 ]
@@ -52,7 +52,7 @@ const ProfilePage = () => {
   const profileUserAccount = userAccount.split("@")[1]
 
   const config =
-    configs.find((config) => config.networkId === "testnet") || configs[0]
+    configs.find((config) => config.networkId === "mainnet") || configs[0]
 
   const provider = useMemo(
     () => new providers.JsonRpcProvider(config.nodeUrl),

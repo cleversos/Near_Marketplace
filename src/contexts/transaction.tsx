@@ -7,8 +7,8 @@ const keyStore = new keyStores.BrowserLocalStorageKeyStore();
 // https://docs.near.org/docs/develop/node/intro/node-types
 const config = {
     keyStore,
-    networkId: "testnet",
-    nodeUrl: "https://rpc.testnet.near.org",
+    networkId: "mainnet",
+    nodeUrl: "https://rpc.mainnet.near.org",
     headers: {}
 };
 
@@ -116,6 +116,7 @@ export async function getTransactionsForCollection(marketplace_account_id, nft_c
 }
 
 export async function getTradingVolumeForCollection(marketplace_account_id, nft_contract_id, timestamp_start = "0", timestamp_end = Date.now() + "000000") {
+    console.log(timestamp_start);
     const getAPI = async () => {
         const API = 'http://13.231.24.204:3002/tradingvolume_for_collection';
         const result = await fetch(API, {

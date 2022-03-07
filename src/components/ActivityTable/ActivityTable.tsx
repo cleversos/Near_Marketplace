@@ -46,7 +46,7 @@ const ActivityTable = (props: { activities: TActivity[] }) => {
             <td>
               <BodyText className="mobile-title">Transaction ID</BodyText>
               <BodyText light>
-                <a href={`https://explorer.testnet.near.org/transactions/${activity?.trxId}`} target="_blank"  >
+                <a href={`https://explorer.mainnet.near.org/transactions/${activity?.trxId}`} target="_blank"  >
                   {
                     activity?.trxId.slice(0, 4)}...{activity?.trxId.slice(
                       activity.trxId.length - 4,

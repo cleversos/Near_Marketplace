@@ -1,6 +1,6 @@
 var pg = require('pg');
 
-var connectionString = "postgres://public_readonly:nearprotocol@testnet.db.explorer.indexer.near.dev/testnet_explorer";
+var connectionString = "postgres://public_readonly:nearprotocol@mainnet.db.explorer.indexer.near.dev/mainnet_explorer";
 var pgClient = new pg.Client(connectionString);
 pgClient.connect();
 

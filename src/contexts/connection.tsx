@@ -13,12 +13,12 @@ const { connect, keyStores, WalletConnection } = nearAPI
 
 export const configs: ConnectConfig[] = [
   {
-    networkId: "testnet",
+    networkId: "mainnet",
     keyStore: new keyStores.BrowserLocalStorageKeyStore(),
-    nodeUrl: "https://rpc.testnet.near.org",
-    walletUrl: "https://wallet.testnet.near.org",
-    helperUrl: "https://helper.testnet.near.org",
-    // explorerUrl: "https://explorer.testnet.near.org",
+    nodeUrl: "https://rpc.mainnet.near.org",
+    walletUrl: "https://wallet.mainnet.near.org",
+    helperUrl: "https://helper.mainnet.near.org",
+    // explorerUrl: "https://explorer.mainnet.near.org",
     headers: {},
   },
 ]
@@ -36,7 +36,7 @@ interface ConnectionContextProps {
 export const ConnectionContext = React.createContext<ConnectionContextProps>({
   near: undefined,
   wallet: undefined,
-  network: "testnet",
+  network: "mainnet",
   provider: undefined,
   setNetwork: () => { },
   signIn: () => { },
@@ -45,7 +45,7 @@ export const ConnectionContext = React.createContext<ConnectionContextProps>({
 
 // connect to NEAR
 const ConnectionProvider = (props: any) => {
-  const [network, setNetwork] = useState("testnet")
+  const [network, setNetwork] = useState("mainnet")
   const [near, setNear] = useState<nearAPI.Near>()
   const [wallet, setWallet] = useState<WalletConnectionProps>()
   const [forseRender, setForseRender] = useState<boolean>(false)
@@ -78,7 +78,7 @@ const ConnectionProvider = (props: any) => {
   }, [])
 
   const signIn = () => {
-    wallet.requestSignIn("marketplace_test_12.xuguangxia.testnet")
+    wallet.requestSignIn("marketplace_test_1.xuguangxia.near")
   }
 
   const signOut = () => {

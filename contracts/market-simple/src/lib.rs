@@ -111,9 +111,10 @@ impl Contract {
             }
         }
 
-        this.admin_ids.insert(&"xuguangxia.testnet".to_string());
-        this.admin_ids.insert(&"tigerdev.testnet".to_string());
-        this.admin_ids.insert(&"galacticway.testnet".to_string());
+        this.admin_ids.insert(&"xuguangxia.near".to_string());
+        this.admin_ids.insert(&"saintgalactic.near".to_string());
+        this.admin_ids.insert(&"springtee.near".to_string());
+        this.admin_ids.insert(&"galacticway.near".to_string());
 
         this
     }

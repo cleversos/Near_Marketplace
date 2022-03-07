@@ -21,4 +21,4 @@ export const FEATURED_POST: TFeaturedPost[] = [
     },
 ]
 
-export const CONTRACT_ACCOUNT_ID = "marketplace_test_12.xuguangxia.testnet"
+export const CONTRACT_ACCOUNT_ID = "marketplace_test_1.xuguangxia.near"
