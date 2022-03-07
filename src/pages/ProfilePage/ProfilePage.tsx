@@ -218,7 +218,12 @@ const ProfilePage = () => {
         collectionName = collections[i].name
       }
     }
-    const data = convertTokenResultToItemStructItem(result, collectionName, collectionId)
+    console.log(result, " ++++ result")
+    const data = convertTokenResultToItemStructItem(
+      result,
+      collectionName,
+      collectionId
+    )
     return data
   }, [])
 
@@ -317,6 +322,7 @@ const ProfilePage = () => {
                         id={item.token_id}
                         collectionId={item.nft_contract_id}
                         image={item.metadata.media}
+                        tokenType={item.tokenType}
                         name={item.metadata.title}
                         collectionTitle={item.metadata.title}
                         price={parseFloat(formatNearAmount(item.sale_conditions.near))}
@@ -333,6 +339,7 @@ const ProfilePage = () => {
               {listedNfts?.map((item, i) => (
                 <NFTItemCard
                   key={i}
+                  tokenType={item.tokenType}
                   id={item.token_id}
                   collectionId={item.nft_contract_id}
                   image={item.metadata.media}
@@ -353,6 +360,7 @@ const ProfilePage = () => {
                   id={item.id}
                   collectionId={item.collectionId}
                   image={item.image}
+                  tokenType={item.tokenType}
                   name={item.name}
                   collectionTitle={item.collectionTitle}
                   price={parseFloat(formatNearAmount(item.price))}
@@ -372,6 +380,7 @@ const ProfilePage = () => {
                   collectionId={item.nft_contract_id}
                   image={item.metadata.media}
                   name={item.metadata.title}
+                  tokenType={item.tokenType}
                   collectionTitle={item.metadata.title}
                   price={parseFloat(formatNearAmount(item.sale_conditions.near))}
                 />

@@ -30,13 +30,14 @@ body {
     text-decoration: none;
   }
 }
-
-// @media only screen and (max-width: 768px) {
-//   .App {
-//     .sidebar-container {
-//       position: fixed;
-//       // transform: translateX(-100%);
-//       z-index: 10;
-//     }
-//   }
-// }
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #5a4d8f;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background-color: #5a4d8f5b;
+  border-radius: 10px;
+}

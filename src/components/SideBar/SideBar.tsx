@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 import { Link, useLocation, useParams } from "react-router-dom"
+import ChevronDownIcon from "../../assets/icons/ChevronDownIcon"
 import ExpandIcon from "../../assets/icons/ExpandIcon"
 import { ConnectionContext } from "../../contexts/connection"
 import BodyText from "../BodyText/BodyText"
@@ -54,6 +55,7 @@ const SideBar = (props: SideBarProps) => {
 
   const location = useLocation()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [communityShow, setCommunityShow] = useState(false)
   return (
     <div
       className={`side-bar ${openMobileSidebar ? "show-mobile" : ""} ${isExpanded ? "expanded" : "collapsed"
@@ -92,13 +94,34 @@ const SideBar = (props: SideBarProps) => {
           </a>
         </li>
         <li>
-          <Link to="/#">
-            <IconLoader
-              icon="community"
-              isIconSelected={location.pathname === "community"}
-            />
-            <BodyText light>Community</BodyText>
-          </Link>
+          <div className="sidebar-dropdown">
+            <div className="sidebar-dropdown-title" onClick={() => setCommunityShow(!communityShow)}>
+              <div className="title-main">
+                <IconLoader
+                  icon="community"
+                  isIconSelected={false}
+                />
+                {isExpanded &&
+                  <BodyText light>Community</BodyText>
+                }
+              </div>
+
+              {isExpanded &&
+                <button>
+                  <ChevronDownIcon />
+                </button>
+              }
+            </div>
+            {communityShow &&
+              <div className="sidebar-dropdown-content">
+                <a href="">Twitter</a>
+                <a href="">Discord</a>
+                <a href="">Podcast</a>
+                <a href="">Blog</a>
+                <a href="">Shop</a>
+              </div>
+            }
+          </div>
         </li>
         <li>
           <Link to="/#">

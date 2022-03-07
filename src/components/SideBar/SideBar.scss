@@ -56,7 +56,36 @@
   background: $background2;
   top: 70px;
   height: calc(100vh - 70px);
-
+  overflow-y: auto;
+  .sidebar-dropdown {
+    .sidebar-dropdown-title {
+      display: flex;
+      justify-content: space-between;
+      padding-left: 10px;
+      cursor: pointer;
+      .title-main {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .sidebar-dropdown-content {
+      padding-left: 30px;
+      a {
+        font-size: 14px;
+        color: rgba(219, 219, 219, 0.65);
+        padding: 8px 0;
+        transition: all 0.3s;
+        &:hover {
+          color: #fff;
+          transition: all 0.3s;
+        }
+      }
+    }
+    button {
+      border: none;
+      background: transparent;
+    }
+  }
   .items-container {
     list-style: none;
     padding: 0;

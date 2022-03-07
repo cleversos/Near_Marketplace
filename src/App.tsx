@@ -37,7 +37,7 @@ function App() {
               path="/collection/:collectionId/:tokenType"
               element={<CollectionPage />}
             />
-            <Route path="/:collectionId/item/:itemId" element={<ItemPage />} />
+            <Route path="/:collectionId/item/:tokenType/:itemId" element={<ItemPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/collections" element={<AllCollectionsPage />} />
             <Route path="/profile/:userAccount" element={<ProfilePage />} />

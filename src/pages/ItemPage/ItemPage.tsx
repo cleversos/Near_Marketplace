@@ -42,6 +42,7 @@ export type TItem = {
   price: number
   id: string
   ownerId: string
+  tokenType: string
 }
 
 export type TItem1 = {
@@ -51,6 +52,7 @@ export type TItem1 = {
   collectionId: string
   price: number
   id: string
+  tokenType: string
   ownerId: string
 }
 
@@ -68,7 +70,7 @@ export type TItemMarketPlaceDetails = {
 }
 
 const ItemPage = () => {
-  const { itemId, collectionId } = useParams()
+  const { itemId, collectionId, tokenType } = useParams()
   const history = createBrowserHistory()
   const [selectedDetailsIndex, setSelectedDetailsIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -144,7 +146,6 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(rawResult.result).toString())
-    console.log(result, "result")
     if (result.metadata.reference !== null) {
       let metadata: any = [];
       try {
@@ -171,7 +172,11 @@ const ItemPage = () => {
       }
     }
     setItem(
-      convertTokenResultToItemStructItem(result, collectionName, collectionId)
+      convertTokenResultToItemStructItem(
+        result,
+        collectionName,
+        collectionId
+      )
     )
   }, [])
 
@@ -241,10 +246,11 @@ const ItemPage = () => {
   }
   const location = useLocation()
   useEffect(() => {
-    if (location.search.indexOf("transactionHashes") !== -1) {
-      history.replace("/")
-      window.location.reload()
-    }
+    console.log(`/collection/${collectionId}/${tokenType}`, "tokenType")
+    // if (location.search.indexOf("transactionHashes") !== -1) {
+    //   history.replace(`/collection/${collectionId}/${tokenType}`)
+    //   window.location.reload()
+    // }
   }, [location.pathname])
   const onBuy = async () => {
     try {

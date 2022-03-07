@@ -14,6 +14,7 @@ interface GallerySectionProps {
   items: NFTItemCardProps[] | null
   setCollapseFilterContainer: Function
   collectionId: string
+  tokenType: string
   priceRange: PriceRange
   attdFilterData: any
 }
@@ -85,6 +86,7 @@ const GallerySection = (props: GallerySectionProps) => {
               name={item.name}
               collectionTitle={item.collectionTitle}
               collectionId={props.collectionId}
+              tokenType={props.tokenType}
               price={item.price}
               image={item.image}
               id={item.id}

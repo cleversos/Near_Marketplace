@@ -308,6 +308,7 @@ const CollectionPage = () => {
               priceRange={priceRange}
               isLoading={isLoading}
               items={items || null}
+              tokenType={tokenType}
               collectionId={collectionId}
               attdFilterData={attdFilterData}
               setCollapseFilterContainer={setCollapseFilterContainer}

@@ -203,7 +203,7 @@ const NewPopularSection = () => {
 
       //get token obj for the tokens not gotten by batch fetch (if any)
       for (let i = 0; i < sales.length; i++) {
-        const { token_id } = sales[i]
+        const { token_id, token_type } = sales[i]
         let token = saleTokens.find(({ token_id: t }) => t === token_id)
         if (!token) {
           const tokenRawResult: any = await provider.query({
@@ -222,7 +222,7 @@ const NewPopularSection = () => {
         convertTokenResultToItemStruct(
           result,
           collectionMarketplaceDetails?.name,
-          collectionId
+          collectionId,
         )
       )
       console.log("fetchItems return")

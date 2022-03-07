@@ -27,6 +27,7 @@ const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, liste
             collectionId={collection.id}
             image={item.image}
             name={item.name}
+            tokenType={item.tokenType}
             collectionTitle={collection.name}
             price={item.price}
           />
@@ -38,6 +39,7 @@ const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, liste
             id={item.token_id}
             collectionId={item.nft_contract_id}
             image={item.metadata.media}
+            tokenType={item.tokenType}
             name={item.metadata.title}
             collectionTitle={collection.name}
             price={parseFloat(formatNearAmount(item.sale_conditions.near))}
