@@ -64,25 +64,25 @@ const Footer = () => {
           <BodyText bold>Community</BodyText>
           <ul>
             <li>
-              <a href="https://twitter.com/GalacticwayNFT" target="_blank">
+              <a href="https://twitter.com/GalacticwayNFT" target="_blank" rel="noreferrer" >
                 <BodyText>Twitter</BodyText>
               </a>
-            </li>   
+            </li>
             <li>
-              <a href="https://discord.com/invite/yuBjY6QdR6" target="_blank">
+              <a href="https://discord.com/invite/yuBjY6QdR6" target="_blank" rel="noreferrer" >
                 <BodyText>Discord</BodyText>
               </a>
-            </li>   
+            </li>
             <li>
-              <a href="https://help.galacticway.io" target="_blank">
+              <a href="https://help.galacticway.io" target="_blank" rel="noreferrer" >
                 <BodyText>Help Desk</BodyText>
               </a>
-            </li>   
+            </li>
             <li>
-              <a href="https://galacticway.medium.com" target="_blank">
+              <a href="https://galacticway.medium.com" target="_blank" rel="noreferrer" >
                 <BodyText>Blog</BodyText>
               </a>
-            </li>   
+            </li>
           </ul>
         </div>
       </SectionPadding>

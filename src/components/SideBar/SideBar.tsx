@@ -114,11 +114,10 @@ const SideBar = (props: SideBarProps) => {
             </div>
             {communityShow &&
               <div className="sidebar-dropdown-content">
-                <a href="">Twitter</a>
-                <a href="">Discord</a>
-                <a href="">Podcast</a>
-                <a href="">Blog</a>
-                <a href="">Shop</a>
+                <a href="https://twitter.com/GalacticwayNFT" target="_blank" rel="noreferrer" >Twitter</a>
+                <a href="https://discord.com/invite/yuBjY6QdR6" target="_blank" rel="noreferrer" >Discord</a>
+                <a href="https://help.galacticway.io" target="_blank" rel="noreferrer" >Help Desk</a>
+                <a href="https://galacticway.medium.com" target="_blank" rel="noreferrer" >Blog</a>
               </div>
             }
           </div>
