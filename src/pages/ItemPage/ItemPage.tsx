@@ -41,6 +41,7 @@ export type TItem = {
   collectionId: string
   price: number
   id: string
+  createdAt: string
   ownerId: string
   tokenType: string
 }

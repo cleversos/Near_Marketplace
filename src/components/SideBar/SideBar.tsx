@@ -152,7 +152,7 @@ const SideBar = (props: SideBarProps) => {
           </Link>
         </li>
         {walletAddress &&
-          <li className={`${location.pathname === "/profile" ? "selected" : ""}`}>
+          <li className={`${location.pathname.indexOf(walletAddress) !== -1 ? "selected" : ""}`}>
             <Link to={`/profile/@${walletAddress}`}>
               <IconLoader
                 icon="profile"

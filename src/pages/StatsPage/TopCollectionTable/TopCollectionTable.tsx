@@ -143,7 +143,6 @@ const TopCollectionTable = (props: {}) => {
           avgPrice: avgPrice
         })
 
-        console.log(all, "=====================================================");
       }
     } catch (error) {
       console.log(error)

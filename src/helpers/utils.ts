@@ -13,6 +13,7 @@ export const convertTokenResultToItemStruct = (
     collectionTitle,
     collectionId,
     tokenType: item.tokenType,
+    createdAt: item.created_at,
     price: parseFloat(formatNearAmount(item.sale_conditions.near)),
     id: item.token_id,
     ownerId: item.owner_id,

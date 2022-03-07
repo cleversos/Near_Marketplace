@@ -79,10 +79,8 @@ const NewPopularSection = () => {
     const twoWeeksDate = (now.getTime() - 14 * 24 * 60 * 60 * 1000).toString() + "000000"
     const nowString = now.getTime().toString() + "000000"
     const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
-    console.log(oneDayDate, twoDaysDate, oneWeekDate, twoWeeksDate, "timestamps")
     try {
       for (let item of collections) {
-        console.log(item, item.tokenType)
         const values = await Promise.all([
           await fetchCollectionMarketDetails(item.collectionId, item.tokenType),
           await fetchItems(item.collectionId),
