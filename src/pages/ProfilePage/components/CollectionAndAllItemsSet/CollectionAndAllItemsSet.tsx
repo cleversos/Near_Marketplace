@@ -5,18 +5,25 @@ import { TProfileCollection } from "../../ProfilePage"
 import "./CollectionAndAllItemsSet.scss"
 
 const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, listedNfts: any }) => {
-  const { collection } = props
-  console.log(collection.items)
+  const { collection, listedNfts } = props
+  let bExist = false;
+  if(collection.items.length > 0)
+    bExist = true;
+  if(bExist == false && listedNfts){
+    for(let i=0; i<listedNfts.length; i++){
+      if(collection.id == listedNfts[i].nft_contract_id){
+        bExist = true;
+        break;
+      }
+    }
+  }
+  if(bExist == false)
+    return null
   return (
     <div className="collection-and-items-set">
       <div className="head">
         <img src={collection.imageUrl} alt={collection.name} />
         <BodyText>{collection.name}</BodyText>
-        {/* <BodyText light>FLOOR: {collection.floorPrice} Ⓝ</BodyText>
-        <BodyText light>
-          TOTAL FLOOR VALUE: {collection.floorPrice * collection.items?.length}{" "}
-          Ⓝ
-        </BodyText> */}
       </div>
       <div className="nfts-container">
         {collection.items?.map((item, i) => (
@@ -32,14 +39,14 @@ const CollectionAndAllItemsSet = (props: { collection: TProfileCollection, liste
             price={item.price}
           />
         ))}
-        {props.listedNfts?.map((item, i) => (
+        {listedNfts?.map((item, i) => (
           collection.id === item.nft_contract_id &&
           <NFTItemCard
             key={i}
             id={item.token_id}
             collectionId={item.nft_contract_id}
             image={item.metadata.media}
-            tokenType={item.tokenType}
+            tokenType={item.token_type}
             name={item.metadata.title}
             collectionTitle={collection.name}
             price={parseFloat(formatNearAmount(item.sale_conditions.near))}

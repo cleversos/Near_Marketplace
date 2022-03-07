@@ -53,7 +53,7 @@ export const getUserTokensInACollection = async (
     account_id: collectionId,
     method_name: "nft_tokens_for_owner",
     args_base64: btoa(
-      `{"account_id": "${accountId}", "from_index": "0", "limit": 100}`
+      `{"account_id": "${accountId}", "from_index": "0", "limit": 200}`
     ),
     finality: "optimistic",
   })
@@ -70,7 +70,7 @@ export const getAllSalesInCollection = async (
     account_id: contractAccountId,
     method_name: "get_sales_by_nft_contract_id",
     args_base64: btoa(
-      `{"nft_contract_id": "${collectionId}", "from_index": "0", "limit": 50}`
+      `{"nft_contract_id": "${collectionId}", "from_index": "0", "limit": 200}`
     ),
     finality: "optimistic",
   })
@@ -88,7 +88,7 @@ export const getUserSalesInMarketplace = async (
     account_id: contractAccountId,
     method_name: "get_sales_by_owner_id",
     args_base64: btoa(
-      `{"account_id": "${accountId}", "from_index": "0", "limit": 50}`
+      `{"account_id": "${accountId}", "from_index": "0", "limit": 200}`
     ),
     finality: "optimistic",
   })
@@ -158,7 +158,7 @@ export const getUserSalesInMarketplace = async (
         account_id: nft_contract_id,
         method_name: "nft_token",
         args_base64: btoa(
-          `{"token_id": "${token_id}", "from_index": "0", "limit": 50}`
+          `{"token_id": "${token_id}", "from_index": "0", "limit": 200}`
         ),
         finality: "optimistic",
       })

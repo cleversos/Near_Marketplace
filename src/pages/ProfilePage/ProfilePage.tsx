@@ -59,12 +59,12 @@ const ProfilePage = () => {
     [config.nodeUrl]
   )
 
-
-  const [profile, setProfile] = useState<TProfile | null>(null)
   const [mode, setMode] = useState<TProfileMode>("myItems")
   const [walletNFTs, setWalletNFTs] = useState<TProfileCollection[]>([])
-  const [listedNfts, setListedNfts] = useState<any>()
+  const [listedNfts, setListedNfts] = useState<any[]>()
   const [activities, setActivities] = useState<any>()
+  const [collections, setCollections] = useState<any>()
+  const [tokenTypeList, setTokenTypeList] = useState<any>()
 
   const getUserTokensInACollection = useCallback(
     async (collection: TCollection, provider, accountId) => {
@@ -73,7 +73,7 @@ const ProfilePage = () => {
         account_id: collection.collectionId,
         method_name: "nft_tokens_for_owner",
         args_base64: btoa(
-          `{"account_id": "${profileUserAccount}", "from_index": "0", "limit": 100}`
+          `{"account_id": "${profileUserAccount}", "from_index": "0", "limit": 200}`
         ),
         finality: "optimistic",
       })
@@ -83,7 +83,6 @@ const ProfilePage = () => {
         id: collection.collectionId,
         imageUrl: collection.profileImageUrl,
         name: collection.name,
-        floorPrice: 10,
         items: items.map((item) =>
           convertTokenResultToItemStructItem(
             item,
@@ -120,22 +119,7 @@ const ProfilePage = () => {
     setActivities(result)
   }
 
-  const getUserSales = async () => {
-    try {
-      const sales = await getUserSalesInMarketplace(
-        provider,
-        CONTRACT_ACCOUNT_ID,
-        profileUserAccount
-      )
-      setListedNfts(sales)
-    } catch (error) {
-      console.log(error, CONTRACT_ACCOUNT_ID, profileUserAccount);
-    }
-  }
-
   useEffect(() => {
-    getUserSales()
-
     getActivities()
   }, [])
 
@@ -146,6 +130,22 @@ const ProfilePage = () => {
     let madeList: any = []
     try {
       const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
+      setCollections(collections)
+      const tokenTypeList = new Map()
+      for(let i=0; i<collections.length; i++){
+        tokenTypeList.set(collections[i].collectionId, collections[i].tokenType);
+      }
+      setTokenTypeList(tokenTypeList);
+      const sales = await getUserSalesInMarketplace(
+        provider,
+        CONTRACT_ACCOUNT_ID,
+        profileUserAccount
+      )
+      for(let i=0; i<sales.length; i++){
+        sales[i].token_type = tokenTypeList.get(sales[i].nft_contract_id);
+      }
+      console.log(sales, "LOOK")
+      setListedNfts(sales)
       const promises = collections.map(
         async (collection) => {
           try {
@@ -166,7 +166,7 @@ const ProfilePage = () => {
             account_id: CONTRACT_ACCOUNT_ID,
             method_name: "get_sales_by_nft_contract_id",
             args_base64: btoa(
-              `{"nft_contract_id": "${contract.collectionId}", "from_index": "0", "limit": 50}`
+              `{"nft_contract_id": "${contract.collectionId}", "from_index": "0", "limit": 200}`
             ),
             finality: "optimistic",
           })
@@ -183,25 +183,29 @@ const ProfilePage = () => {
             }
           }
         }
+        for(let i=0; i<madeList.length; i++){
+          madeList[i].tokenType = tokenTypeList.get(madeList[i].collectionId);
+        }
         setOfferMadeList(madeList)
-        const sales = await getUserSalesInMarketplace(
-          provider,
-          CONTRACT_ACCOUNT_ID,
-          profileUserAccount
-        )
-
-        setListedNfts(sales)
+        console.log(madeList, "MadeList");
       } catch (error) {
         console.log(error, " : getWalletNFTs error")
       }
       await Promise.all(promises).then((results) => {
-        setWalletNFTs(results.filter((result) => result))
-      }
-      )
+        const walletNFTs = results.filter((result) => result)
+        console.log(walletNFTs, "sdfsfsdfsdf");
+        for(let i=0; i<walletNFTs.length; i++){
+          for(let j=0; j<walletNFTs[i].items.length; j++){
+            walletNFTs[i].items[j].tokenType = tokenTypeList.get(walletNFTs[i].items[j].collectionId);
+          }
+        }
+        setWalletNFTs(walletNFTs)
+      })
     } catch (error) {
       console.log(error)
     }
   }, [])
+
   const fetchItemTokenDetails = useCallback(async (collectionId, itemId) => {
     const rawResult: any = await provider.query({
       request_type: "call_function",
@@ -218,7 +222,6 @@ const ProfilePage = () => {
         collectionName = collections[i].name
       }
     }
-    console.log(result, " ++++ result")
     const data = convertTokenResultToItemStructItem(
       result,
       collectionName,
@@ -230,34 +233,6 @@ const ProfilePage = () => {
   useEffect(() => {
     getWalletNFTs()
   }, [getWalletNFTs])
-
-  const totalFloorValue = 235.3
-  let listedItemsCollections: TProfileCollection[] = [
-    {
-      id: "fdfa",
-      imageUrl:
-        "https://www.arweave.net/OHFIbHqpFpgERaUhApaCFCwclAP_KrBoD0MixurXTDk?ext=png",
-      name: "Stressed coders",
-      floorPrice: 128,
-      items: [],
-    },
-  ]
-  let offersMade = listedItemsCollections //fetch this
-
-  const fetchUserData = useCallback(() => {
-    const defaultProfile: TProfile = {
-      imageUrl:
-        "https://cdn.magiceden.io/rs:fill:400:400:0:0/plain/https://iah4a6tcxv5lewkfzajxddmm7xgktorcgj3wa34476nawekxi44a.arweave.net/QA_AemK9erJZRcgTcY2M_cypuiIyd2BvnP-aCxFXRzg/958.png",
-      description:
-        "As you can see from my collection, I'm poor. Send help to my wallet address and be blessed. Thanks.",
-      items: [],
-    }
-    setProfile(defaultProfile)
-  }, [])
-
-  useEffect(() => {
-    fetchUserData()
-  }, [fetchUserData])
 
   return (
     <div className="profile-page">
@@ -309,27 +284,24 @@ const ProfilePage = () => {
         {mode === "myItems" &&
           <>
             {
-              walletNFTs.length !== 0 ?
-                walletNFTs?.map((collection, i) => (
-                  <CollectionAndAllItemsSet collection={collection} listedNfts={listedNfts} key={i} />
-                ))
-                :
-                <div className="collection-and-items-set">
-                  <div className="nfts-container">
-                    {listedNfts && listedNfts?.map((item, i) => (
-                      <NFTItemCard
-                        key={i}
-                        id={item.token_id}
-                        collectionId={item.nft_contract_id}
-                        image={item.metadata.media}
-                        tokenType={item.tokenType}
-                        name={item.metadata.title}
-                        collectionTitle={item.metadata.title}
-                        price={parseFloat(formatNearAmount(item.sale_conditions.near))}
-                      />
-                    ))}
-                  </div>
-                </div>
+              collections?.map((collection, i) => {
+                let collectionData = {
+                  id: collection.collectionId,
+                  imageUrl: collection.profileImageUrl,
+                  name: collection.name,
+                  items: [],
+                  floorPrice: 0
+                };
+                for( const collectionInfo of walletNFTs) {
+                  if( collectionInfo.id == collection.collectionId){
+                    collectionData.items = collectionInfo.items
+                    break;
+                  }
+                }
+                return (
+                  <CollectionAndAllItemsSet collection={collectionData} listedNfts={listedNfts} key={i} />
+                )
+              })
             }
           </>
         }
@@ -339,7 +311,7 @@ const ProfilePage = () => {
               {listedNfts?.map((item, i) => (
                 <NFTItemCard
                   key={i}
-                  tokenType={item.tokenType}
+                  tokenType={item.token_type}
                   id={item.token_id}
                   collectionId={item.nft_contract_id}
                   image={item.metadata.media}
@@ -380,7 +352,7 @@ const ProfilePage = () => {
                   collectionId={item.nft_contract_id}
                   image={item.metadata.media}
                   name={item.metadata.title}
-                  tokenType={item.tokenType}
+                  tokenType={item.token_type}
                   collectionTitle={item.metadata.title}
                   price={parseFloat(formatNearAmount(item.sale_conditions.near))}
                 />
