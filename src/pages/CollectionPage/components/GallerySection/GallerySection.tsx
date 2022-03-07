@@ -109,8 +109,8 @@ const GallerySection = (props: GallerySectionProps) => {
         <div className="sort-by">
           <CustomSelect defaultValue={"sort-l-h"} value={sortMethod} onChange={(e) => handleSort(e)}>
             <StyledOption value={"sort-l-h"}>Lowest Price</StyledOption>
+            <StyledOption value={"sort-h-l"}>Highest price</StyledOption>
             <StyledOption value={"sort-recent"}>Newly listed</StyledOption>
-            <StyledOption value={"sort-h-l"}>Hightst price</StyledOption>
           </CustomSelect>
         </div>
         <div className="icons-container">
