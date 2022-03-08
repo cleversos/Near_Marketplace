@@ -1,5 +1,6 @@
 var pg = require('pg');
 var { connect, keyStores } = require("near-api-js")
+var { formatNearAmount } = require("near-api-js/lib/utils/format")
 
 var connectionString = "postgres://public_readonly:nearprotocol@mainnet.db.explorer.indexer.near.dev/mainnet_explorer";
 var pgClient = new pg.Client(connectionString);
@@ -165,7 +166,7 @@ const fetchItems = async (collectionId) => {
         sales[i] = Object.assign(sales[i], token)
       }
 
-      const items = sales?.map((result) => {
+      const items = sales?.map((item) => {
         return {
             attribute: item.attribute,
             image: item.metadata.media,
@@ -296,7 +297,9 @@ async function intervalFunc() {
           weeklyVolume: values[5].volume,
           weeklyChange: volumeWeekPercent,
           count: itemLength,
-          avgPrice: avgPrice
+          avgPrice: avgPrice,
+          collectinId: item.collectinId,
+          tokenType: item.tokenType
         })
       }
       collectionStats = all;
