@@ -99,7 +99,6 @@ const ItemPage = () => {
 
 
   const GAS = "200000000000000"
-  const depositSpace = parseNearAmount("0.01")
   const depositFee = parseNearAmount("0.001")
   const oneYocto = "1"
 
@@ -301,7 +300,7 @@ const ItemPage = () => {
             }),
           },
           GAS,
-          depositSpace
+          depositFee
         )
       } catch (error) {
         console.log(error)
