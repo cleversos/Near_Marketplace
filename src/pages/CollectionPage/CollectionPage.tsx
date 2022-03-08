@@ -149,8 +149,8 @@ const CollectionPage = () => {
           contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
         }
         item = Object.assign(item, token)
-        if (!item.metadata.reference) {
-          const fetchUri = `${contractMetadata.base_uri}${item.metadata.reference}`
+        if (item.metadata.reference) {
+          const fetchUri = `${contractMetadata.base_uri}/${item.metadata.reference}`
           let metadata: any = [];
           try {
             await fetch(fetchUri)

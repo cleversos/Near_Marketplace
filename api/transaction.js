@@ -288,6 +288,8 @@ async function intervalFunc() {
         }
 
         all.push({
+          collectionId: item.collectionId,
+          tokenType: item.tokenType,
           bannerImageUrl: item.bannerImageUrl,
           name: item.name,
           floorPrice: min,
@@ -298,8 +300,6 @@ async function intervalFunc() {
           weeklyChange: volumeWeekPercent,
           count: itemLength,
           avgPrice: avgPrice,
-          collectinId: item.collectinId,
-          tokenType: item.tokenType
         })
       }
       collectionStats = all;

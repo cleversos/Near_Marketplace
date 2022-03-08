@@ -18,7 +18,7 @@ const NewPopularSectionItem = (props: {
       </div>
       <div className="content">
         <div className="content-icon">
-          <Link to={``}>
+          <Link to={`/collection/${props.data.collectionId}/${props.data.tokenType}`}>
             <img
               src={props.image}
               alt=""
@@ -27,7 +27,9 @@ const NewPopularSectionItem = (props: {
         </div>
         <div className="content-text">
           <div className="content-text-top">
-            <p>{props.name}</p>
+            <Link to={`/collection/${props.data.collectionId}/${props.data.tokenType}`}>
+              {props.name}
+            </Link>
             <span
               className={props.weeklyChange >= 0 ? "green" : "red"}
             >{props.weeklyChange} %</span>
