@@ -75,7 +75,7 @@ const SideBar = (props: SideBarProps) => {
         ))}
 
         <li>
-          <a href="https://galacticway.freshteam.com/jobs">
+          <a href="https://galacticway.freshteam.com/jobs" target="_blank" rel="noreferrer">
             <IconLoader
               icon="job"
               isIconSelected={false}
@@ -85,7 +85,7 @@ const SideBar = (props: SideBarProps) => {
         </li>
 
         <li>
-          <a href="https://airtable.com/shrlLTChvWVKH8M99">
+          <a href="https://airtable.com/shrlLTChvWVKH8M99" target="_blank" rel="noreferrer">
             <IconLoader
               icon="apply"
               isIconSelected={false}
