@@ -304,7 +304,7 @@ async function intervalFunc() {
     } catch (error) {
       console.log("Error Occured")
     }
-    setTimeout(intervalFunc, 10000);
+    setTimeout(intervalFunc, 60000);
 }
   
 const getStatsForAllCollections = async () => {
