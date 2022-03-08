@@ -10,7 +10,7 @@ import "./CollectionPage.scss"
 import CollectionInfoSection from "./components/CollectionInfoSection/CollectionInfoSection"
 import FilterSection from "./components/FilterSection/FilterSection"
 import GallerySection from "./components/GallerySection/GallerySection"
-import { convertTokenResultToItemStruct } from "../../helpers/utils"
+import { convertTokenResultToItemStruct, convertTokenResultToItemStructCollection } from "../../helpers/utils"
 import { TItem } from "../ItemPage/ItemPage"
 import { getAllSalesInCollection } from "../../helpers/collections"
 import { getTransactionsForCollection } from "../../contexts/transaction"
@@ -57,8 +57,8 @@ var _ = require('lodash');
 const CollectionPage = () => {
   const { collectionId, tokenType } = useParams()
 
-  const { provider, wallet } = useContext(ConnectionContext)
-  const { contractAccountId, contract } = useContext(ContractContext)
+  const { provider } = useContext(ConnectionContext)
+  const { contractAccountId } = useContext(ContractContext)
 
   const [collectionMarketplaceDetails, setCollectionMarketplaceDetails] =
     useState<TCollection | null>(null)
@@ -183,9 +183,22 @@ const CollectionPage = () => {
         }
         mapFilterData.set(content.trait_type, contentData);
       }
-
-      const items: TItem[] = sales?.map((result) =>
-        convertTokenResultToItemStruct(
+      if (!sales || !sales.length) return null
+      let newItems: any = []
+      for (let item of sales) {
+        const rawContractResult: any = await provider.query({
+          request_type: "call_function",
+          account_id: collectionId,
+          method_name: "nft_metadata",
+          args_base64: btoa(`{}`),
+          finality: "optimistic",
+        })
+        const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
+        item.baseUri = contractMetadata.base_uri
+        newItems.push(item)
+      }
+      const items: TItem[] = newItems?.map((result) =>
+        convertTokenResultToItemStructCollection(
           result,
           collectionMarketplaceDetails?.name,
           collectionId

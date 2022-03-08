@@ -23,7 +23,7 @@ const ImageWithLoadBg = (props: ImageWithLoadBgProps) => {
         >
             <div className="image">
                 {src !== undefined &&
-                    <img onLoad={onImageLoad} src={src.indexOf("http") !== -1 ? src : "https://ipfs.fleek.co/ipfs/" + src} alt={alt} />
+                    <img onLoad={onImageLoad} src={src} alt={alt} />
                 }
             </div>
         </div>

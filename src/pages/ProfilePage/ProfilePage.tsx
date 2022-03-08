@@ -5,7 +5,7 @@ import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
 import NFTItemCard from "../../components/NFTItemCard/NFTItemCard"
 import { getCollections, getUserSalesInMarketplace } from "../../helpers/collections"
-import { convertTokenResultToItemStructItem } from "../../helpers/utils"
+import { convertTokenResultToItemStructItem, convertTokenResultToItemStructItemProfile } from "../../helpers/utils"
 import { TCollection } from "../CollectionPage/CollectionPage"
 import { TItem } from "../ItemPage/ItemPage"
 import CollectionAndAllItemsSet from "./components/CollectionAndAllItemsSet/CollectionAndAllItemsSet"
@@ -79,12 +79,25 @@ const ProfilePage = () => {
       })
       const items = JSON.parse(Buffer.from(rawResult.result).toString())
       if (!items || !items.length) return null
+      let newItems: any = []
+      for (let item of items) {
+        const rawContractResult: any = await provider.query({
+          request_type: "call_function",
+          account_id: collection.collectionId,
+          method_name: "nft_metadata",
+          args_base64: btoa(`{}`),
+          finality: "optimistic",
+        })
+        const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
+        item.baseUri = contractMetadata.base_uri
+        newItems.push(item)
+      }
       return {
         id: collection.collectionId,
         imageUrl: collection.profileImageUrl,
         name: collection.name,
-        items: items.map((item) =>
-          convertTokenResultToItemStructItem(
+        items: newItems.map((item) =>
+          convertTokenResultToItemStructItemProfile(
             item,
             collection.name,
             collection.collectionId
@@ -132,7 +145,7 @@ const ProfilePage = () => {
       const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
       setCollections(collections)
       const tokenTypeList = new Map()
-      for(let i=0; i<collections.length; i++){
+      for (let i = 0; i < collections.length; i++) {
         tokenTypeList.set(collections[i].collectionId, collections[i].tokenType);
       }
       setTokenTypeList(tokenTypeList);
@@ -141,7 +154,7 @@ const ProfilePage = () => {
         CONTRACT_ACCOUNT_ID,
         profileUserAccount
       )
-      for(let i=0; i<sales.length; i++){
+      for (let i = 0; i < sales.length; i++) {
         sales[i].token_type = tokenTypeList.get(sales[i].nft_contract_id);
       }
       console.log(sales, "LOOK")
@@ -183,7 +196,7 @@ const ProfilePage = () => {
             }
           }
         }
-        for(let i=0; i<madeList.length; i++){
+        for (let i = 0; i < madeList.length; i++) {
           madeList[i].tokenType = tokenTypeList.get(madeList[i].collectionId);
         }
         setOfferMadeList(madeList)
@@ -194,8 +207,8 @@ const ProfilePage = () => {
       await Promise.all(promises).then((results) => {
         const walletNFTs = results.filter((result) => result)
         console.log(walletNFTs, "sdfsfsdfsdf");
-        for(let i=0; i<walletNFTs.length; i++){
-          for(let j=0; j<walletNFTs[i].items.length; j++){
+        for (let i = 0; i < walletNFTs.length; i++) {
+          for (let j = 0; j < walletNFTs[i].items.length; j++) {
             walletNFTs[i].items[j].tokenType = tokenTypeList.get(walletNFTs[i].items[j].collectionId);
           }
         }
@@ -292,8 +305,8 @@ const ProfilePage = () => {
                   items: [],
                   floorPrice: 0
                 };
-                for( const collectionInfo of walletNFTs) {
-                  if( collectionInfo.id == collection.collectionId){
+                for (const collectionInfo of walletNFTs) {
+                  if (collectionInfo.id == collection.collectionId) {
                     collectionData.items = collectionInfo.items
                     break;
                   }

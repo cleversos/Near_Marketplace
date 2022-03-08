@@ -12,7 +12,6 @@ import InputBox from "../../components/InputBox/InputBox"
 import LoadingCircle from "../../components/LoadingCircle/LoadingCircle"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
-import formatAmount from "../../helpers/formatAmount"
 import { convertTokenResultToItemStructItem } from "../../helpers/utils"
 import BidModal from "./components/BidModal/BidModal"
 import "./ItemPage.scss"
@@ -157,7 +156,6 @@ const ItemPage = () => {
     })
     const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
     setBaseUri(contractMetadata.base_uri)
-    console.log(contractMetadata.base_uri + "/" + result.metadata.reference, "result.metadata.reference")
     if (result.metadata.reference !== null) {
       let metadata: any = [];
       try {
@@ -175,7 +173,7 @@ const ItemPage = () => {
       setAttributes(metadata.attributes);
     }
     setName(result.metadata.title)
-    setImage(result.metadata.media)
+    setImage(`${contractMetadata}/${result.metadata.media}`)
     const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID);
     let collectionName = "";
     for (let i = 0; i < collections.length; i++) {
@@ -256,14 +254,6 @@ const ItemPage = () => {
       console.log(error)
     }
   }
-  const location = useLocation()
-  useEffect(() => {
-    console.log(`/collection/${collectionId}/${tokenType}`, "tokenType")
-    // if (location.search.indexOf("transactionHashes") !== -1) {
-    //   history.replace(`/collection/${collectionId}/${tokenType}`)
-    //   window.location.reload()
-    // }
-  }, [location.pathname])
   const onBuy = async () => {
     try {
       await contract.offer(
@@ -353,6 +343,12 @@ const ItemPage = () => {
     getActivities()
   }, [name, image])
 
+  useEffect(() => {
+    if (history.location.search !== "") {
+      history.replace(`/collection/${collectionId}/${tokenType}`)
+      window.location.reload()
+    }
+  }, [])
   return (
     <div className="item-page">
       {isLoading ? (
@@ -379,7 +375,7 @@ const ItemPage = () => {
             <div className="left-side">
               <ImageWithLoadBg
                 aspectRatio={1}
-                src={baseUri + item.image}
+                src={`${baseUri}/${item.image}`}
                 alt="placeholder nft"
               />
             </div>
