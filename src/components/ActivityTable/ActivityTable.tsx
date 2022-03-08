@@ -39,7 +39,7 @@ const ActivityTable = (props: { activities: TActivity[] }) => {
           <tr key={i}>
             <td>
               <div className="collection-name-and-img-column">
-                <img src={activity.itemImageUrl.indexOf("http") !== -1 ? activity.itemImageUrl : "https://ipfs.fleek.co/ipfs/" + activity.itemImageUrl} alt={activity.itemName} />
+                <img src={activity.itemImageUrl} alt={activity.itemName} />
                 <BodyText className="collection-title">{activity.itemName}</BodyText>
               </div>
             </td>

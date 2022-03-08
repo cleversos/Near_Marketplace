@@ -136,6 +136,7 @@ const ItemPage = () => {
   }, [])
   const [name, setName] = useState("")
   const [image, setImage] = useState("")
+  const [baseUri, setBaseUri] = useState("")
   // fetch item token details using itemId from the collection contract
   const fetchItemTokenDetails = useCallback(async () => {
     const rawResult: any = await provider.query({
@@ -155,11 +156,12 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
-
+    setBaseUri(contractMetadata.base_uri)
+    console.log(contractMetadata.base_uri + "/" + result.metadata.reference, "result.metadata.reference")
     if (result.metadata.reference !== null) {
       let metadata: any = [];
       try {
-        await fetch(`${contractMetadata.base_uri}${result.metadata.reference}`)
+        await fetch(`${contractMetadata.base_uri}/${result.metadata.reference}`)
           .then(resp =>
             resp.json()
           ).catch((e) => {
@@ -377,7 +379,7 @@ const ItemPage = () => {
             <div className="left-side">
               <ImageWithLoadBg
                 aspectRatio={1}
-                src={item.image}
+                src={baseUri + item.image}
                 alt="placeholder nft"
               />
             </div>
