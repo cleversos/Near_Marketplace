@@ -3,7 +3,7 @@ import { useCallback, useContext, useEffect, useState } from "react"
 import BodyText from "../../../components/BodyText/BodyText"
 import { ConnectionContext } from "../../../contexts/connection"
 import { ContractContext } from "../../../contexts/contract"
-import { getTradingVolumeForCollection } from "../../../contexts/transaction"
+import { getTradingVolumeForCollection, getCollectionStat } from "../../../contexts/transaction"
 import { getAllSalesInCollection, getCollections } from "../../../helpers/collections"
 import { convertTokenResultToItemStruct } from "../../../helpers/utils"
 import { TItem } from "../../ItemPage/ItemPage"
@@ -73,80 +73,7 @@ const TopCollectionTable = (props: {}) => {
 
   const getAllCollections = async () => {
     setIsLoading(true)
-    let all = []
-    const now = new Date()
-    const oneDayDate = (now.getTime() - 1 * 24 * 60 * 60 * 1000).toString() + "000000"
-    const twoDaysDate = (now.getTime() - 2 * 24 * 60 * 60 * 1000).toString() + "000000"
-    const oneWeekDate = (now.getTime() - 7 * 24 * 60 * 60 * 1000).toString() + "000000"
-    const twoWeeksDate = (now.getTime() - 14 * 24 * 60 * 60 * 1000).toString() + "000000"
-    const nowString = now.getTime().toString() + "000000"
-    const collections = await getCollections(provider, CONTRACT_ACCOUNT_ID)
-    console.log(oneDayDate, twoDaysDate, oneWeekDate, twoWeeksDate, "timestamps")
-    try {
-      for (let item of collections) {
-        console.log(item, item.tokenType)
-        const values = await Promise.all([
-          await fetchCollectionMarketDetails(item.collectionId, item.tokenType),
-          await fetchItems(item.collectionId),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, twoDaysDate, oneDayDate),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, oneDayDate, nowString),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, twoWeeksDate, oneWeekDate),
-          await getTradingVolumeForCollection(CONTRACT_ACCOUNT_ID, item.collectionId, oneWeekDate, nowString),
-        ])
-        let newItems = values[1]
-        console.log(values[0], "fetch items")
-
-        let volumeDayPercent = 0
-        if (parseFloat(values[3].volume) === 0.0) {
-          volumeDayPercent = 100.0
-        } else if (parseFloat(values[4].volume) === 0.0) {
-          volumeDayPercent = -100.0
-        } else {
-          volumeDayPercent = (parseFloat(values[4].volume) - parseFloat(values[3].volume)) / parseFloat(values[3].volume) * 100
-        }
-
-        let volumeWeekPercent = 0
-        if (parseFloat(values[5].volume) === 0.0) {
-          volumeWeekPercent = 100.0
-        } else if (parseFloat(values[6].volume) === 0.0) {
-          volumeWeekPercent = -100.0
-        } else {
-          volumeWeekPercent = (parseFloat(values[6].volume) - parseFloat(values[5].volume)) / parseFloat(values[5].volume) * 100
-        }
-
-        let min = 0
-        let itemLength = 0
-        let sum = 0
-        let avgPrice = "0"
-
-        if (newItems.length !== 0) {
-          newItems.sort(function (a, b) {
-            return a.price - b.price
-          })
-          min = newItems[0].price
-          itemLength = newItems.length
-          sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
-          avgPrice = (sum / itemLength).toFixed(2)
-        }
-
-        all.push({
-          bannerImageUrl: item.bannerImageUrl,
-          name: item.name,
-          floorPrice: min,
-          volumeTotal: values[2].volume,
-          dailyVolume: values[4].volume,
-          dailyChange: volumeDayPercent,
-          weeklyVolume: values[6].volume,
-          weeklyChange: volumeWeekPercent,
-          count: itemLength,
-          avgPrice: avgPrice
-        })
-
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    const all = await getCollectionStat();
     setTableData(all)
     console.log(all, "all table")
     setIsLoading(false)
