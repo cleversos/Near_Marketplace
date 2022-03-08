@@ -146,10 +146,20 @@ const ItemPage = () => {
       finality: "optimistic",
     })
     const result = JSON.parse(Buffer.from(rawResult.result).toString())
+
+    const rawContractResult: any = await provider.query({
+      request_type: "call_function",
+      account_id: collectionId,
+      method_name: "nft_metadata",
+      args_base64: btoa(`{}`),
+      finality: "optimistic",
+    })
+    const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
+
     if (result.metadata.reference !== null) {
       let metadata: any = [];
       try {
-        await fetch(`https://ipfs.io/ipfs/${result.metadata.reference}`)
+        await fetch(`${contractMetadata.base_uri}${result.metadata.reference}`)
           .then(resp =>
             resp.json()
           ).catch((e) => {

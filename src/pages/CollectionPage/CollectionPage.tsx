@@ -129,7 +129,7 @@ const CollectionPage = () => {
       for (let item of sales) {
         const { token_id } = item
         let token = saleTokens.find(({ token_id: t }) => t === token_id)
-
+        let contractMetadata;
         if (!token) {
           const tokenRawResult: any = await provider.query({
             request_type: "call_function",
@@ -139,10 +139,18 @@ const CollectionPage = () => {
             finality: "optimistic",
           })
           token = JSON.parse(Buffer.from(tokenRawResult.result).toString())
+          const rawContractResult: any = await provider.query({
+            request_type: "call_function",
+            account_id: collectionId,
+            method_name: "nft_metadata",
+            args_base64: btoa(`{}`),
+            finality: "optimistic",
+          })
+          contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
         }
         item = Object.assign(item, token)
         if (item.metadata.reference !== null) {
-          const fetchUri = `https://ipfs.io/ipfs/${item.metadata.reference}`
+          const fetchUri = `${contractMetadata.base_uri}${item.metadata.reference}`
           let metadata: any = [];
           try {
             await fetch(fetchUri)
