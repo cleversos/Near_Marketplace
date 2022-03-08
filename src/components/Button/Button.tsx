@@ -5,7 +5,7 @@ import LoadingCircle from "../LoadingCircle/LoadingCircle"
 import "./Button.scss"
 
 interface ButtonProps {
-  title: string
+  title: any
   onClick: Function
   className?: string
   secondary?: boolean

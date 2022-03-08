@@ -14,7 +14,7 @@ const config = {
 
 export async function getTransactionsForItem(marketplace_account_id, nft_contract_id, token_id, offset = 0, count = 10) {
     const getAPI = async () => {
-        const API = 'http://localhost:3002/transactions_for_item';
+        const API = 'http://13.231.24.204:3002/transactions_for_item';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
@@ -94,7 +94,7 @@ export async function getTransactionsForItem(marketplace_account_id, nft_contrac
 
 export async function getTransactionsForCollection(marketplace_account_id, nft_contract_id, offset = 0, count = 10) {
     const getAPI = async () => {
-        const API = 'http://localhost:3002/transactions_for_collection';
+        const API = 'http://13.231.24.204:3002/transactions_for_collection';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
@@ -118,7 +118,7 @@ export async function getTransactionsForCollection(marketplace_account_id, nft_c
 export async function getTradingVolumeForCollection(marketplace_account_id, nft_contract_id, timestamp_start = "0", timestamp_end = Date.now() + "000000") {
     console.log(timestamp_start);
     const getAPI = async () => {
-        const API = 'http://localhost:3002/tradingvolume_for_collection';
+        const API = 'http://13.231.24.204:3002/tradingvolume_for_collection';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
@@ -140,7 +140,7 @@ export async function getTradingVolumeForCollection(marketplace_account_id, nft_
 
 export async function getCollectionStat() {
     const getAPI = async () => {
-        const API = 'http://localhost:3002/stats_for_all_collection';
+        const API = 'http://13.231.24.204:3002/stats_for_all_collection';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',
@@ -158,7 +158,7 @@ export async function getCollectionStat() {
 
 export async function getTransactionsForUser(marketplace_account_id, user_account_id, offset = 0, count = 10) {
     const getAPI = async () => {
-        const API = 'http://localhost:3002/transactions_for_user';
+        const API = 'http://13.231.24.204:3002/transactions_for_user';
         const result = await fetch(API, {
             method: 'POST',
             mode: 'cors',

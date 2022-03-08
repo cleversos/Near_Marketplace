@@ -6,7 +6,7 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 var corsOptions = {
-    origin: 'http://localhost:3001',
+    origin: 'http://13.231.24.204:3001',
     optionsSuccessStatus: 200 // For legacy browser support
 }
 app.use(cors(corsOptions));

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Carousel, CarouselItem } from 'react-bootstrap';
+import ExplorerIcon from '../../../../assets/icons/ExplorerIcon';
 import BodyText from '../../../../components/BodyText/BodyText';
 import Button from '../../../../components/Button/Button';
 import SectionPadding from '../../../../components/SectionPadding/SectionPadding';
@@ -26,7 +27,7 @@ const HeroSection = () => {
                   <h2>{post.name}</h2>
                   <p>{post.description}</p>
                   {/* <a href="#">Go to this collection</a> */}
-                  <Button title="Explore more" onClick={() => { }} disabled={false} />
+                  <Button title={<><ExplorerIcon />Explore</>} onClick={() => { }} disabled={false} />
                 </div>
               </SectionPadding>
               <div className="bg-darkener" />
