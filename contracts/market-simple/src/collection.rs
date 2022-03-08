@@ -23,6 +23,7 @@ pub struct CollectionInfo {
     pub profileImageUrl: String,
     pub description: String,
     pub royalty: u64,
+    pub updated_at: U64,
     pub links: CollectionLinks,
 }
 
@@ -48,10 +49,8 @@ impl Contract {
         instagram: String,
         medium: String,
     ) {
-        let sender_id = env::predecessor_account_id();
-        let signer_id = env::signer_account_id();
+        self.assert_manager();
         let nft_contract: AccountId = nft_contract_id.clone();
-        assert_eq!(sender_id, signer_id, "Must be admin");
         let newCollection = CollectionInfo {
             name: name,
             isVerified: isVerified,
@@ -61,6 +60,7 @@ impl Contract {
             royalty: royalty,
             nft_contract_id: nft_contract.clone(),
             token_type: token_type.clone(),
+            updated_at: U64(env::block_timestamp()/1000000),
             links: CollectionLinks {
                 discord: discord,
                 twitter: twitter,
@@ -93,10 +93,8 @@ impl Contract {
         instagram: String,
         medium: String,
     ) {
-        let sender_id = env::predecessor_account_id();
-        let signer_id = env::signer_account_id();
+        self.assert_manager();
         let nft_contract: AccountId = nft_contract_id.clone();
-        assert_eq!(sender_id, signer_id, "Must be admin");
         let newCollection = CollectionInfo {
             name: name,
             isVerified: isVerified,
@@ -106,6 +104,7 @@ impl Contract {
             royalty: royalty,
             nft_contract_id: nft_contract.clone(),
             token_type: token_type.clone(),
+            updated_at: U64(env::block_timestamp()/1000000),
             links: CollectionLinks {
                 discord: discord,
                 twitter: twitter,
@@ -142,10 +141,8 @@ impl Contract {
         nft_contract_id: AccountId,
         token_type: String
     ) {
-        let sender_id = env::predecessor_account_id();
-        let signer_id = env::signer_account_id();
+        self.assert_manager();
         let nft_contract: AccountId = nft_contract_id.clone();
-        assert_eq!(sender_id, signer_id, "Must be admin");
         let contract_and_token_type = format!("{}{}{}", nft_contract, DELIMETER, token_type);
         self.collections.remove(&contract_and_token_type);
     }

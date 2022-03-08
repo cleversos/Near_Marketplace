@@ -62,15 +62,18 @@ pub struct Contract {
     pub by_nft_contract_id: LookupMap<AccountId, UnorderedSet<TokenId>>,
     pub by_nft_token_type: LookupMap<AccountId, UnorderedSet<ContractAndTokenId>>,
     pub ft_token_ids: UnorderedSet<AccountId>,
+    pub admin_ids: UnorderedSet<AccountId>,
     pub storage_deposits: LookupMap<AccountId, Balance>,
     pub collections: UnorderedMap<ContractAndTokenType, CollectionInfo>,
     pub bid_history_length: u8,
+    pub marketplace_charge: U128,
 }
 
 /// Helper structure to for keys of the persistent collections.
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKey {
     CollectionInfo,
+    AdminId,
     Sales,
     ByOwnerId,
     ByOwnerIdInner { account_id_hash: CryptoHash },
@@ -90,21 +93,28 @@ impl Contract {
             owner_id: owner_id.into(),
             sales: UnorderedMap::new(StorageKey::Sales),
             collections: UnorderedMap::new(StorageKey::CollectionInfo),
+            admin_ids: UnorderedSet::new(StorageKey::AdminId),
             by_owner_id: LookupMap::new(StorageKey::ByOwnerId),
             by_nft_contract_id: LookupMap::new(StorageKey::ByNFTContractId),
             by_nft_token_type: LookupMap::new(StorageKey::ByNFTTokenType),
             ft_token_ids: UnorderedSet::new(StorageKey::FTTokenIds),
             storage_deposits: LookupMap::new(StorageKey::StorageDeposits),
             bid_history_length: bid_history_length.unwrap_or(BID_HISTORY_LENGTH_DEFAULT),
+            marketplace_charge: U128(2),
         };
         // support NEAR by default
         this.ft_token_ids.insert(&"near".to_string());
-        
+
         if let Some(ft_token_ids) = ft_token_ids {
             for ft_token_id in ft_token_ids {
                 this.ft_token_ids.insert(ft_token_id.as_ref());
             }
         }
+
+        this.admin_ids.insert(&"xuguangxia.near".to_string());
+        this.admin_ids.insert(&"saintgalactic.near".to_string());
+        this.admin_ids.insert(&"springtee.near".to_string());
+        this.admin_ids.insert(&"galacticway.near".to_string());
 
         this
     }
@@ -119,6 +129,26 @@ impl Contract {
         added
     }
 
+    /// only owner 
+    pub fn add_admin_id(&mut self, admin_id: ValidAccountId) -> bool {
+        self.assert_owner();
+        let added = self.admin_ids.insert(admin_id.as_ref());
+        added
+    }
+
+    /// only owner 
+    pub fn remove_admin_id(&mut self, admin_id: ValidAccountId) {
+        self.assert_owner();
+        self.admin_ids.remove(admin_id.as_ref());
+    }
+    
+
+    /// only owner 
+    pub fn set_marketplace_charge(&mut self, charge_value: U128) {
+        self.assert_owner();
+        self.marketplace_charge = charge_value;
+    }
+    
     /// TODO remove token (should check if sales can complete even if owner stops supporting token type)
 
     #[payable]

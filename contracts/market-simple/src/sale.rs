@@ -105,15 +105,26 @@ impl Contract {
             );
         } else {
             if sale.is_auction && price > 0 {
-                assert!(deposit >= price, "Attached deposit must be greater than reserve price");
+                assert!(deposit <= price, "Attached deposit must be lesser than reserve price");
             }
-            self.add_bid(
-                contract_and_token_id,
-                deposit,
-                ft_token_id,
-                buyer_id,
-                &mut sale,
-            );
+
+            if deposit == price {
+                self.process_purchase(
+                    contract_id,
+                    token_id,
+                    ft_token_id,
+                    U128(deposit),
+                    buyer_id,
+                );
+            } else {
+                self.add_bid(
+                    contract_and_token_id,
+                    deposit,
+                    ft_token_id,
+                    buyer_id,
+                    &mut sale,
+                );
+            }
         }
     }
 
@@ -202,7 +213,7 @@ impl Contract {
             token_id,
             sale.approval_id,
             "payout from market".to_string(),
-            price,
+            U128::from(u128::from(price).checked_div(100).unwrap().checked_mul(100 - u128::from(self.marketplace_charge)).unwrap()),
 			10,
             &nft_contract_id,
             1,
@@ -212,7 +223,7 @@ impl Contract {
             ft_token_id,
             buyer_id,
             sale,
-            price,
+            U128::from(u128::from(price).checked_div(100).unwrap().checked_mul(100 - u128::from(self.marketplace_charge)).unwrap()),
             &env::current_account_id(),
             NO_DEPOSIT,
             GAS_FOR_ROYALTIES,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './ImageWithLoadBg.scss';
 
 interface ImageWithLoadBgProps {
@@ -7,22 +7,24 @@ interface ImageWithLoadBgProps {
     alt: string;
 }
 
-const ImageWithLoadBg = (props: ImageWithLoadBgProps) =>{
+const ImageWithLoadBg = (props: ImageWithLoadBgProps) => {
     const [imageLoaded, setImageLoaded] = useState(false);
-    const {src, aspectRatio, alt} = props;
-    const onImageLoad = ()=> {
+    const { src, aspectRatio, alt } = props;
+    const onImageLoad = () => {
         setImageLoaded(true)
     }
-    return(
+    return (
         <div
-            style = {{
+            style={{
                 paddingTop: `${(1 / aspectRatio) * 100}%`,
-                backgroundColor: imageLoaded ? 'transparent' : '#2C3037' 
+                backgroundColor: imageLoaded ? 'transparent' : '#2C3037'
             }}
-            className = "image-with-Bg"
+            className="image-with-Bg"
         >
-            <div className = "image">
-                <img onLoad = {onImageLoad} src = {src} alt = {alt}/>
+            <div className="image">
+                {src !== undefined &&
+                    <img onLoad={onImageLoad} src={src} alt={alt} />
+                }
             </div>
         </div>
     )

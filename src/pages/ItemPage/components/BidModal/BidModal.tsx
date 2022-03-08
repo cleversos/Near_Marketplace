@@ -13,19 +13,20 @@ const BidModal = (props: {
   onMakeBid: Function
 }) => {
   const { onClose, isVisible, price, onMakeBid } = props
-  const [amount, setAmount] = useState(null)
+  const [amount, setAmount] = useState<number>()
   const { wallet } = useContext(ConnectionContext)
-  const userNearBalance = 20
-  console.log({ wallet: wallet?.account() })
-
+  const [validation, setValidation] = useState(false)
   const onInputChange = (event) => {
     setAmount(event.target.value)
-    //check the amount
-    if (amount < Number(price) / 2) {
-    } else if (amount > userNearBalance) {
+    setValidation(false)
+  }
+  const handleBid = () => {
+    if (amount <= price) {
+      onMakeBid(amount)
+    } else {
+      setValidation(true)
     }
   }
-
   return (
     <ModalContainer
       onClose={onClose}
@@ -38,14 +39,20 @@ const BidModal = (props: {
         </BodyText>
       </div>
       <div className="body">
+        {validation &&
+          <div className="text-validation">
+            This value can't bid then {price} Ⓝ
+          </div>
+        }
         <InputBox
           onInputChange={onInputChange}
           placeholder={`${price}`}
           name="amount"
           value={amount}
           type="number"
+          max={price}
         />
-        <Button title="Make offer" onClick={() => onMakeBid(amount)} />
+        <Button title="Make offer" onClick={() => handleBid()} disabled={false} />
       </div>
     </ModalContainer>
   )

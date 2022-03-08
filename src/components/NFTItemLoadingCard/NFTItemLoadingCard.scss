@@ -1,4 +1,4 @@
-@import '../../sass/variables.scss';
+@import "../../sass/variables.scss";
 
 .nft-item-loading-card {
   background: $background2;
@@ -9,7 +9,7 @@
 
     .item-name {
       height: 20px;
-      background: #2C3037;
+      background: #2c3037;
       width: 70%;
       margin-bottom: 9px;
     }
@@ -21,16 +21,16 @@
       margin-bottom: 10px;
 
       .collection-name {
-        background: #2C3037;
+        background: #2c3037;
         width: 50%;
-        height: 14px;
+        height: 13px;
       }
 
       .price-container {
-        height: 14px;
-        background: #2C3037;
+        height: 13px;
+        background: #2c3037;
         width: 40px;
-      }      
+      }
     }
   }
 }

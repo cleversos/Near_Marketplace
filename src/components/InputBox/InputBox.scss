@@ -1,5 +1,5 @@
-@import '../../sass/variables.scss';
-@import '../BodyText/BodyText.scss';
+@import "../../sass/variables.scss";
+@import "../BodyText/BodyText.scss";
 
 .input-box {
   background: $background2;
@@ -19,6 +19,6 @@
     outline: none;
     flex: 1;
     height: 100%;
-    font-size: 14px;
+    font-size: 13px;
   }
 }

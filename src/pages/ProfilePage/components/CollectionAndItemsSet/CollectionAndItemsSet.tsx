@@ -1,4 +1,3 @@
-import React from "react"
 import BodyText from "../../../../components/BodyText/BodyText"
 import NFTItemCard from "../../../../components/NFTItemCard/NFTItemCard"
 import { TProfileCollection } from "../../ProfilePage"
@@ -20,9 +19,23 @@ const CollectionAndItemsSet = (props: { collection: TProfileCollection }) => {
       <div className="nfts-container">
         {collection.items?.map((item, i) => (
           <NFTItemCard
+            key={i}
             id={item.id}
             collectionId={collection.id}
             image={item.image}
+            name={item.name}
+            tokenType={item.tokenType}
+            collectionTitle={collection.name}
+            price={item.price}
+          />
+        ))}
+        {collection.items?.map((item, i) => (
+          <NFTItemCard
+            key={i}
+            id={item.id}
+            collectionId={collection.id}
+            image={item.image}
+            tokenType={item.tokenType}
             name={item.name}
             collectionTitle={collection.name}
             price={item.price}

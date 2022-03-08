@@ -1,0 +1,55 @@
+@import "../../sass/variables.scss";
+@import "../BodyText/BodyText.scss";
+
+.autocomplete-search-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    input {
+        @include body-text();
+        background: none;
+        padding: 7px 20px !important;
+        border: none;
+        border-radius: 20px !important;
+        color: #94959a !important;
+        padding-left: 28px !important;
+        outline: none;
+        flex: 1;
+        background: #090619 !important;
+        height: 100%;
+        border-color: transparent !important;
+        &:focus {
+            border-color: #44a0fe !important;
+        }
+    }
+    .icon-loader {
+        display: flex;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-left: 10px;
+    }
+    li {
+        color: #dbdbdba6 !important;
+        font-weight: 300;
+    }
+}
+.MuiAutocomplete-paper {
+    background-color: #090619 !important;
+}
+.MuiAutocomplete-option {
+    font-size: 13px !important;
+    color: #dbdbdba6;
+}
+
+.collection-auto-li {
+    img {
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+}

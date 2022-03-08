@@ -1,4 +1,3 @@
-import React from "react"
 import { Link } from "react-router-dom"
 import BodyText from "../BodyText/BodyText"
 import ImageWithLoadBg from "../ImageWithLoadBg/ImageWithLoadBg"
@@ -14,7 +13,7 @@ export interface CollectionCardProps {
 }
 
 const CollectionCard = (props: CollectionCardProps) => {
-  const { image, name, id, volTraded, description, tokenType } = props
+  const { image, name, id, description, tokenType } = props
   return (
     <Link to={`/collection/${id}/${tokenType}`} className="collection-card">
       <ImageWithLoadBg aspectRatio={1.386} src={image} alt={name} />
@@ -22,11 +21,11 @@ const CollectionCard = (props: CollectionCardProps) => {
         <BodyText className="collection-name" bold>
           {name}
         </BodyText>
-        {volTraded && (
+        {/* {volTraded && (
           <BodyText className="volume" light>
             <span>Ⓝ {volTraded}</span> Total Volume
           </BodyText>
-        )}
+        )} */}
         <div className="description-container">
           <BodyText className="description" light>
             {description}

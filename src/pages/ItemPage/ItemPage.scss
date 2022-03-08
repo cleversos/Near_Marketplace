@@ -65,6 +65,12 @@
           line-height: 32.4px;
         }
 
+        .collection-name {
+          margin-top: 12px;
+          font-size: 20px;
+          line-height: 24px;
+        }
+
         .owners-and-faves-container {
           display: flex;
           align-items: center;
@@ -80,12 +86,13 @@
             }
 
             .body-text {
-              font-size: 14px;
+              font-size: 13px;
             }
           }
         }
       }
       .price-detail-container {
+        position: relative;
         min-height: 250px;
         display: flex;
         flex-direction: column;
@@ -97,6 +104,7 @@
         padding: 30px 35px;
 
         .list-item-container {
+          position: relative;
           .input-box {
             background-color: $body-background;
             margin-bottom: 30px;
@@ -105,7 +113,7 @@
         }
 
         .label {
-          font-size: 14px;
+          font-size: 13px;
           color: white;
           line-height: 21px;
         }
@@ -137,26 +145,44 @@
       }
 
       .attributes-container {
-        display: grid;
         grid-template-columns: 1fr 1fr;
         padding: 25px 0;
-        grid-gap: 25px;
+        grid-gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
       }
     }
   }
 }
 
+.required-filed {
+  font-size: 12px;
+  position: absolute;
+  left: 0px;
+  top: -20px;
+  z-index: 10;
+  color: #ff2222;
+}
+.bid-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
 @media only screen and (max-width: 800px) {
   .item-page {
     display: block;
 
     .left-side,
     .right-side {
-      width: 100%;
+      width: 100% !important;
     }
 
     .right-side {
       margin-top: 20px;
+    }
+    .content {
+      flex-direction: column;
     }
   }
 }

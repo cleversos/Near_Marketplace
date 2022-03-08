@@ -1,37 +1,39 @@
-import React, { useState } from "react"
+import { useEffect, useState } from "react"
 import ArrowBackIcon from "../../../../assets/icons/ArrowBackIcon"
 import ChevronDownIcon from "../../../../assets/icons/ChevronDownIcon"
-import DollarIcon from "../../../../assets/icons/DollarIcon"
+import AttributeAutocomplete from "../../../../components/AttributeAutocomplete/AttributeAutocomplete"
 import BodyText from "../../../../components/BodyText/BodyText"
 import Button from "../../../../components/Button/Button"
+import FilterPriceInput from "../FitlerPriceInput/FilterPriceInput"
 import "./FilterSection.scss"
-
-const currencyOptions = [
-  {
-    currency: "US Dollar",
-    symbol: "USD",
-    icon: "usd",
-  },
-]
-
-const resolveIcon = (icon: string) => {
-  switch (icon) {
-    case "usd":
-      return <DollarIcon />
-    default:
-      break
-  }
-}
 
 interface FilterSectionProps {
   collapseFilterContainer: boolean
   setCollapseFilterContainer: Function
+  priceRange: PriceRange
+  setPriceRange: Function
+  attributesFilterOptions: any
+  fixFilterData: Function
+  attdFilterData: any
+}
+
+type PriceRange = {
+  currency: string
+  min: string
+  max: string
 }
 
 const FilterSection = (props: FilterSectionProps) => {
-  const [selectedCurrency, setSelectedCurrency] = useState("usd")
   const [showPriceOptions, setShowPriceOptions] = useState(true)
+  const [showAttd, setShowAttd] = useState(true)
   const { collapseFilterContainer, setCollapseFilterContainer } = props
+  let attdArray: any;
+  if (props.attributesFilterOptions !== undefined) {
+    attdArray = Array.from(props.attributesFilterOptions, ([name, value]) => ({ name, value }));
+  }
+
+  const [priceMin, setPriceMin] = useState("")
+  const [priceMax, setPriceMax] = useState("")
 
   const toggleCollapse = () => {
     setCollapseFilterContainer(!collapseFilterContainer)
@@ -41,6 +43,16 @@ const FilterSection = (props: FilterSectionProps) => {
     setShowPriceOptions((current) => !current)
   }
 
+  const handleApply = () => {
+    props.setPriceRange({
+      currency: "Near",
+      min: priceMin,
+      max: priceMax
+    })
+  }
+  useEffect(() => {
+    handleApply()
+  }, [])
   return (
     <div
       className={`filter-section ${collapseFilterContainer ? "hidden" : ""}`}
@@ -48,18 +60,13 @@ const FilterSection = (props: FilterSectionProps) => {
       <div onClick={toggleCollapse} className="row-container head">
         <BodyText light>Filter</BodyText>
         <div
-          className={`toggle-hidden-btn ${
-            collapseFilterContainer ? "front" : ""
-          }`}
+          className={`toggle-hidden-btn ${collapseFilterContainer ? "front" : ""
+            }`}
         >
           <ArrowBackIcon />
         </div>
       </div>
       <div className="section-body">
-        <div className="row-container">
-          <BodyText light>Status</BodyText>
-          <ChevronDownIcon />
-        </div>
         <div
           onClick={togglePriceOptions}
           className={`row-container ${!showPriceOptions ? "up" : ""}`}
@@ -67,23 +74,36 @@ const FilterSection = (props: FilterSectionProps) => {
           <BodyText light>Price</BodyText>
           <ChevronDownIcon />
         </div>
-        {showPriceOptions && (
-          <div className="price-options-container">
-            <div className="currency-option-select">
-              {resolveIcon(currencyOptions[0].icon)}
-              <select>
-                {currencyOptions.map((option, i) => (
-                  <option>{option.currency}</option>
-                ))}
-              </select>
+        {showPriceOptions &&
+          <>
+            <div className="price-options-container">
+              <span>Ⓝ NEAR Protocol</span>
+              <FilterPriceInput placeholder="Min" value={priceMin} setValue={(e: any) => setPriceMin(e)} />
+              <FilterPriceInput placeholder="Max" value={priceMax} setValue={(e: any) => setPriceMax(e)} />
             </div>
-            <input type="text" placeholder="Min" />
-            <input type="text" placeholder="Max" />
-          </div>
-        )}
+            <Button title="Apply" onClick={() => handleApply()} disabled={false} />
+          </>
+        }
 
-        <Button title="Apply" onClick={() => {}} />
       </div>
+      {!collapseFilterContainer &&
+        <>
+          <div className={`row-container ${!showAttd ? "up" : ""}`} onClick={() => setShowAttd(!showAttd)} style={{ borderTop: showPriceOptions ? "1px solid #20252C" : "1px solid transparent" }}>
+            <BodyText light>Attributes</BodyText>
+            <ChevronDownIcon />
+          </div>
+          {showAttd &&
+            attdArray !== undefined && attdArray.map((item: any, key) => (
+              <AttributeAutocomplete
+                key={key}
+                options={item}
+                fixFilterData={props.fixFilterData}
+                attdFilterData={props.attdFilterData}
+                originData={attdArray}
+              />
+            ))}
+        </>
+      }
     </div>
   )
 }

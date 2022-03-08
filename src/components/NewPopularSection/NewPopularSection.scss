@@ -1,0 +1,10 @@
+@import "../../sass/variables.scss";
+.display-between {
+  display: flex;
+  justify-content: space-between;
+}
+.popular-content {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}

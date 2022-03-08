@@ -1,6 +1,5 @@
-import React from "react"
 import { Link } from "react-router-dom"
-import HeartIcon from "../../assets/icons/HeartIcon"
+// import HeartIcon from "../../assets/icons/HeartIcon"
 import BodyText from "../BodyText/BodyText"
 import ImageWithLoadBg from "../ImageWithLoadBg/ImageWithLoadBg"
 import "./NFTItemCard.scss"
@@ -12,26 +11,29 @@ export interface NFTItemCardProps {
   collectionId: string
   price: number
   id: string
+  tokenType: string
 }
 
 const NFTItemCard = (props: NFTItemCardProps) => {
   const { image, name, collectionTitle, collectionId, price } = props
   return (
-    <Link to={`/${collectionId}/item/${props.id}`} className="nft-item-card">
+    <Link to={`/${collectionId}/item/${props.tokenType}/${props.id}`} className="nft-item-card">
       <ImageWithLoadBg aspectRatio={1.386} src={image} alt={name} />
-      <div className="like-btn">
+      {/* <div className="like-btn">
         <HeartIcon />
-      </div>
+      </div> */}
       <div className="details-container">
         <div className="collection-and-price-container">
           <BodyText className="collection-name" light>
             {collectionTitle}
           </BodyText>
-          <div className="price-container">
-            <BodyText className="price" bold>
-              {price} Ⓝ
-            </BodyText>
-          </div>
+          {price &&
+            <div className="price-container">
+              <BodyText className="price" bold>
+                {price} Ⓝ
+              </BodyText>
+            </div>
+          }
         </div>
         <BodyText className="item-name" bold>
           {name}

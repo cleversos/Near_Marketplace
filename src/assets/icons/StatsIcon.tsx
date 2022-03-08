@@ -1,7 +1,12 @@
-const StatsIcon = (props: {isSelected?: boolean}) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M21 13.5003C21 16.2851 19.8937 18.9557 17.9246 20.925C15.9554 22.8941 13.2844 24.0003 10.5 24.0003C7.71554 24.0003 5.04466 22.8941 3.07536 20.925C1.10628 18.9557 0 16.2848 0 13.5003C0 10.7159 1.10624 8.04502 3.07536 6.07572C5.04462 4.10663 7.71554 3.00035 10.5 3.00035C10.6989 3.00035 10.8897 3.07937 11.0304 3.22C11.171 3.36062 11.25 3.55147 11.25 3.75036V12.7504H20.2501C20.4489 12.7504 20.6398 12.8294 20.7804 12.9701C20.921 13.1107 21.0001 13.3015 21.0001 13.5004L21 13.5003ZM13.4999 0.000244141C13.301 0.000244141 13.1102 0.0792647 12.9696 0.219889C12.8289 0.360512 12.7499 0.551365 12.7499 0.75025V10.5003C12.7499 10.6992 12.8289 10.8901 12.9696 11.0307C13.1102 11.1713 13.301 11.2503 13.4999 11.2503H23.25C23.4489 11.2503 23.6397 11.1713 23.7804 11.0307C23.921 10.8901 24 10.6992 24 10.5003C24 8.65711 23.5149 6.84655 22.5932 5.25028C21.6716 3.65401 20.3462 2.3286 18.75 1.407C17.1537 0.485391 15.3431 0.000244141 13.4999 0.000244141Z" fill={props.isSelected ? "white" : "#B3B9C4"} />
-</svg>
+const StatsIcon = (props: { isSelected?: boolean }) => (
+
+
+  <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13 1H9V19H13V1Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M21 6H17V19H21V6Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M5 11H1V19H5V11Z" stroke={props.isSelected ? "white" : "#B3B9C4"} strokeWidth="2" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+
 )
 
 export default StatsIcon;

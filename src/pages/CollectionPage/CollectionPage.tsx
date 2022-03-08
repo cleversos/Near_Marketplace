@@ -1,5 +1,4 @@
-import { CodeResult } from "near-api-js/lib/providers/provider"
-import React, { useCallback, useContext, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import ActivityIcon from "../../assets/icons/ActivityIcon"
 import ItemsIcon from "../../assets/icons/ItemsIcon"
@@ -11,10 +10,12 @@ import "./CollectionPage.scss"
 import CollectionInfoSection from "./components/CollectionInfoSection/CollectionInfoSection"
 import FilterSection from "./components/FilterSection/FilterSection"
 import GallerySection from "./components/GallerySection/GallerySection"
-import * as nearAPI from "near-api-js"
-import { convertTokenResultToItemStruct } from "../../helpers/utils"
+import { convertTokenResultToItemStruct, convertTokenResultToItemStructCollection } from "../../helpers/utils"
 import { TItem } from "../ItemPage/ItemPage"
 import { getAllSalesInCollection } from "../../helpers/collections"
+import { getCollectionStat, getTransactionsForCollection } from "../../contexts/transaction"
+import { formatNearAmount } from "near-api-js/lib/utils/format"
+import { CONTRACT_ACCOUNT_ID } from "../../config"
 
 type TCollectionLinks = {
   discord?: string
@@ -23,6 +24,12 @@ type TCollectionLinks = {
   telegram?: string
   instagram?: string
   medium?: string
+}
+
+type PriceRange = {
+  currency: string
+  min: string
+  max: string
 }
 
 export type TCollection = {
@@ -36,20 +43,22 @@ export type TCollection = {
   creator: string
   royalty: number
   description: string
+  updated_at: number
 }
 
 export type TCollectionContractDetails = {
   numberOfItems?: number
-  owners?: number
   floorPrice?: number
   volTraded?: number
 }
 
+var _ = require('lodash');
+
 const CollectionPage = () => {
   const { collectionId, tokenType } = useParams()
 
-  const { provider, wallet } = useContext(ConnectionContext)
-  const { contractAccountId, contract } = useContext(ContractContext)
+  const { provider } = useContext(ConnectionContext)
+  const { contractAccountId } = useContext(ContractContext)
 
   const [collectionMarketplaceDetails, setCollectionMarketplaceDetails] =
     useState<TCollection | null>(null)
@@ -57,8 +66,24 @@ const CollectionPage = () => {
     useState<TCollectionContractDetails | null>(null)
   const [items, setItems] = useState<TItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [collapseFilterContainer, setCollapseFilterContainer] = useState(false)
+  const [collapseFilterContainer, setCollapseFilterContainer] = useState(true)
   const [mode, setMode] = useState<"items" | "activities">("items")
+  const [priceRange, setPriceRange] = useState<PriceRange>({
+    currency: "USD",
+    min: "min",
+    max: "max"
+  });
+  const [forceRender, setForceRender] = useState(false)
+  const [attdFilterData, setAttdFilterData] = useState()
+  const fixFilterData = (e) => {
+    setForceRender(!forceRender)
+    setAttdFilterData(e)
+  }
+
+  useEffect(() => {
+    const bodyWidth = document.body.clientWidth
+    setCollapseFilterContainer(bodyWidth < 800)
+  }, [])
 
   // fetch collection details using collectionId and tokenType
   const fetchCollectionMarketDetails = useCallback(async () => {
@@ -83,18 +108,9 @@ const CollectionPage = () => {
       royalty: result.royalty,
       links: result.links,
       creator: "",
+      updated_at: result.updated_at,
     }
     return collectionDetails
-  }, [])
-
-  const fetchCollectionContractDetails = useCallback(async () => {
-    const details: TCollectionContractDetails = {
-      numberOfItems: 1212,
-      owners: 10,
-      floorPrice: 2,
-      volTraded: 2391,
-    }
-    return details
   }, [])
 
   // fetch items on sale in this collection
@@ -107,28 +123,13 @@ const CollectionPage = () => {
         collectionId
       )
 
-      // //get the token object for all the sales using nft_tokens_batch
-      // const salesTokensResults: any = await provider.query({
-      //   request_type: "call_function",
-      //   account_id: collectionId,
-      //   method_name: "nft_tokens_batch",
-      //   args_base64: btoa(
-      //     `{"token_ids": ${sales
-      //       .filter(({ nft_contract_id }) => nft_contract_id === collectionId)
-      //       .map(({ token_id }) => token_id)}}`
-      //   ),
-      //   finality: "optimistic",
-      // })
-      // const saleTokens = JSON.parse(
-      //   Buffer.from(salesTokensResults.result).toString()
-      // )
-
       const saleTokens = []
-
+      const attds = []
       //get token obj for the tokens not gotten by batch fetch (if any)
-      for (let i = 0; i < sales.length; i++) {
-        const { token_id } = sales[i]
+      for (let item of sales) {
+        const { token_id } = item
         let token = saleTokens.find(({ token_id: t }) => t === token_id)
+        let contractMetadata;
         if (!token) {
           const tokenRawResult: any = await provider.query({
             request_type: "call_function",
@@ -138,45 +139,164 @@ const CollectionPage = () => {
             finality: "optimistic",
           })
           token = JSON.parse(Buffer.from(tokenRawResult.result).toString())
+          const rawContractResult: any = await provider.query({
+            request_type: "call_function",
+            account_id: collectionId,
+            method_name: "nft_metadata",
+            args_base64: btoa(`{}`),
+            finality: "optimistic",
+          })
+          contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
         }
-        sales[i] = Object.assign(sales[i], token)
+        item = Object.assign(item, token)
+        if (item.metadata.reference !== null) {
+          const fetchUri = `${contractMetadata.base_uri}${item.metadata.reference}`
+          let metadata: any = [];
+          try {
+            await fetch(fetchUri)
+              .then(resp =>
+                resp.json()
+              ).catch((e) => {
+                console.log(e);
+              }).then((json) => {
+                metadata = json
+                item = Object.assign(item, { "attribute": json.attributes })
+              })
+          } catch (error) {
+            console.log(error)
+            return null
+          }
+          attds.push(...metadata.attributes)
+        } else {
+          item = Object.assign(item, { "attribute": [] })
+        }
       }
 
-      const items: TItem[] = sales?.map((result) =>
-        convertTokenResultToItemStruct(
+      let mapFilterData = new Map();
+      for (let i = 0; i < attds.length; i++) {
+        let content = attds[i];
+        let contentData = [];
+        if (mapFilterData.has(content.trait_type)) {
+          contentData = mapFilterData.get(content.trait_type);
+        }
+        if (!contentData.includes(content.value)) {
+          contentData.push(content.value);
+        }
+        mapFilterData.set(content.trait_type, contentData);
+      }
+      if (!sales || !sales.length) return null
+      let newItems: any = []
+      for (let item of sales) {
+        const rawContractResult: any = await provider.query({
+          request_type: "call_function",
+          account_id: collectionId,
+          method_name: "nft_metadata",
+          args_base64: btoa(`{}`),
+          finality: "optimistic",
+        })
+        const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
+        item.baseUri = contractMetadata.base_uri
+        newItems.push(item)
+      }
+      const items: TItem[] = newItems?.map((result) =>
+        convertTokenResultToItemStructCollection(
           result,
           collectionMarketplaceDetails?.name,
           collectionId
         )
       )
-      console.log(items)
-      return items
+
+      let attdArray: any;
+      if (mapFilterData !== undefined) {
+        attdArray = Array.from(mapFilterData, ([name, value]) => ({ name, value }));
+      }
+      fixFilterData(attdArray)
+      return { items, mapFilterData }
     } catch (error) {
       console.log(error)
     }
   }, [])
+
+  const [attributesFilterOptions, setAttributesFilterOptions] = useState<any>()
 
   const fetchAll = useCallback(async () => {
     setIsLoading(true)
     try {
       const values = await Promise.all([
         await fetchCollectionMarketDetails(),
-        await fetchCollectionContractDetails(),
         await fetchItems(),
       ])
-
       setCollectionMarketplaceDetails(values[0])
-      setCollectionContractDetails(values[1])
-      setItems(values[2])
-      setIsLoading(false)
+      setItems(values[1].items)
+      setAttributesFilterOptions(values[1].mapFilterData)
+
+      let newItems = values[1].items
+      newItems.sort(function (a, b) {
+        return a?.price - b?.price
+      })
+      const min = newItems[0]?.price
+      const itemLength = newItems.length
+      let sum = null
+      const all = await getCollectionStat();
+      for (let collectionStat of all) {
+        console.log(collectionStat.name, "collectionStat.name")
+        console.log(values[0].name, "values[0].name")
+        if (collectionStat.name === values[0].name) {
+          sum = collectionStat.volumeTotal
+        }
+      }
+      setCollectionContractDetails({
+        numberOfItems: itemLength,
+        floorPrice: min,
+        volTraded: sum
+      })
     } catch (error) {
       console.log(error)
+      setIsLoading(false)
+      return null
     }
+    setIsLoading(false)
   }, [])
+
+  const [activities, setActivities] = useState<any>([])
+  const getActivities = async () => {
+    const data = await getTransactionsForCollection(CONTRACT_ACCOUNT_ID, collectionId)
+    const result = []
+    for (let item of data) {
+      const rawResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: item.args.args_json.sale.nft_contract_id,
+        method_name: "nft_token",
+        args_base64: btoa(`{"token_id": "${item.args.args_json.sale.token_id}"}`),
+        finality: "optimistic",
+      })
+      const newRow = JSON.parse(Buffer.from(rawResult.result).toString())
+
+      const rawContractResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: collectionId,
+        method_name: "nft_metadata",
+        args_base64: btoa(`{}`),
+        finality: "optimistic",
+      })
+      const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
+      result.push({
+        itemName: newRow.metadata.title,
+        itemImageUrl: `${contractMetadata.base_uri}/${newRow.metadata.media}`,
+        trxId: item.originated_from_transaction_hash,
+        time: item.time,
+        amount: formatNearAmount(item.args.args_json.price),
+        buyer: item.args.args_json.buyer_id,
+        seller: item.args.args_json.sale.owner_id,
+      })
+    }
+    setActivities(result)
+  }
 
   useEffect(() => {
     fetchAll()
-  }, [fetchAll])
+    getActivities()
+  }, [fetchAll, priceRange])
 
   const switchToActivities = () => {
     setMode("activities")
@@ -216,31 +336,28 @@ const CollectionPage = () => {
           <FilterSection
             collapseFilterContainer={collapseFilterContainer}
             setCollapseFilterContainer={setCollapseFilterContainer}
+            priceRange={priceRange}
+            setPriceRange={(e) => setPriceRange(e)}
+            attributesFilterOptions={attributesFilterOptions}
+            attdFilterData={attdFilterData}
+            fixFilterData={(e: any) => fixFilterData(e)}
           />
         </div>
         {mode === "items" ? (
           <div className="gallery-section-container">
             <GallerySection
+              priceRange={priceRange}
               isLoading={isLoading}
               items={items || null}
+              tokenType={tokenType}
               collectionId={collectionId}
+              attdFilterData={attdFilterData}
               setCollapseFilterContainer={setCollapseFilterContainer}
             />
           </div>
         ) : (
           <ActivityTable
-            activities={[
-              {
-                itemName: "Stressed Coders #2352",
-                itemImageUrl:
-                  "https://cdn.magiceden.io/rs:fill:40:40:0:0/plain/https://arweave.net/L1DNqHMvx9ngzWSAp5DSibVUo6YWDTdLXAjAAzTdvvs/1663.png",
-                trxType: "Listing",
-                trxId: "sadfasdfasuf",
-                time: 1644244154000,
-                amount: 15.8,
-                mintAddress: "sadfasdfasuf",
-              },
-            ]}
+            activities={activities}
           />
         )}
       </div>

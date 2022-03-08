@@ -1,8 +1,8 @@
-@import '../../../../sass/variables.scss';
+@import "../../../../sass/variables.scss";
 
 .collection-info-section {
   padding-bottom: 40px;
-  
+
   .banner-section {
     position: relative;
     height: 200px;
@@ -10,16 +10,16 @@
 
     .collection-links {
       position: absolute;
-      bottom: 20px;
+      bottom: 50%;
       right: 25px;
       display: flex;
-      background: rgba(255, 255, 255, 0.05);
+      background: #090619;
       border: 1px solid $separator;
       border-radius: 10px;
       z-index: 2;
 
       & > * {
-        padding: 15px;
+        padding: 12px;
         display: flex;
         border-right: 1px solid $separator;
 
@@ -28,7 +28,7 @@
         }
 
         svg {
-          width: 22px;
+          width: 16px;
           height: auto;
         }
       }
@@ -36,7 +36,7 @@
 
     .image-container {
       height: 100%;
-      
+
       .darkener {
         position: absolute;
         top: 0;
@@ -49,9 +49,9 @@
       img {
         width: 100%;
         height: 100%;
+        object-fit: cover;
       }
     }
-
   }
 
   .details-container {
@@ -74,6 +74,7 @@
       img {
         height: 100%;
         width: 100%;
+        object-fit: cover;
       }
     }
 
@@ -94,7 +95,7 @@
     }
 
     .creator-text {
-      font-size: 14px;
+      font-size: 10px;
       color: $text-color-gray;
 
       .green {

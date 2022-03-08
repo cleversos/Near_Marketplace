@@ -1,0 +1,32 @@
+.attribute-autocomplete {
+    margin: 10px;
+    .MuiInputLabel-formControl {
+        color: #8f9095 !important;
+    }
+    .MuiChip-label {
+        color: #8f9095 !important;
+        font-size: 12px;
+    }
+    .MuiChip-deleteIcon {
+        fill: #8f9095 !important;
+        width: 14px;
+        height: 14px;
+    }
+    .MuiSvgIcon-root {
+        fill: #8f9095 !important;
+    }
+    .MuiInputLabel-formControl {
+        color: #8f9095 !important;
+        font-size: 13px !important;
+    }
+    .MuiChip-root.MuiChip-filled {
+        background-color: #ffffff1f !important;
+    }
+    .MuiOutlinedInput-input {
+        color: #8f9095 !important;
+        height: 0.8375em !important;
+    }
+    .MuiOutlinedInput-notchedOutline {
+        border-color: #ffffff1f !important;
+    }
+}

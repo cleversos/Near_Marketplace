@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import DiscordIcon from '../../../../assets/icons/DiscordIcon';
 import InstagramIcon from '../../../../assets/icons/InstagramIcon';
 import TelegramIcon from '../../../../assets/icons/TelegramIcon';
@@ -8,44 +9,81 @@ import SectionPadding from '../../../../components/SectionPadding/SectionPadding
 import './Footer.scss';
 
 const Footer = () => {
-  return(
+  return (
     <footer>
       <SectionPadding>
         <div className="brand">
-          <img
-            src={require('../../../../assets/images/desmarketLogo.png')}
-            alt="Brand"
-          />
-          <BodyText>Galacticway</BodyText>
+          <div className="brand-content">
+            <img
+              src={require('../../../../assets/images/desmarketLogo.png')}
+              alt="Brand"
+            />
+            <BodyText>Galacticway</BodyText>
+          </div>
+          <p>Galacticway, the first NEAR NFT Marketplace for Collections</p>
+          <p>© 2022 Galacticway. All Rights Reserved.</p>
         </div>
-        <div className="links">
-          <BodyText bold>Links</BodyText>
+        <div className="marketplace">
+          <BodyText bold>Marketplace</BodyText>
           <ul>
-            <li><BodyText>Collections</BodyText></li>
-            <li><BodyText>Launchpad</BodyText></li>
-            <li><BodyText>FAQs</BodyText></li>
-            <li><BodyText>Sell/Your Wallet</BodyText></li>
+            <li>
+              <Link to={"/collections"}>
+                <BodyText>Collections</BodyText>
+              </Link>
+            </li>
+            <li>
+              <Link to={"/collections"}>
+                <BodyText>All NFTs</BodyText>
+              </Link>
+            </li>
+            <li>
+              <Link to={"/"}>
+                <BodyText>Explore</BodyText>
+              </Link>
+            </li>
           </ul>
         </div>
-        <div className="top-collections">
-          <BodyText bold>Top Collections</BodyText>
+        <div className="company">
+          <BodyText bold>Company</BodyText>
           <ul>
-            <li><BodyText>Soi Squiggle</BodyText></li>
-            <li><BodyText>TrashyPandas</BodyText></li>
-            <li><BodyText>Psychobats</BodyText></li>
-            <li><BodyText>Kolsana</BodyText></li>
-            <li><BodyText>Mighty Pangolins NFT</BodyText></li>
-            <li><BodyText>Block Buddies</BodyText></li>
+            <li>
+              <a href="https://privacy.galacticway.io" target="_blank">
+                <BodyText>Privacy Policy</BodyText>
+              </a>
+            </li>
+            <li><BodyText>Terms of Service</BodyText></li>
+            <li><BodyText>Copyright</BodyText></li>
+            <li>
+              <a href="https://galacticway.freshteam.com/jobs" target="_blank">
+                <BodyText>Careers</BodyText>
+              </a>
+            </li>
           </ul>
         </div>
         <div className="community">
-          <BodyText bold>Join The Community</BodyText>
-          <div className="socials">
-            <DiscordIcon />
-            <TelegramIcon />
-            <TwitterIcon />
-            <InstagramIcon />
-          </div>
+          <BodyText bold>Community</BodyText>
+          <ul>
+            <li>
+              <a href="https://twitter.com/GalacticwayNFT" target="_blank" rel="noreferrer" >
+                <BodyText>Twitter</BodyText>
+              </a>
+            </li>
+            <li>
+              <a href="https://discord.com/invite/yuBjY6QdR6" target="_blank" rel="noreferrer" >
+                <BodyText>Discord</BodyText>
+              </a>
+            </li>
+            <li>
+              <a href="https://help.galacticway.io" target="_blank" rel="noreferrer" >
+                <BodyText>Help Desk</BodyText>
+              </a>
+            </li>
+            <li>
+              <a href="https://galacticway.medium.com" target="_blank" rel="noreferrer" >
+                <BodyText>Blog</BodyText>
+              </a>
+            </li>
+          </ul>
         </div>
       </SectionPadding>
     </footer>

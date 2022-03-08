@@ -8,6 +8,9 @@ import CollectionSearchBox from "../CollectionSearchBox/CollectionSearchBox"
 import { IconLoader } from "../IconLoader"
 import "./AppNavbar.scss"
 import { ConnectionContext } from "../../contexts/connection"
+import copy from 'copy-to-clipboard'
+import CollectionAutoComplete from "../CollectionAutoComplete/CollectionAutoComplete"
+import { CollectionContext } from "../../contexts/collections"
 
 interface AppNavbarProps {
   setOpenSidebar: Function
@@ -16,29 +19,27 @@ interface AppNavbarProps {
   showVolBar: boolean
 }
 const AppNavbar = (props: AppNavbarProps) => {
+  const walletOptionsRef = useRef(null)
+  const { collections } = useContext(CollectionContext)
+
   const [expandSearchBox, setExpandSearchBox] = useState(false)
   const [showMobileNavMenu, setShowMobileNavMenu] = useState(false)
   const { wallet, signIn, signOut } = useContext(ConnectionContext)
   const walletAddress = wallet?.getAccountId()
   const [hideWalletOptions, setHideWalletOptions] = useState(true)
-  const walletOptionsRef = useRef(null)
 
   const navLinks = [
     {
       name: "Apply",
-      onClick: () => {},
+      link: "/#",
     },
     {
       name: "Browse",
-      onClick: () => {},
+      link: "/collections",
     },
     {
       name: "Sell",
-      onClick: () => {},
-    },
-    {
-      name: "Community",
-      onClick: () => {},
+      link: "/profile",
     },
   ]
 
@@ -56,16 +57,15 @@ const AppNavbar = (props: AppNavbarProps) => {
   return (
     <>
       <nav className="app-navbar">
-        <VolumeAndLangBar
+        {/* <VolumeAndLangBar
           dailyVolume={props.dailyVolume}
           totalVolume={props.totalVolume}
-        />
+        /> */}
         <div className="main-navbar">
           <div
             onClick={() => props.setOpenSidebar(true)}
-            className={`sidebar-open-btn ${
-              expandSearchBox ? "hide-mobile" : ""
-            }`}
+            className={`sidebar-open-btn ${expandSearchBox ? "hide-mobile" : ""
+              }`}
           >
             <IconLoader icon="menu" />
           </div>
@@ -79,13 +79,14 @@ const AppNavbar = (props: AppNavbarProps) => {
           <div
             className={`search-bar-container ${expandSearchBox ? "show" : ""}`}
           >
-            <CollectionSearchBox />
+            {collections.length !== 0 &&
+              <CollectionAutoComplete collections={collections} />
+            }
           </div>
           <div
             onClick={() => setExpandSearchBox((current) => !current)}
-            className={`search-icon-btn ${
-              !expandSearchBox ? "search" : "cancel"
-            }`}
+            className={`search-icon-btn ${!expandSearchBox ? "search" : "cancel"
+              }`}
           >
             <IconLoader icon={!expandSearchBox ? "search" : "cancel"} />
           </div>
@@ -95,17 +96,18 @@ const AppNavbar = (props: AppNavbarProps) => {
           >
             <IconLoader icon="more" />
           </div>
-          <ul className="nav-links">
+          {/* <ul className="nav-links">
             {navLinks.map((link, i) => (
               <li key={link.name}>
-                <BodyText>{link.name}</BodyText>
+                <Link to={link.link} style={{ color: "#b3b9c4" }}>{link.name}</Link>
               </li>
             ))}
-          </ul>
+          </ul> */}
           {walletAddress ? (
             <div className="wallet-options-container">
               <Button
                 secondary
+                disabled={false}
                 title={`
                 ${walletAddress.slice(0, 4)}...${walletAddress.slice(
                   walletAddress.length - 4,
@@ -116,11 +118,15 @@ const AppNavbar = (props: AppNavbarProps) => {
                 onClick={() => setHideWalletOptions(!hideWalletOptions)}
               />
               <ul
-                className={`dropdown-options ${
-                  hideWalletOptions ? "hidden" : "visible"
-                }`}
+                className={`dropdown-options ${hideWalletOptions ? "hidden" : "visible"
+                  }`}
               >
-                <li onClick={() => signOut()}>
+                <li onClick={() => copy(walletAddress)}>
+                  <Link to={"/profile/@" + walletAddress} style={{ color: "#b3b9c4" }}>
+                    <BodyText light>Profile</BodyText>
+                  </Link>
+                </li>
+                <li onClick={() => copy(walletAddress)}>
                   <BodyText light>Copy address</BodyText>
                 </li>
                 <li onClick={() => signOut()}>
@@ -132,6 +138,7 @@ const AppNavbar = (props: AppNavbarProps) => {
             <Button
               className="connect-wallet-btn"
               title="Connect wallet"
+              disabled={false}
               icon="wallet"
               onClick={signIn}
             />

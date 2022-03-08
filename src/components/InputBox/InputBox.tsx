@@ -9,6 +9,7 @@ interface InputBoxProps {
   name: string
   value: any
   type?: string
+  max?: number
 }
 
 const InputBox = (props: InputBoxProps) => {
@@ -19,6 +20,7 @@ const InputBox = (props: InputBoxProps) => {
         type={props.type || "text"}
         value={props.value}
         name={props.name}
+        max={props.placeholder}
         placeholder={props.placeholder}
         onChange={(event) => props.onInputChange(event)}
       />
