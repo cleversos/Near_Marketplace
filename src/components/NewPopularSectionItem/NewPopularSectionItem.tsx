@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import "./NewPopularSectionItem.scss"
 
 const NewPopularSectionItem = (props: {
@@ -6,8 +7,11 @@ const NewPopularSectionItem = (props: {
   floorPrice: number,
   weeklyChange: number,
   weeklyVolume: number,
-  image: string
+  image: string,
+  listItems: number,
+  data: any
 }) => {
+  console.log(props.data, "new datad")
   return (
     <div className="new-popular-item">
       <div className="number">
@@ -15,10 +19,12 @@ const NewPopularSectionItem = (props: {
       </div>
       <div className="content">
         <div className="content-icon">
-          <img
-            src={props.image}
-            alt=""
-          />
+          <Link to={``}>
+            <img
+              src={props.image}
+              alt=""
+            />
+          </Link>
         </div>
         <div className="content-text">
           <div className="content-text-top">
