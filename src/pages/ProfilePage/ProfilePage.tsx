@@ -5,7 +5,7 @@ import BodyText from "../../components/BodyText/BodyText"
 import Button from "../../components/Button/Button"
 import NFTItemCard from "../../components/NFTItemCard/NFTItemCard"
 import { getCollections, getUserSalesInMarketplace } from "../../helpers/collections"
-import { convertTokenResultToItemStructItem, convertTokenResultToItemStructItemProfile } from "../../helpers/utils"
+import { convertTokenResultToItemStructItem, convertTokenResultToItemStructItemProfile, convertTokenResultToItemStructItemProfileListed } from "../../helpers/utils"
 import { TCollection } from "../CollectionPage/CollectionPage"
 import { TItem } from "../ItemPage/ItemPage"
 import CollectionAndAllItemsSet from "./components/CollectionAndAllItemsSet/CollectionAndAllItemsSet"
@@ -155,10 +155,26 @@ const ProfilePage = () => {
         profileUserAccount
       )
       for (let i = 0; i < sales.length; i++) {
+        const rawContractResult: any = await provider.query({
+          request_type: "call_function",
+          account_id: sales[i].nft_contract_id,
+          method_name: "nft_metadata",
+          args_base64: btoa(`{}`),
+          finality: "optimistic",
+        })
+        const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
+        sales[i].baseUri = contractMetadata.base_uri
         sales[i].token_type = tokenTypeList.get(sales[i].nft_contract_id);
       }
-      console.log(sales, "LOOK")
-      setListedNfts(sales)
+      const newSales = sales.map((item) =>
+        convertTokenResultToItemStructItemProfileListed(
+          item,
+          item.token_type,
+          item.nft_contract_id
+        )
+      )
+      setListedNfts(newSales)
+      console.log(newSales, "LOOK")
       const promises = collections.map(
         async (collection) => {
           try {
@@ -324,13 +340,13 @@ const ProfilePage = () => {
               {listedNfts?.map((item, i) => (
                 <NFTItemCard
                   key={i}
-                  tokenType={item.token_type}
-                  id={item.token_id}
-                  collectionId={item.nft_contract_id}
-                  image={item.metadata.media}
-                  name={item.metadata.title}
-                  collectionTitle={item.metadata.title}
-                  price={parseFloat(formatNearAmount(item.sale_conditions.near))}
+                  tokenType={item.tokenType}
+                  id={item.id}
+                  collectionId={item.collectionId}
+                  image={item.image}
+                  name={item.name}
+                  collectionTitle={item.collectionTitle}
+                  price={parseFloat(formatNearAmount(item.price.near))}
                 />
               ))}
             </div>
@@ -342,13 +358,13 @@ const ProfilePage = () => {
               {offerMadeList?.map((item, i) => (
                 <NFTItemCard
                   key={i}
+                  tokenType={item.tokenType}
                   id={item.id}
                   collectionId={item.collectionId}
                   image={item.image}
-                  tokenType={item.tokenType}
                   name={item.name}
                   collectionTitle={item.collectionTitle}
-                  price={parseFloat(formatNearAmount(item.price))}
+                  price={parseFloat(formatNearAmount(item.price.near))}
                 />
               ))}
             </div>
@@ -361,13 +377,13 @@ const ProfilePage = () => {
                 item.bids.near &&
                 <NFTItemCard
                   key={i}
-                  id={item.token_id}
-                  collectionId={item.nft_contract_id}
-                  image={item.metadata.media}
-                  name={item.metadata.title}
                   tokenType={item.token_type}
-                  collectionTitle={item.metadata.title}
-                  price={parseFloat(formatNearAmount(item.sale_conditions.near))}
+                  id={item.id}
+                  collectionId={item.collectionId}
+                  image={item.image}
+                  name={item.name}
+                  collectionTitle={item.collectionTitle}
+                  price={parseFloat(formatNearAmount(item.price.near))}
                 />
               ))}
             </div>

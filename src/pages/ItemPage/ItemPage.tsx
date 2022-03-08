@@ -56,6 +56,17 @@ export type TItem1 = {
   ownerId: string
 }
 
+export type TItemListed = {
+  image: any
+  name: string
+  collectionTitle: string
+  collectionId: string
+  bids: any
+  price: number
+  id: string
+  tokenType: string
+  ownerId: string
+}
 export type TItemSalesDetails = {
   approvalId: number
   saleConditions: { near: string }

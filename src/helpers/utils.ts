@@ -1,5 +1,5 @@
 import { formatNearAmount } from "near-api-js/lib/utils/format"
-import { TItem, TItem1 } from "../pages/ItemPage/ItemPage"
+import { TItem, TItem1, TItemListed } from "../pages/ItemPage/ItemPage"
 
 export const convertTokenResultToItemStruct = (
   item,
@@ -47,6 +47,24 @@ export const convertTokenResultToItemStructItemProfile = (
     name: item.metadata.title,
     collectionTitle,
     tokenType: item.tokenType,
+    collectionId,
+    price: item.sale_conditions,
+    id: item.token_id,
+    ownerId: item.owner_id,
+  }
+}
+
+export const convertTokenResultToItemStructItemProfileListed = (
+  item,
+  collectionTitle,
+  collectionId
+): TItemListed => {
+  return {
+    image: item.baseUri !== undefined ? `${item.baseUri}/${item.metadata.media}` : item.metadata.media,
+    name: item.metadata.title,
+    collectionTitle,
+    bids: item.bids,
+    tokenType: item.token_type,
     collectionId,
     price: item.sale_conditions,
     id: item.token_id,

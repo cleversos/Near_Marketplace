@@ -13,7 +13,7 @@ import GallerySection from "./components/GallerySection/GallerySection"
 import { convertTokenResultToItemStruct, convertTokenResultToItemStructCollection } from "../../helpers/utils"
 import { TItem } from "../ItemPage/ItemPage"
 import { getAllSalesInCollection } from "../../helpers/collections"
-import { getTransactionsForCollection } from "../../contexts/transaction"
+import { getCollectionStat, getTransactionsForCollection } from "../../contexts/transaction"
 import { formatNearAmount } from "near-api-js/lib/utils/format"
 import { CONTRACT_ACCOUNT_ID } from "../../config"
 
@@ -164,6 +164,7 @@ const CollectionPage = () => {
               })
           } catch (error) {
             console.log(error)
+            return null
           }
           attds.push(...metadata.attributes)
         } else {
@@ -235,16 +236,26 @@ const CollectionPage = () => {
       })
       const min = newItems[0]?.price
       const itemLength = newItems.length
-      const sum = newItems.map(item => item?.price).reduce((prev, curr) => prev + curr, 0)
+      let sum = null
+      const all = await getCollectionStat();
+      for (let collectionStat of all) {
+        console.log(collectionStat.name, "collectionStat.name")
+        console.log(values[0].name, "values[0].name")
+        if (collectionStat.name === values[0].name) {
+          sum = collectionStat.volumeTotal
+        }
+      }
       setCollectionContractDetails({
         numberOfItems: itemLength,
         floorPrice: min,
         volTraded: sum
       })
-      setIsLoading(false)
     } catch (error) {
       console.log(error)
+      setIsLoading(false)
+      return null
     }
+    setIsLoading(false)
   }, [])
 
   const [activities, setActivities] = useState<any>([])
@@ -260,9 +271,18 @@ const CollectionPage = () => {
         finality: "optimistic",
       })
       const newRow = JSON.parse(Buffer.from(rawResult.result).toString())
+
+      const rawContractResult: any = await provider.query({
+        request_type: "call_function",
+        account_id: collectionId,
+        method_name: "nft_metadata",
+        args_base64: btoa(`{}`),
+        finality: "optimistic",
+      })
+      const contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
       result.push({
         itemName: newRow.metadata.title,
-        itemImageUrl: newRow.metadata.media,
+        itemImageUrl: `${contractMetadata.base_uri}/${newRow.metadata.media}`,
         trxId: item.originated_from_transaction_hash,
         time: item.time,
         amount: formatNearAmount(item.args.args_json.price),

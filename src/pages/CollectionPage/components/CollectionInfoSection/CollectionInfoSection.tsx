@@ -18,6 +18,7 @@ interface CollectionInfoSectionProps {
 const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
   const { collectionMarketplaceDetails, collectionContractDetails, isLoading } =
     props
+  console.log(collectionContractDetails, "collectionContractDetails")
   return (
     <div className="collection-info-section">
       <div className="banner-section">
@@ -110,21 +111,33 @@ const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
       </div>
       <div className="collection-stats-container">
         <div className="stat-set">
-          <BodyText bold>{collectionContractDetails?.numberOfItems}</BodyText>
+          {collectionContractDetails?.numberOfItems ?
+            <BodyText bold>{collectionContractDetails?.numberOfItems}</BodyText>
+            :
+            "--"
+          }
           <BodyText light>Items</BodyText>
         </div>
         <div className="stat-set">
-          <BodyText bold>
-            {collectionContractDetails?.floorPrice}
-            <span style={{ marginLeft: "5px" }}>Ⓝ</span>
-          </BodyText>
+          {collectionContractDetails?.floorPrice ?
+            <BodyText bold>
+              {collectionContractDetails?.floorPrice}
+              <span style={{ marginLeft: "5px" }}>Ⓝ</span>
+            </BodyText>
+            :
+            "--"
+          }
           <BodyText light>Floor price</BodyText>
         </div>
         <div className="stat-set">
-          <BodyText bold>
-            {collectionContractDetails?.volTraded}
-            <span style={{ marginLeft: "5px" }}>Ⓝ</span>
-          </BodyText>
+          {collectionContractDetails?.volTraded !== null ?
+            <BodyText bold>
+              {collectionContractDetails?.volTraded}
+              <span style={{ marginLeft: "5px" }}>Ⓝ</span>
+            </BodyText>
+            :
+            "--"
+          }
           <BodyText light>Volume traded</BodyText>
         </div>
       </div>

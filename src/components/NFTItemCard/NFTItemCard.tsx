@@ -27,11 +27,13 @@ const NFTItemCard = (props: NFTItemCardProps) => {
           <BodyText className="collection-name" light>
             {collectionTitle}
           </BodyText>
-          <div className="price-container">
-            <BodyText className="price" bold>
-              {price} Ⓝ
-            </BodyText>
-          </div>
+          {price &&
+            <div className="price-container">
+              <BodyText className="price" bold>
+                {price} Ⓝ
+              </BodyText>
+            </div>
+          }
         </div>
         <BodyText className="item-name" bold>
           {name}

@@ -29,6 +29,8 @@
 
     &.value {
       text-transform: capitalize;
+      width: 100%;
+      overflow: hidden;
     }
   }
 }
