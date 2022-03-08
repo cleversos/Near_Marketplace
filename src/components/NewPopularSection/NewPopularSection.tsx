@@ -68,6 +68,7 @@ const NewPopularSection = () => {
   const getAllCollections = async () => {
     setIsLoading(true)
     const all = await getCollectionStat();
+    console.log(all, "sdfsdf")
     setTableData(all)
     setIsLoading(false)
   }

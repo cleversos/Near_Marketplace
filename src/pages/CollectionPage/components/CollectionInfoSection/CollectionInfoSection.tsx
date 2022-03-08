@@ -18,7 +18,6 @@ interface CollectionInfoSectionProps {
 const CollectionInfoSection = (props: CollectionInfoSectionProps) => {
   const { collectionMarketplaceDetails, collectionContractDetails, isLoading } =
     props
-  console.log(collectionContractDetails, "collectionContractDetails")
   return (
     <div className="collection-info-section">
       <div className="banner-section">

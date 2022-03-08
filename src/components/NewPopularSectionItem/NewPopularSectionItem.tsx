@@ -11,7 +11,6 @@ const NewPopularSectionItem = (props: {
   listItems: number,
   data: any
 }) => {
-  console.log(props.data, "new datad")
   return (
     <div className="new-popular-item">
       <div className="number">

@@ -6,16 +6,16 @@ import ActivityTable from "../../components/ActivityTable/ActivityTable"
 import BodyText from "../../components/BodyText/BodyText"
 import { ConnectionContext } from "../../contexts/connection"
 import { ContractContext } from "../../contexts/contract"
-import "./CollectionPage.scss"
 import CollectionInfoSection from "./components/CollectionInfoSection/CollectionInfoSection"
 import FilterSection from "./components/FilterSection/FilterSection"
 import GallerySection from "./components/GallerySection/GallerySection"
-import { convertTokenResultToItemStruct, convertTokenResultToItemStructCollection } from "../../helpers/utils"
+import { convertTokenResultToItemStructCollection } from "../../helpers/utils"
 import { TItem } from "../ItemPage/ItemPage"
 import { getAllSalesInCollection } from "../../helpers/collections"
 import { getCollectionStat, getTransactionsForCollection } from "../../contexts/transaction"
 import { formatNearAmount } from "near-api-js/lib/utils/format"
 import { CONTRACT_ACCOUNT_ID } from "../../config"
+import "./CollectionPage.scss"
 
 type TCollectionLinks = {
   discord?: string
@@ -149,7 +149,7 @@ const CollectionPage = () => {
           contractMetadata = JSON.parse(Buffer.from(rawContractResult.result).toString())
         }
         item = Object.assign(item, token)
-        if (item.metadata.reference !== null) {
+        if (!item.metadata.reference) {
           const fetchUri = `${contractMetadata.base_uri}${item.metadata.reference}`
           let metadata: any = [];
           try {
@@ -227,29 +227,29 @@ const CollectionPage = () => {
         await fetchItems(),
       ])
       setCollectionMarketplaceDetails(values[0])
-      setItems(values[1].items)
-      setAttributesFilterOptions(values[1].mapFilterData)
+      if (values[1]) {
+        setItems(values[1].items)
+        setAttributesFilterOptions(values[1].mapFilterData)
 
-      let newItems = values[1].items
-      newItems.sort(function (a, b) {
-        return a?.price - b?.price
-      })
-      const min = newItems[0]?.price
-      const itemLength = newItems.length
-      let sum = null
-      const all = await getCollectionStat();
-      for (let collectionStat of all) {
-        console.log(collectionStat.name, "collectionStat.name")
-        console.log(values[0].name, "values[0].name")
-        if (collectionStat.name === values[0].name) {
-          sum = collectionStat.volumeTotal
+        let newItems = values[1].items
+        newItems.sort(function (a, b) {
+          return a?.price - b?.price
+        })
+        const min = newItems[0]?.price
+        const itemLength = newItems.length
+        let sum = null
+        const all = await getCollectionStat();
+        for (let collectionStat of all) {
+          if (collectionStat.name === values[0].name) {
+            sum = collectionStat.volumeTotal
+          }
         }
+        setCollectionContractDetails({
+          numberOfItems: itemLength,
+          floorPrice: min,
+          volTraded: sum
+        })
       }
-      setCollectionContractDetails({
-        numberOfItems: itemLength,
-        floorPrice: min,
-        volTraded: sum
-      })
     } catch (error) {
       console.log(error)
       setIsLoading(false)
