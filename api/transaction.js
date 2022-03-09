@@ -3,8 +3,6 @@ var { connect, keyStores } = require("near-api-js")
 var { formatNearAmount } = require("near-api-js/lib/utils/format")
 
 var connectionString = "postgres://public_readonly:nearprotocol@mainnet.db.explorer.indexer.near.dev/mainnet_explorer";
-var pgClient = new pg.Client(connectionString);
-pgClient.connect();
 
 const homedir = require("os").homedir();
 const CREDENTIALS_DIR = ".near-credentials";
@@ -21,6 +19,8 @@ const config = {
 let collectionStats = []
 
 const getTransactionsForItem  = async (marketplace_account_id, nft_contract_id, token_id, offset, count) => {
+    var pgClient = new pg.Client(connectionString);
+    pgClient.connect();
     try{
         var query = await pgClient.query("\
         select \
@@ -48,7 +48,7 @@ const getTransactionsForItem  = async (marketplace_account_id, nft_contract_id, 
         // and action_receipt_actions.args->'args_json'->'sale'->'nft_contract_id' = '" + nft_contract_id + "' \
         // and action_receipt_actions.args->'args_json'->'sale'->'token_id' = '" + token_id + "' \
         // and transactions.receiver_account_id = '" + marketplace_account_id + "' \
-    
+        pgClient.end();
         return query.rows;
         // query.on("row", function(row,result){
         //     console.log(row, result);
@@ -56,14 +56,17 @@ const getTransactionsForItem  = async (marketplace_account_id, nft_contract_id, 
             
         //     });
     } catch (error) {
+        pgClient.end();
         console.log(error)
         return [];
     }
 }
 
 const getTransactionsForCollection = async (marketplace_account_id, nft_contract_id, offset, count) => {
+    var pgClient = new pg.Client(connectionString);
+    pgClient.connect();
     try{
-        var query = await pgClient.query("\
+      var query = await pgClient.query("\
         select \
             date_trunc('minute', to_timestamp(receipt_included_in_block_timestamp/1000/1000/1000)) as time, \
             action_receipt_actions.*, \
@@ -79,35 +82,46 @@ const getTransactionsForCollection = async (marketplace_account_id, nft_contract
         order by time desc \
         limit " + count + " offset " + offset + " \
             ");
+        pgClient.end();
         return query.rows;
     } catch (error) {
+        pgClient.end();
         console.log(error)
         return [];
     }
 }
 
 const getTradingVolumeForCollection = async (marketplace_account_id, nft_contract_id, timestamp_start = "0", timestamp_end = (Date.now() + "000000")) => {
-    console.log(marketplace_account_id, nft_contract_id, timestamp_start, timestamp_end);
-    var query = await pgClient.query("\
-    select \
-        sum(SUBSTRING(action_receipt_actions.args->'args_json'->>'price', 0, length(action_receipt_actions.args->'args_json'->>'price') - 18)::float / 100000.0) as volume \
-    from \
-        action_receipt_actions \
-    join receipts \
-    on receipts.receipt_id = action_receipt_actions.receipt_id \
-    where \
-        action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
-        and action_receipt_actions.args->'args_json'->'sale'->>'nft_contract_id' = '" + nft_contract_id + "' \
-        and action_receipt_actions.receipt_predecessor_account_id = '" + marketplace_account_id + "' \
-        and receipt_included_in_block_timestamp >= " + timestamp_start + " \
-        and receipt_included_in_block_timestamp <= " + timestamp_end + " \
-    ");
-    if(query.rows[0].volume == null)
-        return {volume: 0.0};
-    return {volume: query.rows[0].volume};
+    var pgClient = new pg.Client(connectionString);
+    pgClient.connect();
+    try{
+      var query = await pgClient.query("\
+      select \
+          sum(SUBSTRING(action_receipt_actions.args->'args_json'->>'price', 0, length(action_receipt_actions.args->'args_json'->>'price') - 18)::float / 100000.0) as volume \
+      from \
+          action_receipt_actions \
+      join receipts \
+      on receipts.receipt_id = action_receipt_actions.receipt_id \
+      where \
+          action_receipt_actions.args->>'method_name' = 'resolve_purchase' \
+          and action_receipt_actions.args->'args_json'->'sale'->>'nft_contract_id' = '" + nft_contract_id + "' \
+          and action_receipt_actions.receipt_predecessor_account_id = '" + marketplace_account_id + "' \
+          and receipt_included_in_block_timestamp >= " + timestamp_start + " \
+          and receipt_included_in_block_timestamp <= " + timestamp_end + " \
+      ");
+      pgClient.end();
+      if(query.rows[0].volume == null)
+          return {volume: 0.0};
+      return {volume: query.rows[0].volume};
+    } catch (error) {
+      pgClient.end();
+      console.log(error);
+    }
 }
 
 const getTransactionsForUser = async (marketplace_account_id, user_account_id, offset, count) => {
+    var pgClient = new pg.Client(connectionString);
+    pgClient.connect();
     try{
         var query = await pgClient.query("\
         select \
@@ -126,8 +140,10 @@ const getTransactionsForUser = async (marketplace_account_id, user_account_id, o
         order by time desc \
         limit " + count + " offset " + offset + " \
         ");
+        pgClient.end();
         return query.rows;
     } catch (error) {
+        pgClient.end();
         console.log(error)
         return [];
     }
@@ -305,7 +321,7 @@ async function intervalFunc() {
       collectionStats = all;
       console.log("Succeed Stat Fetching")
     } catch (error) {
-      console.log("Error Occured")
+      console.log(error, "Error Occured")
     }
     setTimeout(intervalFunc, 60000);
 }
